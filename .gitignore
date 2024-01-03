@@ -2,3 +2,5 @@ node_modules/
 
 .ignore
 .vscode/
+/back-end/rest/
+/back-end/.env
