@@ -1,4 +1,0 @@
-# Liste des Users (SELECT)
-
-###
-GET http://localhost:3050/listeUsers
