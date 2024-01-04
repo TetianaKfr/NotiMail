@@ -34,10 +34,22 @@ class Controller {
     });
   }
 
+  async executeQuery(query) {
+    return new Promise((resolve, reject) => {
+      this.#connection.query(query, function (error, results, fields) {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+  }
+
   async getAllUsers() {
     try {
       const query = "SELECT * FROM users";
-      const results = await this.#connection.executeQuery(query);
+      let results = await this.executeQuery(query);
 
       const users = results.map(
         (result) =>
@@ -56,6 +68,85 @@ class Controller {
       );
 
       return users;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async insertUser(
+    firm_name,
+    first_name,
+    last_name,
+    email,
+    phone_number,
+    password,
+    last_received_mail,
+    last_picked_up,
+    has_mail,
+    is_admin
+  ) {
+    try {
+      const query = `
+        INSERT INTO users (
+          firm_name,
+          first_name,
+          last_name,
+          email,
+          phone_number,
+          password,
+          last_received_mail,
+          last_picked_up,
+          has_mail,
+          is_admin
+          )
+        VALUES ('${firm_name}', '${first_name}', '${last_name}', '${email}', '${phone_number}', '${password}', '${last_received_mail}', '${last_picked_up}', '${has_mail}', '${is_admin}')
+      `;
+
+      await this.executeQuery(query);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteUser(firm_name) {
+    try {
+      const query = `DELETE FROM users WHERE firm_name = '${firm_name}'`;
+      await this.executeQuery(query);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateUser(
+    new_firm_name,
+    new_first_name,
+    new_last_name,
+    new_email,
+    new_phone_number,
+    new_password,
+    new_last_received_mail,
+    new_last_picked_up,
+    new_has_mail,
+    new_is_admin
+  ) {
+    try {
+      const query = `
+    UPDATE users 
+    SET 
+      firm_name = '${new_firm_name}', 
+      first_name = '${new_first_name}', 
+      last_name = '${new_last_name}', 
+      email = '${new_email}', 
+      phone_number = '${new_phone_number}',
+      password = '${new_password}', 
+      last_received_mail = '${new_last_received_mail}', 
+      last_picked_up = '${new_last_picked_up}', 
+      has_mail = '${new_has_mail}', 
+      is_admin = '${new_is_admin}'
+    WHERE firm_name = '${new_firm_name}'`;
+
+      console.log(query);
+      await this.executeQuery(query);
     } catch (error) {
       throw error;
     }
