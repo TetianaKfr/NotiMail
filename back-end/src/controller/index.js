@@ -12,6 +12,10 @@ class Controller {
   #connection;
 
   constructor() {
+    this.connect();
+  }
+
+  connect() {
     this.#connection = mysql.createConnection({
       host: DATABASE_HOST,
       user: DATABASE_USER,
@@ -21,6 +25,28 @@ class Controller {
 
     this.#connection.connect((err) => {
       if (err) {
+        console.log(err.errno);
+        if (err.errno == 1049 /* Database doesn't exists */) {
+          let connection = mysql.createConnection({
+            host: DATABASE_HOST,
+            user: DATABASE_USER,
+            password: DATABASE_PASSWORD,
+          });
+
+          connection.query("CREATE DATABASE " + DATABASE_NAME, (err, _results) => {
+            if (err) {
+              console.error("Failed to create database '" + DATABASE_NAME + "': " + err.stack);
+              process.exit(-1);
+            }
+
+            console.log("Created database '" + DATABASE_NAME + "'");
+
+            this.connect();
+            this.initialize_database();
+          });
+          return;
+        }
+
         console.error(
           "Failed to connect to my database '" + DATABASE_NAME + "': ",
           err.stack
@@ -31,6 +57,32 @@ class Controller {
       console.log(
         "Connected to mysql database database '" + DATABASE_NAME + "'"
       );
+    })
+  }
+
+  initialize_database() {
+    let initialization_query = 
+      "CREATE TABLE IF NOT EXISTS `users` (" +
+      "`firm_name` varchar(25) NOT NULL," +
+      "`first_name` varchar(25) DEFAULT NULL," +
+      "`last_name` varchar(25) DEFAULT NULL," +
+      "`email` varchar(50) NOT NULL," +
+      "`phone_number` varchar(25) NOT NULL," +
+      "`password` varchar(25) NOT NULL," +
+      "`last_received_mail` timestamp NULL DEFAULT NULL," +
+      "`last_picked_up` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+      "`has_mail` tinyint(1) DEFAULT '0'," +
+      "`is_admin` tinyint(1) DEFAULT '0'," +
+      "PRIMARY KEY (`firm_name`)" +
+      ");"
+    ;
+    
+    this.#connection.query(initialization_query, (err, _results) => {
+      if (err) {
+        console.error("Failed to setup database '" + DATABASE_NAME + "': " + err.stack);
+      } else {
+        console.log("Database '" + DATABASE_NAME + "' initialized");
+      }
     });
   }
 
