@@ -71,8 +71,8 @@ class Controller {
       "`password` varchar(25) NOT NULL," +
       "`last_received_mail` timestamp NULL DEFAULT NULL," +
       "`last_picked_up` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
-      "`has_mail` tinyint(1) DEFAULT '0'," +
-      "`is_admin` tinyint(1) DEFAULT '0'," +
+      "`has_mail` bit(1) NOT NULL DEFAULT b'0'," +
+      "`is_admin` bit(1) NOT NULL DEFAULT b'0'," +
       "PRIMARY KEY (`firm_name`)" +
       ");"
     ;
