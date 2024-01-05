@@ -96,3 +96,16 @@ router.put("/update_user", async (req, res) => {
     res.status(500).send("Erreur lors de la modification de l'utilisateur");
   }
 });
+
+router.get("/get_user_by_firm_name", async (req, res) => {
+  try {
+    const { firm_name } = req.body;
+    const user = await controller.getUserById(firm_name);
+    res.json(user);
+  } catch (error) {
+    console.error("Erreur : " + error.stack);
+    res
+      .status(500)
+      .send("Erreur lors de la récupération des données de l'utilisateur");
+  }
+});

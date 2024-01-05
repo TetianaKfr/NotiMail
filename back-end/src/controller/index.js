@@ -151,6 +151,17 @@ class Controller {
       throw error;
     }
   }
+
+  async getUserById(firm_name) {
+    try {
+      const query = `SELECT * FROM users WHERE firm_name = '${firm_name}'`;
+      let result = await this.executeQuery(query);
+
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export let controller = new Controller();
