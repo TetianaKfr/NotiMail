@@ -6,6 +6,7 @@ import {
   DATABASE_NAME,
   DATABASE_USER,
   DATABASE_PASSWORD,
+  MYSQL_PORT,
 } from "../environment.js";
 
 class Controller {
@@ -21,6 +22,7 @@ class Controller {
       user: DATABASE_USER,
       password: DATABASE_PASSWORD,
       database: DATABASE_NAME,
+      port: MYSQL_PORT,
     });
 
     this.#connection.connect((err) => {
@@ -31,6 +33,7 @@ class Controller {
             host: DATABASE_HOST,
             user: DATABASE_USER,
             password: DATABASE_PASSWORD,
+            port: MYSQL_PORT,
           });
 
           connection.query(
