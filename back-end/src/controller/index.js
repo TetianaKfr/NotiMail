@@ -33,17 +33,25 @@ class Controller {
             password: DATABASE_PASSWORD,
           });
 
-          connection.query("CREATE DATABASE " + DATABASE_NAME, (err, _results) => {
-            if (err) {
-              console.error("Failed to create database '" + DATABASE_NAME + "': " + err.stack);
-              process.exit(-1);
+          connection.query(
+            "CREATE DATABASE " + DATABASE_NAME,
+            (err, _results) => {
+              if (err) {
+                console.error(
+                  "Failed to create database '" +
+                    DATABASE_NAME +
+                    "': " +
+                    err.stack
+                );
+                process.exit(-1);
+              }
+
+              console.log("Created database '" + DATABASE_NAME + "'");
+
+              this.connect();
+              this.initialize_database();
             }
-
-            console.log("Created database '" + DATABASE_NAME + "'");
-
-            this.connect();
-            this.initialize_database();
-          });
+          );
           return;
         }
 
@@ -57,11 +65,11 @@ class Controller {
       console.log(
         "Connected to mysql database database '" + DATABASE_NAME + "'"
       );
-    })
+    });
   }
 
   initialize_database() {
-    let initialization_query = 
+    let initialization_query =
       "CREATE TABLE IF NOT EXISTS `users` (" +
       "`firm_name` varchar(25) NOT NULL," +
       "`first_name` varchar(25) DEFAULT NULL," +
@@ -74,12 +82,12 @@ class Controller {
       "`has_mail` bit(1) NOT NULL DEFAULT b'0'," +
       "`is_admin` bit(1) NOT NULL DEFAULT b'0'," +
       "PRIMARY KEY (`firm_name`)" +
-      ");"
-    ;
-    
+      ");";
     this.#connection.query(initialization_query, (err, _results) => {
       if (err) {
-        console.error("Failed to setup database '" + DATABASE_NAME + "': " + err.stack);
+        console.error(
+          "Failed to setup database '" + DATABASE_NAME + "': " + err.stack
+        );
       } else {
         console.log("Database '" + DATABASE_NAME + "' initialized");
       }
@@ -114,8 +122,8 @@ class Controller {
             result.password,
             result.last_received_mail,
             result.last_picked_up,
-            result.has_mail,
-            result.is_admin
+            result.has_mail[0] != 0,
+            result.is_admin[0] != 0
           )
       );
 
@@ -151,7 +159,7 @@ class Controller {
           has_mail,
           is_admin
           )
-        VALUES ('${firm_name}', '${first_name}', '${last_name}', '${email}', '${phone_number}', '${password}', '${last_received_mail}', '${last_picked_up}', '${has_mail}', '${is_admin}')
+        VALUES ('${firm_name}', '${first_name}', '${last_name}', '${email}', '${phone_number}', '${password}', '${last_received_mail}', '${last_picked_up}', b'${has_mail}', b'${is_admin}')
       `;
 
       await this.executeQuery(query);
@@ -209,16 +217,8 @@ class Controller {
       const query = `SELECT * FROM users WHERE firm_name = '${firm_name}'`;
       let result = await this.executeQuery(query);
 
-      return result;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async getUserByHasMail(has_mail) {
-    try {
-      const query = `SELECT * FROM users WHERE has_mail = ${has_mail}`;
-      let result = await this.executeQuery(query);
+      result[0].is_admin = result[0].is_admin[0] != 0; // Convertit de Buffer à boolean
+      result[0].has_mail = result[0].has_mail[0] != 0;
 
       return result;
     } catch (error) {
