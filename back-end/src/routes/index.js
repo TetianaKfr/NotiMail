@@ -100,8 +100,20 @@ router.put("/update_user", async (req, res) => {
 router.get("/get_user_by_firm_name", async (req, res) => {
   try {
     const { firm_name } = req.body;
-    const user = await controller.getUserById(firm_name);
+    const user = await controller.getUserByFirmName(firm_name);
     res.json(user);
+  } catch (error) {
+    console.error("Erreur : " + error.stack);
+    res
+      .status(500)
+      .send("Erreur lors de la récupération des données de l'utilisateur");
+  }
+});
+router.get("/has_mail", async (req, res) => {
+  try {
+    const { has_mail } = req.body;
+    const user_mail = await controller.getUserByHasMail(has_mail);
+    res.json(user_mail);
   } catch (error) {
     console.error("Erreur : " + error.stack);
     res
