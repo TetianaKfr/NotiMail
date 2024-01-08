@@ -16,15 +16,17 @@
 }
 
 .logomail img {
-    height: 50px; /* Ajustez la taille du logo selon vos besoins */
+    height: 70px; /* Ajustez la taille du logo selon vos besoins */
     width: auto;
 }
 
 .ent-ou-admin {
 
+    margin-bottom: 15px;
     margin-right: 20px;
-    font-weight: bold; /* Style pour le texte 'Admin' */
-    /* Ajoutez d'autres styles si nécessaire */
+    font-weight: 400;  /* Style pour le texte 'Admin' */
+    color: #025892;
+    
 }
 
 #deconnexion {
@@ -32,7 +34,7 @@
     background-color: #FF3535; /* Couleur de fond pour le bouton */
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 30px;
     cursor: pointer;
     /* Ajoutez d'autres styles pour le bouton si nécessaire */
 }

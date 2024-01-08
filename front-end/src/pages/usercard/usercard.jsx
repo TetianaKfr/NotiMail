@@ -1,6 +1,6 @@
 import React from 'react';
 import { IoMdCreate, IoIosArrowBack } from 'react-icons/io'; // Icônes pour le design
-import './UserCard.css'; // Assurez-vous de créer un fichier CSS correspondant
+import './usercard.css'; // Assurez-vous de créer un fichier CSS correspondant
 
 function UserCard({ user, onEdit }) {
   return (

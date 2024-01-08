@@ -1,7 +1,7 @@
 import "./navbar.css"
-import logoMail from '../images/LogoByMathysG.jpg'
+import logoMail from '/Users/malika.mezaoui/Documents/Ferhat/Cours imts/NotiMail/front-end/images/logo-notimail.png'
 
-export const Navbar = () => {
+ const Navbar = () => {
 
 return (
   <>
@@ -13,9 +13,10 @@ return (
       </div>
       <div className="right">
         <span className="ent-ou-admin">Admin</span>
-        <button id="deconnexion">Déconnexion</button>
+        <button onClick={()=> {console.log("deconnexion")}} id="deconnexion">Déconnexion</button>
       </div>
     </div>
   </>
 )
 }
+export default Navbar
