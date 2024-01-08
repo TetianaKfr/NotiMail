@@ -1,11 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-//import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 import Home from './pages/home/home.jsx'
 import Navbar from './components/navbar/navbar.jsx';
-import UserCard from './pages/usercard/usercard.jsx';
+import Edition from './pages/edition/edition.jsx';
 import Notification from './pages/notification/notification.jsx';
 import Menu from "./components/Menu.jsx";
 import BtnConnect from "./components/BtnConnect.jsx";
@@ -21,7 +20,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/notification" element={<Notification />} />
-        <Route path="/usercard" element={<UserCard />} />
+        <Route path="/edition" element={<Edition />} />
         <Route path="/" element={<Menu />} />
         <Route path="/b" element={<BtnConnect />} />
         <Route path="/c" element={<PanneauAdmin />} />
