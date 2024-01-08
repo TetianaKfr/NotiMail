@@ -6,6 +6,7 @@ import {
   DATABASE_NAME,
   DATABASE_USER,
   DATABASE_PASSWORD,
+  MYSQL_PORT,
 } from "../environment.js";
 
 class Controller {
@@ -21,6 +22,7 @@ class Controller {
       user: DATABASE_USER,
       password: DATABASE_PASSWORD,
       database: DATABASE_NAME,
+      port: MYSQL_PORT,
     });
 
     this.#connection.connect((err) => {
@@ -31,6 +33,7 @@ class Controller {
             host: DATABASE_HOST,
             user: DATABASE_USER,
             password: DATABASE_PASSWORD,
+            port: MYSQL_PORT,
           });
 
           connection.query(
@@ -225,6 +228,38 @@ class Controller {
       throw error;
     }
   }
+
+  async updateLastPickedUp(firm_name) {
+    try {
+      const query = `
+      UPDATE users 
+      SET last_picked_up = CURRENT_TIMESTAMP 
+      WHERE firm_name = '${firm_name}'`;
+      let result = await this.executeQuery(query);
+
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // async updatePickedUpMail(firm_name) {
+  //   try {
+  //     // Définition de la requête SQL d'update
+
+  //     const query = `
+  //     UPDATE users
+  //     SET firm_name = '${firm_name}'
+  //     WHERE last_picked_up = CURRENT_TIMESTAMP;
+  //   `;
+
+  //     // Exécution de la requête SQL
+  //     await this.executeQuery(query);
+  //   } catch (error) {
+  //     // En cas d'erreur, lancez une exception pour la gérer à un niveau supérieur
+  //     throw error;
+  //   }
+  // }
 }
 
 export let controller = new Controller();

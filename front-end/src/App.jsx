@@ -8,8 +8,8 @@ import "./index.css";
 
 import Menu from "../components/Menu.jsx";
 import BtnConnect from "../components/BtnConnect.jsx";
-import PanneauAdmin from "../components/panneauAdmin.jsx";
-import PanneauUser from "../components/panneauUser.jsx";
+import PanneauAdmin from "../components/PanneauAdmin.jsx";
+import PanneauUser from "../components/PanneauUser.jsx";
 function App() {
   const options = [
     { value: "entreprise1", label: "Entreprise 1" },
