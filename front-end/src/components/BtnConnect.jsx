@@ -26,8 +26,8 @@ function LoginButton() {
       navigate("/admin");
     } else if (password === "<PASSWORD>") {
       setIsAdmin(false);
-      navigate("/user");}
-      else{
+      navigate("/user");
+    } else {
       setErrorMessage("Mot de passe incorrect.");
       setTimeout(() => {
         setErrorMessage("");
@@ -54,7 +54,7 @@ function LoginButton() {
       {errorMessage && <div>{errorMessage}</div>}
       {isAdmin && (
         <div style={{ color: "green" }}>
-          Vous êtes connecté en tant qu administrateur.
+          Vous êtes connecté en tant que administrateur.
         </div>
       )}
     </form>
