@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/home/home.jsx'
 import Navbar from './components/navbar/navbar.jsx';
-import UserCard from './pages/usercard/usercard.jsx';
+import Edition from './pages/edition/edition.jsx';
 import Notification from './pages/notification/notification.jsx';
 // Importez vos autres composants ici
 
@@ -15,7 +15,7 @@ root.render(
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/notification" element={<Notification />} />
-        <Route path="/usercard" element={<UserCard />} />
+        <Route path="/edition" element={<Edition />} />
       </Routes>
     </Router>
   </React.StrictMode>
