@@ -23,10 +23,7 @@ function App() {
     <>
       <img src={logo} alt="Logo" />
       <Routes>
-        <Route path="/" element={<Menu />} />
-        <Route path="/b" element={<BtnConnect />} />
-        <Route path="/c" element={<PanneauAdmin />} />
-        <Route path="/d" element={<PanneauUser />} />
+       
       </Routes>
       <Select options={options} />
     </>
