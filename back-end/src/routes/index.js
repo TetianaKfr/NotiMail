@@ -121,3 +121,37 @@ router.get("/has_mail", async (req, res) => {
       .send("Erreur lors de la récupération des données de l'utilisateur");
   }
 });
+
+// router.get("/picked_up_mail", async (req, res) => {
+//   try {
+//     const { last_picked_up } = req.body;
+//     const user_picked_up = await controller.getUserByLastPickedUp(
+//       last_picked_up
+//     );
+//     res.json(user_picked_up);
+//   } catch (error) {
+//     console.error("Erreur : " + error.stack);
+//     res
+//       .status(500)
+//       .send("Erreur lors de la récupération des données de l'utilisateur");
+//   }
+// });
+
+// Endpoint pour récupérer des données
+router.put("/picked_up_mail", async (req, res) => {
+  try {
+    const { firm_name } = req.body;
+
+    // Appel de la méthode pour mettre à jour last_picked_up
+    await controller.updateLastPickedUp(firm_name);
+
+    // Récupération des données mises à jour
+    const user_picked_up = await controller.getUserByFirmName(firm_name);
+    res.json(user_picked_up);
+  } catch (error) {
+    console.error("Erreur : " + error.stack);
+    res
+      .status(500)
+      .send("Erreur lors de la récupération des données de l'utilisateur");
+  }
+});
