@@ -1,6 +1,6 @@
 .user-card {
     width: 250px;
-    background-color: white;
+    background-color: #E3E3E3;
     border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -8,7 +8,7 @@
   }
   
   .user-header {
-    background-color: #007bff;
+    background-color: #006C92;
     color: white;
     padding: 10px;
     display: flex;
@@ -52,7 +52,10 @@
     justify-content: space-between;
     margin-top: 20px;
   }
-  
+  input {
+    background-color: #EEEEEE;
+    border-radius: 33px;
+  }
   .edit-button, .delete-button, .submit-button {
     background-color: #007bff;
     border: none;

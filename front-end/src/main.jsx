@@ -12,7 +12,7 @@ import PanneauAdmin from "./components/panneauAdmin.jsx";
 import PanneauUser from "./components/panneauUser.jsx";
 
 // Importez vos autres composants ici
-
+let user={companyName:'entreprise 1'}
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
@@ -20,7 +20,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/notification" element={<Notification />} />
-        <Route path="/edition" element={<Edition />} />
+        <Route path="/edition" element={<Edition user = {user} />} />
         <Route path="/" element={<Menu />} />
         <Route path="/b" element={<BtnConnect />} />
         <Route path="/c" element={<PanneauAdmin />} />
