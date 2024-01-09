@@ -54,7 +54,7 @@ export const BtnConnect = () => {
       {errorMessage && <div>{errorMessage}</div>}
       {isAdmin && (
         <div style={{ color: "green" }}>
-          Vous êtes connecté en tant qu administrateur.
+          Vous êtes connecté en tant que administrateur.
         </div>
       )}
     </form>
