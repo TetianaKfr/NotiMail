@@ -66,3 +66,46 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+#logo1{
+  display:flex;
+  width: 12vw;
+  height: auto;
+}
+#logo{
+  display:flex;
+  width: 6vw;
+  height: auto;
+}
+
+#mail{
+  display:flex;
+  width: 17vw;
+  height: auto;
+  color: #025892;
+}
+.search-bar {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.search-icon {
+  margin-right: 8px;
+  color: #ccc;
+}
+#add{
+  display: flex;
+  width: 4vw;
+  height:auto;
+  color:#025892;
+}
+#send-mail{
+  display: flex;
+  width: 4vw;
+  height:auto;
+  background-color:#025892;
+  border-radius: 100%;
+  color:white;
+}
