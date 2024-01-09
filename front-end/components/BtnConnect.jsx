@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 
-function LoginButton() {
+export const BtnConnect = () => {
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -26,8 +26,8 @@ function LoginButton() {
       navigate("/admin");
     } else if (password === "<PASSWORD>") {
       setIsAdmin(false);
-      navigate("/user");}
-      else{
+      navigate("/user");
+    } else {
       setErrorMessage("Mot de passe incorrect.");
       setTimeout(() => {
         setErrorMessage("");
@@ -60,4 +60,3 @@ function LoginButton() {
     </form>
   );
 }
-export default LoginButton;
