@@ -1,64 +1,23 @@
-import './home.css'
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Button from "react-bootstrap/Button";
+import BtnConnect from "../../components/btnConnect/BtnConnect.jsx";
+import Logo from "../../assets/images/LogoByMathysG.jpg";
+import Select from "react-select";
 
-function Home() {
-  const [password, setPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    if (isSubmitting) {
-      alert(
-        "Vous ne pouvez pas envoyer plus d'une demande de connexion toutes les 10 secondes."
-      );
-      return;
-    }
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-    }, 10000);
-    if (password === "monMotDePasse") {
-      setIsAdmin(true);
-      navigate("/admin");
-    } else if (password === "<PASSWORD>") {
-      setIsAdmin(false);
-      navigate("/user");}
-      else{
-      setErrorMessage("Mot de passe incorrect.");
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 10000);
-    }
-  }
+const Home = () => {
+  const options = [
+    { value: "entreprise1", label: "Entreprise 1" },
+    { value: "entreprise2", label: "Entreprise 2" },
+    { value: "entreprise3", label: "Entreprise 3" },
+    { value: "entreprise4", label: "Entreprise 4" },
+    { value: "entreprise5", label: "Entreprise 5" },
+  ];
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="connexion">
-        <label htmlFor="password">Mot de passe:</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <div>
-        <Button variant="primary" type="submit">
-          Se connecter
-        </Button>
-      </div>
-      {errorMessage && <div>{errorMessage}</div>}
-      {isAdmin && (
-        <div style={{ color: "green" }}>
-          Vous êtes connecté en tant qu administrateur.
-        </div>
-      )}
-    </form>
+    <>
+      <img id="logo1" src={Logo} alt="Logo" />
+      <Select options={options} />
+      <BtnConnect />
+    </>
   );
-}
+};
+
 export default Home;

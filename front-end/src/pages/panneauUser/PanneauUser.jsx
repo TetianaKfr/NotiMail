@@ -1,6 +1,4 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import Logo from "../assets/logo.png";
+import Logo from "../../assets/images/logo-notimail.png";
 import { IoMdMail } from "react-icons/io";
 
 const PanneauUser = () => {
