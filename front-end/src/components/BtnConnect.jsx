@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 
-export const BtnConnect = () => {
+const BtnConnect = () => {
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -60,3 +60,5 @@ export const BtnConnect = () => {
     </form>
   );
 }
+
+export default BtnConnect;

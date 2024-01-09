@@ -1,18 +1,16 @@
 import React from 'react'
 import ReactDOM from'react-dom';
-import { Navbar } from "../../components/Navbar";
 import Logo from "../assets/logo.png";
 import { FaSearch } from 'react-icons/fa';
 import { IoMdAddCircle } from "react-icons/io";
 import { BiMailSend } from "react-icons/bi";
 import { NavLink } from 'react-router-dom';
 
-export const PanneauAdmin = () => {
+const PanneauAdmin = () => {
   
     return (
       <>
         <img id="logo" src={Logo} alt="Logo" />
-        <Navbar />
         <div className="search-bar">
           <FaSearch className="search-icon" />
           <input type="text" placeholder="Rechercher..." />
@@ -68,3 +66,5 @@ export const PanneauAdmin = () => {
       </>
     )
   };
+
+  export default PanneauAdmin;

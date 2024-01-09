@@ -6,10 +6,9 @@ import Home from './pages/home/home.jsx'
 import Navbar from './components/navbar/navbar.jsx';
 import Edition from './pages/edition/edition.jsx';
 import Notification from './pages/notification/notification.jsx';
-import Menu from "./components/Menu.jsx";
 import BtnConnect from "./components/BtnConnect.jsx";
-import PanneauAdmin from "./components/panneauAdmin.jsx";
-import PanneauUser from "./components/panneauUser.jsx";
+import PanneauAdmin from "./pages/PanneauAdmin.jsx";
+import PanneauUser from "./pages/PanneauUser.jsx";
 
 // Importez vos autres composants ici
 let user={companyName:'entreprise 1'}
@@ -21,7 +20,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/" element={<Home />} />
         <Route path="/notification" element={<Notification />} />
         <Route path="/edition" element={<Edition user = {user} />} />
-        <Route path="/" element={<Menu />} />
         <Route path="/b" element={<BtnConnect />} />
         <Route path="/c" element={<PanneauAdmin />} />
         <Route path="/d" element={<PanneauUser />} />
