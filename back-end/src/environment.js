@@ -41,6 +41,6 @@ if (mysql_port == undefined) {
   console.log(
     "The 'NOTIMAIL_MYSQL_PORT' environment variable is not set, defaulting to 3306"
   );
-  mysql_port = 3306
+  mysql_port = 3306;
 }
 export const MYSQL_PORT = mysql_port;
