@@ -1,6 +1,41 @@
+.body-home {
+
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+.home-logo {
+    width: 240px;
+    height: auto;
+}
 .connexion {
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+    gap: 40px;
+}
+.company-select select {
+    width: 330px; 
+    height: 50px; 
+    background: #E3E3E3; 
+    border-radius: 80px;
+
+
+}
+select {
+    -webkit-appearance: none;
+}
+   
+.password-input {
+    width: 330px; 
+    height: 50px; 
+    background: #E3E3E3; 
+    border-radius: 80px;
+    display: flex;
+    justify-content: center;
+
 }

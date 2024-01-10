@@ -21,10 +21,10 @@ const BtnConnect = () => {
     setTimeout(() => {
       setIsSubmitting(false);
     }, 10000);
-    if (password === "monMotDePasse") {
+    if (password === "mdp") {
       setIsAdmin(true);
       navigate("/admin");
-    } else if (password === "<PASSWORD>") {
+    } else if (password === "PASSWORD") {
       setIsAdmin(false);
       navigate("/user");
     } else {

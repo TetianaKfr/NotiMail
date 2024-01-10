@@ -10,7 +10,7 @@ const Navbar = () => {
   if (pathname === '/' || pathname === '/entreprises') {
     return null;
   }
-
+  
   return (
     <>
       <div className='ma-navbar'>
@@ -20,7 +20,8 @@ const Navbar = () => {
           </nav>
         </div>
         <div className="right">
-          <span className="ent-ou-admin">Admin</span>
+          {/* Affiche "Admin" si la page est '/admin', sinon "Utilisateur" */}
+          <span className="ent-ou-admin">{pathname === '/admin' ? 'Admin' : 'Utilisateur'} </span>
           <button onClick={() => { console.log("deconnexion") }} id="deconnexion">Déconnexion</button>
         </div>
       </div>
