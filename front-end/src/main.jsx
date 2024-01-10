@@ -7,6 +7,7 @@ import Navbar from './components/navbar/navbar.jsx';
 import PanneauAdmin from "./pages/panneauAdmin/PanneauAdmin.jsx";
 import Entreprises from './pages/Entreprise/Entreprises.jsx';
 import PanneauUser from "./pages/panneauUser/PanneauUser.jsx";
+import Notifier from "./pages/Notifier/Notifier.jsx";
 
 // Importez vos autres composants ici
 let user = { companyName: 'entreprise 1' }
@@ -20,6 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/admin" element={<PanneauAdmin />} />
         <Route path="/user" element={<PanneauUser />} />
         <Route path="/entreprises" element={<Entreprises />} />
+        <Route path="/notifier" element={<Notifier />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
