@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Button from "react-bootstrap/Button";
 
 const BtnConnect = () => {
   const [password, setPassword] = useState("");
@@ -28,7 +27,7 @@ const BtnConnect = () => {
       setIsAdmin(false);
       navigate("/user");
     } else {
-      setErrorMessage("Mot de passe incorrect.");
+      // setErrorMessage("Mot de passe incorrect.");
       setTimeout(() => {
         setErrorMessage("");
       }, 10000);
@@ -36,21 +35,16 @@ const BtnConnect = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="password">Mot de passe:</label>
+    <form className="password-input" onSubmit={handleSubmit}>
         <input
           type="password"
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-      </div>
-      <div>
-        <Button variant="primary" type="submit">
-          Se connecter
-        </Button>
-      </div>
+      
+      <img src="src/assets/images/padlock.png" alt="submit" onClick={handleSubmit} />
+     
       {errorMessage && <div>{errorMessage}</div>}
       {isAdmin && (
         <div style={{ color: "green" }}>

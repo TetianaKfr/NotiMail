@@ -1,3 +1,4 @@
+import BtnConnect from '../../components/btnConnect/BtnConnect';
 import { useState, useEffect } from 'react';
 import "./home.css"
 
@@ -16,7 +17,6 @@ const Home = () => {
         // const reponse = await fetch('API');
         // const firmList = await reponse.json();
 
-        // Supposons que les données soient un tableau d'entreprises
         setEntreprises(firmList.slice(0, 5)); // Prend les 5 premières entreprises
       } catch (erreur) {
         console.error('Erreur lors de la récupération des entreprises:', erreur);
@@ -36,6 +36,7 @@ const Home = () => {
       <div className='company-select'>
       <select disabled={isLoading}>
       <option value="">Entreprise</option>
+
       {entreprises.map(entreprise => (
       <option key={entreprise.id} value={entreprise.id}>
           {entreprise.nom}
@@ -44,8 +45,7 @@ const Home = () => {
     </select>
     </div>
     <div className="password-input">
-        <label htmlFor="password" className="form-label"></label>
-        <input id="password" type="password" className="form-control" />
+        <BtnConnect></BtnConnect>
       </div>
     </div>
     </>
