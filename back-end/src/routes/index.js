@@ -56,6 +56,12 @@ router.post("/create_user", async (req, res) => {
 router.delete("/delete_user", async (req, res) => {
   try {
     const { firm_name } = req.body;
+
+    if (firm_name === undefined) {
+      res.status(200).send("Champs non trouvé");
+      return;
+    }
+
     await controller.deleteUser(firm_name);
     res.send("Utilisateur a été supprimé");
   } catch (error) {
@@ -100,6 +106,12 @@ router.put("/update_user", async (req, res) => {
 router.get("/get_user_by_firm_name", async (req, res) => {
   try {
     const { firm_name } = req.body;
+
+    if (firm_name === undefined) {
+      res.status(200).send("Champs non trouvé");
+      return;
+    }
+
     const user = await controller.getUserByFirmName(firm_name);
     res.json(user);
   } catch (error) {
@@ -109,11 +121,21 @@ router.get("/get_user_by_firm_name", async (req, res) => {
       .send("Erreur lors de la récupération des données de l'utilisateur");
   }
 });
-router.get("/has_mail", async (req, res) => {
+
+// Endpoint pour récupérer des données
+router.put("/picked_up_mail", async (req, res) => {
   try {
-    const { has_mail } = req.body;
-    const user_mail = await controller.getUserByHasMail(has_mail);
-    res.json(user_mail);
+    const { firm_name } = req.body;
+
+    if (firm_name === undefined) {
+      res.status(200).send("Champs non trouvé");
+      return;
+    }
+
+    // Appel de la méthode pour mettre à jour last_picked_up
+    await controller.updateLastPickedUp(firm_name);
+
+    res.status(200).send("OK");
   } catch (error) {
     console.error("Erreur : " + error.stack);
     res
@@ -122,36 +144,12 @@ router.get("/has_mail", async (req, res) => {
   }
 });
 
-// router.get("/picked_up_mail", async (req, res) => {
-//   try {
-//     const { last_picked_up } = req.body;
-//     const user_picked_up = await controller.getUserByLastPickedUp(
-//       last_picked_up
-//     );
-//     res.json(user_picked_up);
-//   } catch (error) {
-//     console.error("Erreur : " + error.stack);
-//     res
-//       .status(500)
-//       .send("Erreur lors de la récupération des données de l'utilisateur");
-//   }
-// });
-
-// Endpoint pour récupérer des données
-router.put("/picked_up_mail", async (req, res) => {
+router.get("/get_last_users", async (req, res) => {
   try {
-    const { firm_name } = req.body;
-
-    // Appel de la méthode pour mettre à jour last_picked_up
-    await controller.updateLastPickedUp(firm_name);
-
-    // Récupération des données mises à jour
-    const user_picked_up = await controller.getUserByFirmName(firm_name);
-    res.json(user_picked_up);
+    const results = await controller.LastMessage();
+    res.json(results);
   } catch (error) {
     console.error("Erreur : " + error.stack);
-    res
-      .status(500)
-      .send("Erreur lors de la récupération des données de l'utilisateur");
+    res.status(500).send("Erreur lors de la récupération des données");
   }
 });

@@ -2,12 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const BtnConnect = () => {
+  //utilise plusieurs hooks pour stocker l’état local du formulaire de connexion
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
 
+  // est appelée lorsque l’utilisateur soumet le formulaire. Cette fonction vérifie si l’utilisateur a déjà soumis le formulaire dans les 10 dernières secondes, puis met à jour l’état local en conséquence
   function handleSubmit(event) {
     event.preventDefault();
     if (isSubmitting) {
@@ -16,6 +18,7 @@ const BtnConnect = () => {
       );
       return;
     }
+    //Si le mot de passe entré par l’utilisateur est correct, la fonction met à jour l’état local pour indiquer que l’utilisateur est connecté en tant qu’administrateur ou utilisateur, puis navigue vers la page appropriée. Sinon, la fonction affiche un message d’erreur.
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
@@ -46,6 +49,7 @@ const BtnConnect = () => {
       <img src="src/assets/images/padlock.png" alt="submit" onClick={handleSubmit} />
      
       {errorMessage && <div>{errorMessage}</div>}
+      {/* Affichez un message de confirmation si l'utilisateur est connecté en tant qu'administrateur */}
       {isAdmin && (
         <div style={{ color: "green" }}>
           Vous êtes connecté en tant que administrateur.
