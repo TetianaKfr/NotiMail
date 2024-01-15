@@ -9,6 +9,12 @@ import {
   MYSQL_PORT,
 } from "../environment.js";
 
+export class PermissionException extends Error {
+  constructor() {
+    super("Unauthorized");
+  }
+}
+
 const SessionState = {
   NO_SESSION: 0,
   USER: 1,
@@ -163,6 +169,8 @@ class Controller {
   }
 
   async createUser(
+    session_firm_name,
+    session_token,
     firm_name,
     first_name,
     last_name,
@@ -172,6 +180,10 @@ class Controller {
     has_mail,
     is_admin,
   ) {
+    if (this.verify_session(session_firm_name, session_token) != SessionState.ADMIN) {
+      throw new PermissionException();
+    }
+
     let password_hash = await bcrypt.hash(password, 12);
 
     await this.executeQuery(`
@@ -198,11 +210,17 @@ class Controller {
     `);
   }
 
-  async deleteUser(firm_name) {
+  async deleteUser(session_firm_name, session_token, firm_name) {
+    if (this.verify_session(session_firm_name, session_token) != SessionState.ADMIN) {
+      throw new PermissionException();
+    }
+
     return (await this.executeQuery(`DELETE FROM users WHERE firm_name = '${firm_name}'`)).affectedRows > 0;
   }
 
   async updateUser(
+    session_firm_name,
+    session_token,
     firm_name,
     first_name,
     last_name,
@@ -212,25 +230,38 @@ class Controller {
     has_mail,
     is_admin
   ) {
+    let session_state = this.verify_session(session_firm_name, session_token)
+    if (session_state == SessionState.NO_SESSION) {
+      throw new PermissionException();
+    }
+
+    let require_admin = false;
+
     let updated_fields = [];
 
     if (firm_name != undefined) {
       updated_fields.push(`firm_name = '${firm_name}'`);
+      require_admin = true;
     }
     if (first_name != undefined) {
       updated_fields.push(`first_name = '${first_name}'`);
+      require_admin = true;
     }
     if (last_name != undefined) {
       updated_fields.push(`last_name = '${last_name}'`);
+      require_admin = true;
     }
     if (email != undefined) {
       updated_fields.push(`email = '${email}'`);
+      require_admin = true;
     }
     if (phone_number != undefined) {
       updated_fields.push(`phone_number = '${phone_number}'`);
+      require_admin = true;
     }
     if (password != undefined) {
       updated_fields.push(`password_hash = '${await bcrypt.hash(password, 12)}'`);
+      require_admin = true;
     }
     if (has_mail != undefined) {
       updated_fields.push(`has_mail = b'${has_mail ? 1 : 0}'`);
@@ -242,6 +273,11 @@ class Controller {
     }
     if (is_admin != undefined) {
       updated_fields.push(`is_admin = b'${is_admin ? 1 : 0}'`);
+      require_admin = true;
+    }
+
+    if (require_admin && session_state != SessionState.ADMIN) {
+      throw new PermissionException();
     }
 
     let result = await this.executeQuery(`
@@ -253,7 +289,12 @@ class Controller {
     return result.affectedRows > 0;
   }
 
-  async getUser(firm_name) {
+  async getUser(session_firm_name, session_token, firm_name) {
+    let session_state = this.verify_session(session_firm_name, session_token);
+    if (session_state == SessionState.NO_SESSION || (session_state == SessionState.USER && firm_name != session_firm_name)) {
+      throw new PermissionException();
+    }
+
     const query = `SELECT 
       first_name,
       last_name,

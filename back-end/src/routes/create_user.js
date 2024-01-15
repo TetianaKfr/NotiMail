@@ -1,12 +1,12 @@
 import { Router } from "express";
 
-import controller from "../controller/index.js"
+import controller, { PermissionException } from "../controller/index.js"
 
 export default Router().post("/create_user", async (req, res) => {
   try {
     const {
-      session_token,
       session_firm_name,
+      session_token,
       firm_name,
       first_name,
       last_name,
@@ -18,8 +18,8 @@ export default Router().post("/create_user", async (req, res) => {
     } = req.body;
 
     if (
-      typeof session_token != "string" ||
-      typeof session_firm_name != "string" ||
+      (typeof session_firm_name != "string" && typeof session_firm_name != null) ||
+      (typeof session_token != "string" && typeof session_token != null) ||
       typeof firm_name != "string" ||
       typeof first_name != "string" ||
       typeof last_name != "string" ||
@@ -34,6 +34,8 @@ export default Router().post("/create_user", async (req, res) => {
     }
 
     await controller.createUser(
+      session_firm_name,
+      session_token,
       firm_name,
       first_name,
       last_name,
@@ -46,6 +48,10 @@ export default Router().post("/create_user", async (req, res) => {
 
     res.sendStatus(201);
   } catch (err) {
+    if (err instanceof PermissionException) {
+      res.sendStatus(401);
+    }
+
     console.error("Error : " + err.stack);
     res.sendStatus(500);
   }
