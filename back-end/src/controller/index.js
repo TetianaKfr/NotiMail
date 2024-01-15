@@ -199,7 +199,7 @@ class Controller {
   }
 
   async deleteUser(firm_name) {
-    return await this.executeQuery(`DELETE FROM users WHERE firm_name = '${firm_name}'`).affectedRows > 0;
+    return (await this.executeQuery(`DELETE FROM users WHERE firm_name = '${firm_name}'`)).affectedRows > 0;
   }
 
   async updateUser(
