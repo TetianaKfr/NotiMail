@@ -186,7 +186,8 @@ class Controller {
 
     let password_hash = await bcrypt.hash(password, 12);
 
-    await this.executeQuery(`
+    try {
+      await this.executeQuery(`
       INSERT INTO users (
         firm_name,
         first_name,
@@ -208,6 +209,14 @@ class Controller {
         b'${is_admin ? 1 : 0}'
       )
     `);
+    } catch (err) {
+      if (err.code == "ER_DUP_ENTRY") {
+        return false;
+      }
+      throw err;
+    }
+
+    return true;
   }
 
   async deleteUser(session_firm_name, session_token, firm_name) {

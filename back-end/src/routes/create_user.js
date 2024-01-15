@@ -33,7 +33,7 @@ export default Router().post("/create_user", async (req, res) => {
       return;
     }
 
-    await controller.createUser(
+    if (await controller.createUser(
       session_firm_name,
       session_token,
       firm_name,
@@ -44,9 +44,13 @@ export default Router().post("/create_user", async (req, res) => {
       password,
       has_mail,
       is_admin,
-    );
-
+    )) {
     res.sendStatus(201);
+      
+    } else {
+      res.sendStatus(409);
+    }
+
   } catch (err) {
     if (err instanceof PermissionException) {
       res.sendStatus(401);
