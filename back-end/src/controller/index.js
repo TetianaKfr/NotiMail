@@ -1,4 +1,6 @@
 import mysql from "mysql";
+import bcrypt from "bcrypt";
+
 import { Users } from "../model/users.js";
 
 import {
@@ -72,20 +74,22 @@ class Controller {
   }
 
   initialize_database() {
-    let initialization_query =
-      "CREATE TABLE IF NOT EXISTS `users` (" +
-      "`firm_name` varchar(25) NOT NULL," +
-      "`first_name` varchar(25) DEFAULT NULL," +
-      "`last_name` varchar(25) DEFAULT NULL," +
-      "`email` varchar(50) NOT NULL," +
-      "`phone_number` varchar(25) NOT NULL," +
-      "`password` varchar(25) NOT NULL," +
-      "`last_received_mail` timestamp NULL DEFAULT NULL," +
-      "`last_picked_up` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
-      "`has_mail` bit(1) NOT NULL DEFAULT b'0'," +
-      "`is_admin` bit(1) NOT NULL DEFAULT b'0'," +
-      "PRIMARY KEY (`firm_name`)" +
-      ");";
+    let initialization_query = `
+      CREATE TABLE IF NOT EXISTS users (
+        firm_name varchar(120) NOT NULL,
+        first_name varchar(50) DEFAULT NULL,
+        last_name varchar(50) DEFAULT NULL,
+        email varchar(320) NOT NULL,
+        phone_number varchar(25) NOT NULL,
+        password_hash varchar(72) NOT NULL,
+        last_received_mail timestamp NULL DEFAULT NULL,
+        last_picked_up timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        has_mail bit(1) NOT NULL DEFAULT b'0',
+        is_admin bit(1) NOT NULL DEFAULT b'0',
+        token char(64) NULL DEFAULT NULL,
+        last_token_usage timestamp NULL DEFAULT NULL,
+        PRIMARY KEY (firm_name)
+      );`;
     this.#connection.query(initialization_query, (err, _results) => {
       if (err) {
         console.error(
@@ -93,9 +97,6 @@ class Controller {
         );
       } else {
         console.log("Database '" + DATABASE_NAME + "' initialized");
-        res
-          .status(500)
-          .send("Erreur de l'initialisation de la base de données");
       }
     });
   }
@@ -112,43 +113,54 @@ class Controller {
     });
   }
 
-  async getAllUsers() {
-    try {
-      const query = "SELECT * FROM users";
-      let results = await this.executeQuery(query);
-
-      // Vérifier si les résultats sont vides
-      if (results.length === 0) {
-        throw new Error("Aucun utilisateur trouvé");
-      }
-
-      const users = results.map(
-        (result) =>
-          new Users(
-            result.firm_name,
-            result.first_name,
-            result.last_name,
-            result.email,
-            result.phone_number,
-            result.password,
-            result.last_received_mail,
-            result.last_picked_up,
-            result.has_mail[0] != 0,
-            result.is_admin[0] != 0
-          )
-      );
-
-      return users;
-    } catch (error) {
-      // Logguer l'erreur pour le suivi
-      console.error(
-        "Error lors de la récupération des utilisateurs :",
-        error.message
-      );
-      res
-        .status(500)
-        .send("Erreur lors de la récupération des données de l'utilisateur");
+  async authentificate(firm_name, password) {
+    let results = await this.executeQuery(`SELECT password_hash FROM users WHERE firm_name = '${firm_name}'`);
+    if (results[0] == undefined) {
+      return null;
     }
+
+    if (!await bcrypt.compare(password, results[0].password_hash)) {
+      return null;
+    }
+
+    let token = Buffer.from(crypto.getRandomValues(new Uint8Array(32))).toString('base64');
+
+    await this.executeQuery(`UPDATE users SET
+      token = '${token}',
+      last_token_usage = NOW()
+      WHERE firm_name = '${firm_name}'
+    `)
+
+    return token;
+  }
+
+  async getAllUsers() {
+    const query = "SELECT firm_name FROM users";
+    let results = await this.executeQuery(query);
+
+    // Vérifier si les résultats sont vides
+    if (results.length === 0) {
+      throw new Error("Aucun utilisateur trouvé");
+    }
+
+    const users = results.map(
+      (result) =>
+        new Users(
+          result.firm_name,
+          result.first_name,
+          result.last_name,
+          result.email,
+          result.phone_number,
+          result.password,
+          result.last_received_mail,
+          result.last_picked_up,
+          result.has_mail[0] != 0,
+          result.is_admin[0] != 0
+        )
+    );
+    console.log(users);
+
+    return users;
   }
 
   async insertUser(
@@ -158,41 +170,40 @@ class Controller {
     email,
     phone_number,
     password,
-    last_received_mail,
-    last_picked_up,
     has_mail,
     is_admin
   ) {
-    try {
-      const query = `
+    let password_hash = await bcrypt.hash(password, 12);
+    
+    const query = `
         INSERT INTO users (
           firm_name,
           first_name,
           last_name,
           email,
           phone_number,
-          password,
-          last_received_mail,
-          last_picked_up,
+          password_hash,
           has_mail,
           is_admin
-          )
-        VALUES ('${firm_name}', '${first_name}', '${last_name}', '${email}', '${phone_number}', '${password}', '${last_received_mail}', '${last_picked_up}', b'${has_mail}', b'${is_admin}')
+        )
+        VALUES (
+          '${firm_name}',
+          '${first_name}',
+          '${last_name}',
+          '${email}',
+          '${phone_number}',
+          '${password_hash}',
+          b'${has_mail ? 1 : 0}',
+          b'${is_admin ? 1 : 0}'
+        )
       `;
 
-      await this.executeQuery(query);
-    } catch (error) {
-      res.status(500).send("Echec de l'insertion de l'utilisateur.");
-    }
+    await this.executeQuery(query);
   }
 
   async deleteUser(firm_name) {
-    try {
-      const query = `DELETE FROM users WHERE firm_name = '${firm_name}'`;
-      await this.executeQuery(query);
-    } catch (error) {
-      res.status(500).send("Echec de la suppression de l'utilisateur.");
-    }
+    const query = `DELETE FROM users WHERE firm_name = '${firm_name}'`;
+    await this.executeQuery(query);
   }
 
   async updateUser(
@@ -202,50 +213,62 @@ class Controller {
     new_email,
     new_phone_number,
     new_password,
-    new_last_received_mail,
-    new_last_picked_up,
     new_has_mail,
     new_is_admin
   ) {
-    try {
-      // last_received_mail = ${
-      //   new_has_mail ? `'${new_last_received_mail}'` : "NULL"
-      // },
-      // Met à jour la dernière réception de courrier, ou NULL si has_mail est faux
-      /*
-      last_picked_up = ${new_has_mail ? "NULL" : `'${new_last_picked_up}'`}, 
-      */
-      // Met à jour la dernière récupération de courrier, ou NULL si has_mail est vrai
-      /*
-      has_mail = '${new_has_mail ? 1 : 0}',
-      */
-      // Met à jour l'état du courrier en fonction de new_has_mail
-      const query = `
+    let updated_fields = [];
+
+    if (new_firm_name != undefined) {
+      updated_fields.push(`firm_name = '${new_firm_name}'`);
+    }
+
+    if (new_first_name != undefined) {
+      updated_fields.push(`first_name = '${new_first_name}'`);
+    }
+
+    if (new_last_name != undefined) {
+      updated_fields.push(`last_name = '${new_last_name}'`);
+    }
+
+    if (new_email != undefined) {
+      updated_fields.push(`email = '${new_email}'`);
+    }
+
+    if (new_phone_number != undefined) {
+      updated_fields.push(`phone_number = '${new_phone_number}'`);
+    }
+
+    if (new_password != undefined) {
+      updated_fields.push(`password = '${new_password}'`);
+    }
+
+    if (new_has_mail != undefined) {
+      updated_fields.push(`has_mail = '${new_has_mail ? 1 : 0}'`);
+      if (new_has_mail) {
+        updated_fields.push(`last_received_mail = NOW()`);
+      } else {
+        updated_fields.push(`last_picked_up = NOW()`);
+      }
+    }
+
+    if (new_is_admin != undefined) {
+      updated_fields.push(`is_admin = '${new_is_admin}'`);
+    }
+
+    const querybody = updated_fields.join(",");
+
+    const query = `
     UPDATE users 
     SET 
-    first_name = '${new_first_name}', 
-    last_name = '${new_last_name}', 
-    email = '${new_email}', 
-    phone_number = '${new_phone_number}',
-    password = '${new_password}', 
-    last_received_mail = ${
-      new_has_mail ? `'${new_last_received_mail}'` : "NULL"
-    }, 
-    last_picked_up = ${new_has_mail ? "NULL" : `'${new_last_picked_up}'`}, 
-    has_mail = '${new_has_mail ? 1 : 0}', 
-    is_admin = '${new_is_admin}'
+    ${querybody}
     WHERE firm_name = '${new_firm_name}'`;
 
-      console.log(query);
-      await this.executeQuery(query);
-    } catch (error) {
-      res.status(500).send("Echec de la mise à jour de l'utilisateur.");
-    }
+    console.log(query);
+    await this.executeQuery(query);
   }
 
   async getUserByFirmName(firm_name) {
-    try {
-      const query = `SELECT 
+    const query = `SELECT 
       first_name,
       last_name,
       email,
@@ -256,96 +279,34 @@ class Controller {
       is_admin
       FROM users
       WHERE firm_name = '${firm_name}'`;
-      let result = await this.executeQuery(query);
+    let result = await this.executeQuery(query);
 
-      if (result && result.length > 0) {
-        // Vérifie si des résultats sont renvoyés et s'il y a au moins une ligne dans les résultats
-        // Convertit le champ is_admin de Buffer à boolean
-        result[0].is_admin = result[0].is_admin[0] != 0; // Convertit de Buffer à boolean
-        // Convertit le champ has_mail de Buffer à boolean
+    if (result && result.length > 0) {
+      // Vérifie si des résultats sont renvoyés et s'il y a au moins une ligne dans les résultats
+      // Convertit le champ is_admin de Buffer à boolean
+      result[0].is_admin = result[0].is_admin[0] != 0; // Convertit de Buffer à boolean
+      // Convertit le champ has_mail de Buffer à boolean
 
-        result[0].has_mail = result[0].has_mail[0] != 0;
+      result[0].has_mail = result[0].has_mail[0] != 0;
 
-        // Retourne le premier objet du tableau (première ligne de résultats)
-        return result[0];
-      }
-
-      return result;
-    } catch (error) {
-      console.error(
-        "Error lors de la récupérationde l'utilisateur par nom de société :",
-        error.message
-      );
-      res
-        .status(500)
-        .send(
-          "Error lors de la récupérationde l'utilisateur par nom de société :"
-        );
+      // Retourne le premier objet du tableau (première ligne de résultats)
+      return result[0];
     }
+
+    return result;
   }
 
   async updateLastPickedUp(firm_name) {
-    try {
-      // Met à jour last_picked_up et has_mail
-      const updateQuery = `
+    // Met à jour last_picked_up et has_mail
+    const updateQuery = `
         UPDATE users 
         SET last_picked_up = CURRENT_TIMESTAMP,
             has_mail = b'0'
         WHERE firm_name = '${firm_name}'`;
-      await this.executeQuery(updateQuery);
+    await this.executeQuery(updateQuery);
 
-      // Retourner uniquement le firm_name
-    } catch (error) {
-      console.error(
-        "Error lors de la mise à jour la dernière récupération de l'utilisateur :",
-        error.message
-      );
-      res
-        .status(500)
-        .send(
-          "Error lors de la mise à jour la dernière récupération de l'utilisateur :"
-        );
-    }
+    // Retourner uniquement le firm_name
   }
 }
 
 export let controller = new Controller();
-
-// async LastMessage() {
-//   try {
-//     const query = "SELECT * FROM users ORDER BY last_picked_up DESC LIMIT 1";
-//     let results = await this.executeQuery(query);
-
-//     // Vérifier si les résultats sont vides
-//     if (results.length === 0) {
-//       throw new Error("Aucun utilisateur trouvé");
-//     }
-
-//     const users = results.map(
-//       (result) =>
-//         new Users(
-//           result.firm_name,
-//           result.first_name,
-//           result.last_name,
-//           result.email,
-//           result.phone_number,
-//           result.password,
-//           result.last_received_mail,
-//           result.last_picked_up,
-//           result.has_mail[0] != 0,
-//           result.is_admin[0] != 0
-//         )
-//     );
-
-//     return users;
-//   } catch (error) {
-//     // Logguer l'erreur pour le suivi
-//     console.error(
-//       "Error lors de la récupération du dernier utilisateur :",
-//       error.message
-//     );
-//     res
-//       .status(500)
-//       .send("Error lors de la récupération du dernier utilisateur :");
-//   }
-// }

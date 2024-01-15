@@ -8,6 +8,31 @@ export let router = express.Router();
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
+router.post("/authentificate", async (req, res) => {
+  try {
+    const {
+      firm_name,
+      password,
+    } = req.body;
+
+    if (typeof firm_name != "string" || typeof password != "string") {
+      res.sendStatus(400);
+      return;
+    }
+    
+    let token = await controller.authentificate(firm_name, password);
+    if (token == null) {
+      res.sendStatus(401);
+      return;
+    }
+
+    res.status(200).send({ token: token });
+  } catch (err) {
+    console.error("Error: " + err.stack);
+    res.sendStatus(500);
+  }
+});
+
 router.get("/get_all_users", async (req, res) => {
   try {
     const results = await controller.getAllUsers();
@@ -27,8 +52,6 @@ router.post("/create_user", async (req, res) => {
       email,
       phone_number,
       password,
-      last_received_mail,
-      last_picked_up,
       has_mail,
       is_admin,
     } = req.body;
@@ -40,8 +63,6 @@ router.post("/create_user", async (req, res) => {
       email,
       phone_number,
       password,
-      last_received_mail,
-      last_picked_up,
       has_mail,
       is_admin
     );
@@ -79,8 +100,6 @@ router.put("/update_user", async (req, res) => {
       new_email,
       new_phone_number,
       new_password,
-      new_last_received_mail,
-      new_last_picked_up,
       new_has_mail,
       new_is_admin,
     } = req.body;
@@ -91,8 +110,6 @@ router.put("/update_user", async (req, res) => {
       new_email,
       new_phone_number,
       new_password,
-      new_last_received_mail,
-      new_last_picked_up,
       new_has_mail,
       new_is_admin
     );
