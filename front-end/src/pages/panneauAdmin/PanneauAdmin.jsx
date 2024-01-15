@@ -4,8 +4,14 @@ import { FaSearch } from 'react-icons/fa';
 import { IoMdAddCircle } from "react-icons/io";
 import { BiMailSend } from "react-icons/bi";
 import { NavLink } from 'react-router-dom';
+import ModalNotifier from '../../pages/Notifier/Notifier.jsx';
 
-const PanneauAdmin = () => {
+  const PanneauAdmin  = ({ handleBiMailSendClick }) => {
+    const [showModal, setShowModal] = useState(false);
+  
+    const handleCloseModal = () => {
+      setShowModal(false);
+    };
 
   const [isChecked, setIsChecked] = useState(false);
 
@@ -97,7 +103,8 @@ const PanneauAdmin = () => {
           <NavLink to="/entreprises">
             <IoMdAddCircle className="icon-style" />
           </NavLink>
-          <BiMailSend className="icon-style" />
+          <button className="icon-style" onClick={handleBiMailSendClick}></button>
+          <ModalNotifier show={showModal} handleClose={handleCloseModal} handleEnvoi={() => {}} />
         </div>
       </footer>
     </>
