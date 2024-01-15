@@ -7,6 +7,8 @@
   height: 100%;
   background-color: #00000080;
   position: fixed;
+  color: #006c92;
+  font-family: "Kanit", sans-serif;
   top: 0;
   left: 0;
   z-index: 1000;
@@ -42,8 +44,15 @@
   color: white;
   background-color: #ff3535;
   font-weight: 600;
-  border-radius: 20px;
+  border-radius: 26px;
   margin: 20px;
+  width: 134px;
+  height: 56px;
+  top: 608px;
+  left: 70px;
+  justify-content: center;
+  align-items: center;
+  font-family: "Kanit", sans-serif;
 }
 
 .envoi {
@@ -55,6 +64,15 @@
   font-weight: 600;
   border-radius: 20px;
   margin: 20px;
+  border-radius: 26px;
+  margin: 20px;
+  width: 134px;
+  height: 56px;
+  top: 608px;
+  left: 225px;
+  justify-content: center;
+  align-items: center;
+  font-family: "Kanit", sans-serif;
 }
 .container {
   display: flex;
@@ -69,4 +87,22 @@
   flex-direction: column;
   border-radius: 20px;
   padding: 20px;
+  background-color: #d9d9d9;
+  border-radius: 31px;
+  width: 321px;
+  height: 430px;
+  top: 251px;
+  left: 54px;
+}
+
+.selected {
+  background-color: #bebebe;
+  display: flex;
+  border-radius: 31px;
+  width: 283px;
+  height: 222px;
+  top: 367px;
+  left: 73px;
+  color: #006c92;
+  font-family: "Kanit", sans-serif;
 }

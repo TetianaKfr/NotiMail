@@ -34,18 +34,6 @@ const Modal = ({ show, handleClose, handleEnvoi }) => {
   return (
     <div className={show ? 'modal display-block' : 'modal display-none'}>
       <section className="modal-main">
-        <h2>Vous vous apprêtez à notifier :</h2>
-        <select value={selectedCompany} onChange={handleCompanyChange}>
-          {companies.map((company) => (
-            <option key={company} value={company}>
-              {company}
-            </option>
-          ))}
-        </select>
-        <button onClick={handleClose}>Annuler</button>
-        <button onClick={() => alert(`Vous avez sélectionné ${selectedCompany}`)}>
-          Envoyer
-        </button>
         <div className="cadre">
            <h2>Vous vous apprêtez à notifier :</h2>
            <select
