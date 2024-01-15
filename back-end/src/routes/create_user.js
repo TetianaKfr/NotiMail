@@ -13,7 +13,6 @@ export default Router().post("/create_user", async (req, res) => {
       email,
       phone_number,
       password,
-      has_mail,
       is_admin,
     } = req.body;
 
@@ -26,7 +25,6 @@ export default Router().post("/create_user", async (req, res) => {
       typeof email != "string" ||
       typeof phone_number != "string" ||
       typeof password != "string" ||
-      typeof has_mail != "boolean" ||
       typeof is_admin != "boolean"
     ) {
       res.sendStatus(400);
@@ -42,7 +40,6 @@ export default Router().post("/create_user", async (req, res) => {
       email,
       phone_number,
       password,
-      has_mail,
       is_admin,
     )) {
     res.sendStatus(201);

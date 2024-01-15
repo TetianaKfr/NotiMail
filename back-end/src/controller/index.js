@@ -177,14 +177,11 @@ class Controller {
     email,
     phone_number,
     password,
-    has_mail,
     is_admin,
   ) {
     if (await this.verify_session(session_firm_name, session_token) != SessionState.ADMIN) {
       throw new PermissionException();
     }
-
-    let password_hash = await bcrypt.hash(password, 12);
 
     try {
       await this.executeQuery(`
@@ -195,7 +192,6 @@ class Controller {
         email,
         phone_number,
         password_hash,
-        has_mail,
         is_admin
       )
       VALUES (
@@ -204,8 +200,7 @@ class Controller {
         '${last_name}',
         '${email}',
         '${phone_number}',
-        '${password_hash}',
-        b'${has_mail ? 1 : 0}',
+        '${await bcrypt.hash(password, 12)}',
         b'${is_admin ? 1 : 0}'
       )
     `);
