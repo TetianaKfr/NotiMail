@@ -230,7 +230,7 @@ class Controller {
       updated_fields.push(`phone_number = '${phone_number}'`);
     }
     if (password != undefined) {
-      updated_fields.push(`password = '${password}'`);
+      updated_fields.push(`password_hash = '${await bcrypt.hash(password, 12)}'`);
     }
     if (has_mail != undefined) {
       updated_fields.push(`has_mail = '${has_mail ? 1 : 0}'`);
