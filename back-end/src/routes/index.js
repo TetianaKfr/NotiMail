@@ -1,7 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
 
-import controller from "../controller/index.js";
 import authentificate from "./authentificate.js";
 import list_users from "./list_users.js";
 import create_user from "./create_user.js";
