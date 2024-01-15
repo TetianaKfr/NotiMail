@@ -79,8 +79,6 @@ router.put("/update_user", async (req, res) => {
       new_email,
       new_phone_number,
       new_password,
-      new_last_received_mail,
-      new_last_picked_up,
       new_has_mail,
       new_is_admin,
     } = req.body;
@@ -91,8 +89,6 @@ router.put("/update_user", async (req, res) => {
       new_email,
       new_phone_number,
       new_password,
-      new_last_received_mail,
-      new_last_picked_up,
       new_has_mail,
       new_is_admin
     );
