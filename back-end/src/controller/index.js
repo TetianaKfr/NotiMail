@@ -123,11 +123,11 @@ class Controller {
       return null;
     }
 
-    let token = crypto.getRandomValues(new Uint8Array(32)).toString('base64');
-  
+    let token = Buffer.from(crypto.getRandomValues(new Uint8Array(32))).toString('base64');
+
     await this.executeQuery(`UPDATE users SET
       token = '${token}',
-      last_token_usage = NOW(),
+      last_token_usage = NOW()
       WHERE firm_name = '${firm_name}'
     `)
 
@@ -170,11 +170,11 @@ class Controller {
     email,
     phone_number,
     password,
-    last_received_mail,
-    last_picked_up,
     has_mail,
     is_admin
   ) {
+    let password_hash = await bcrypt.hash(password, 12);
+    
     const query = `
         INSERT INTO users (
           firm_name,
@@ -182,13 +182,20 @@ class Controller {
           last_name,
           email,
           phone_number,
-          password,
-          last_received_mail,
-          last_picked_up,
+          password_hash,
           has_mail,
           is_admin
-          )
-        VALUES ('${firm_name}', '${first_name}', '${last_name}', '${email}', '${phone_number}', '${password}', '${last_received_mail}', '${last_picked_up}', b'${has_mail}', b'${is_admin}')
+        )
+        VALUES (
+          '${firm_name}',
+          '${first_name}',
+          '${last_name}',
+          '${email}',
+          '${phone_number}',
+          '${password_hash}',
+          b'${has_mail ? 1 : 0}',
+          b'${is_admin ? 1 : 0}'
+        )
       `;
 
     await this.executeQuery(query);

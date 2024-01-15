@@ -20,7 +20,7 @@ router.post("/authentificate", async (req, res) => {
       return;
     }
     
-    let token = await controller.authentificate();
+    let token = await controller.authentificate(firm_name, password);
     if (token == null) {
       res.sendStatus(401);
       return;
@@ -52,8 +52,6 @@ router.post("/create_user", async (req, res) => {
       email,
       phone_number,
       password,
-      last_received_mail,
-      last_picked_up,
       has_mail,
       is_admin,
     } = req.body;
@@ -65,8 +63,6 @@ router.post("/create_user", async (req, res) => {
       email,
       phone_number,
       password,
-      last_received_mail,
-      last_picked_up,
       has_mail,
       is_admin
     );
