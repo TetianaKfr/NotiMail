@@ -51,7 +51,7 @@ input {
 ```ts
 input {
     session_firm_name: string,
-    session_token:     string
+    session_token:     string,
     firm_name: string,
 }
 ```
