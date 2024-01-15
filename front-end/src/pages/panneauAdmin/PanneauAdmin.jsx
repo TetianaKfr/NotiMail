@@ -5,6 +5,8 @@ import { IoMdAddCircle } from "react-icons/io";
 import { BiMailSend } from "react-icons/bi";
 import { NavLink } from "react-router-dom";
 import ModalNotifier from "../../pages/Notifier/Notifier.jsx";
+// import 'react-responsive-modal/styles.css';
+// import { Modal } from 'react-responsive-modal';
 
 const PanneauAdmin = () => {
   const [showModal, setShowModal] = useState(false);
@@ -14,6 +16,11 @@ const PanneauAdmin = () => {
   };
 
   const [isChecked, setIsChecked] = useState(false);
+
+  // const [open, setOpen] = useState(false);
+
+  // const onOpenModal = () => setOpen(true);
+  // const onCloseModal = () => setOpen(false);
 
   // Fonction pour gérer le changement d'état de la case à cocher "toggleicon"
   // Cette fonction sera appelée à chaque fois que l'utilisateur clique sur la case à cocher
@@ -138,6 +145,10 @@ const PanneauAdmin = () => {
           )}
         </div>
       </footer>
+      {/*<button onClick={onOpenModal}>Open modal</button>
+      <Modal open={open} onClose={onCloseModal} center>
+        <h2>Simple centered modal</h2>
+          </Modal>*/}
     </>
   );
 };
