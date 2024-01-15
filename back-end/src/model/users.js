@@ -5,7 +5,7 @@ export class Users {
     last_name,
     email,
     phone_number,
-    password,
+    password_hash,
     last_received_mail,
     last_picked_up,
     has_mail,
@@ -16,7 +16,7 @@ export class Users {
     this.last_name = last_name;
     this.email = email;
     this.phone_number = phone_number;
-    this.password = password;
+    this.password_hash = password_hash;
     this.last_received_mail = last_received_mail;
     this.last_picked_up = last_picked_up;
     this.has_mail = has_mail;
