@@ -1,5 +1,6 @@
 import React from "react";
 import { TiArrowLeftThick } from "react-icons/ti";
+import "../Entreprise/entreprise.css";
 
 const Entreprises = () => {
   const [values, setValues] = React.useState({
@@ -28,15 +29,15 @@ const Entreprises = () => {
   }
 
   return (
-
+    <>
+    <h2 className="entreprise-title">Entreprise</h2>
+    <div className="entreprises">
     <form id="form" onSubmit={handleSubmit}>
-
       <div className="header-entreprise">
         <span> <TiArrowLeftThick className="back-icon" /></span>
-        <h2 className="entreprise-title">Entreprise</h2>
-        </div>
+      </div>
         
-        <div>
+      <div className="entreprise">
         <label>
           Entreprise :
           <input type="text" name="entreprise" value={values.entreprise} onChange={handleChange} />
@@ -83,8 +84,9 @@ const Entreprises = () => {
         <button id="terminer" type="submit">Terminer</button>
         <button id="supprimer" type="button" onClick={() => { }}>Supprimer</button>
       </div>
-
     </form>
+    </div>
+    </>
   );
 }
 

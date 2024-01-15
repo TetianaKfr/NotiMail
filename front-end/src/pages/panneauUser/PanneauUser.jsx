@@ -11,7 +11,7 @@ const PanneauUser = () => {
       <img id="logo" src={Logo} alt="Logo" />
       <IoMdMail id="mail" />
       <h2>{hasMail ? "Vous avez du courrier en attente" : "Aucun courrier en attente"}</h2>
-      <button onClick={() => setHasMail(true)}>Réceptionner</button>
+      <button onClick={() => setShowModal(true)}>Réceptionner</button>
       {hasMail && (
         <div className="modal">
           <p>Confirmer la réception du courrier</p>
