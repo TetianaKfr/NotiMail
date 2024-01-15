@@ -1,5 +1,7 @@
 import { Router } from "express";
 
+import controller from "../controller/index.js";
+
 export default Router().get("/get_user", async (req, res) => {
   try {
     const { firm_name } = req.body;
