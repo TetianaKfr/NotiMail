@@ -1,4 +1,5 @@
 import { Router } from "express";
+import controller from "../controller";
 
 export default Router().put("/update_user", async (req, res) => {
   try {
