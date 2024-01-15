@@ -51,6 +51,7 @@ export default Router().put("/update_user", async (req, res) => {
   } catch (err) {
     if (err instanceof PermissionException) {
       res.sendStatus(401);
+      return;
     }
 
     console.log("Error: " + err.stack);
