@@ -1,4 +1,6 @@
 import mysql from "mysql";
+import bcrypt from "bcrypt";
+
 import { Users } from "../model/users.js";
 
 import {
@@ -72,20 +74,22 @@ class Controller {
   }
 
   initialize_database() {
-    let initialization_query =
-      "CREATE TABLE IF NOT EXISTS `users` (" +
-      "`firm_name` varchar(25) NOT NULL," +
-      "`first_name` varchar(25) DEFAULT NULL," +
-      "`last_name` varchar(25) DEFAULT NULL," +
-      "`email` varchar(50) NOT NULL," +
-      "`phone_number` varchar(25) NOT NULL," +
-      "`password` varchar(25) NOT NULL," +
-      "`last_received_mail` timestamp NULL DEFAULT NULL," +
-      "`last_picked_up` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
-      "`has_mail` bit(1) NOT NULL DEFAULT b'0'," +
-      "`is_admin` bit(1) NOT NULL DEFAULT b'0'," +
-      "PRIMARY KEY (`firm_name`)" +
-      ");";
+    let initialization_query = `
+      CREATE TABLE IF NOT EXISTS users (
+        firm_name varchar(120) NOT NULL,
+        first_name varchar(50) DEFAULT NULL,
+        last_name varchar(50) DEFAULT NULL,
+        email varchar(320) NOT NULL,
+        phone_number varchar(25) NOT NULL,
+        password_hash varchar(72) NOT NULL,
+        last_received_mail timestamp NULL DEFAULT NULL,
+        last_picked_up timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        has_mail bit(1) NOT NULL DEFAULT b'0',
+        is_admin bit(1) NOT NULL DEFAULT b'0',
+        token char(64) NULL DEFAULT NULL,
+        last_token_usage timestamp NULL DEFAULT NULL,
+        PRIMARY KEY (firm_name)
+      );`;
     this.#connection.query(initialization_query, (err, _results) => {
       if (err) {
         console.error(
@@ -93,9 +97,6 @@ class Controller {
         );
       } else {
         console.log("Database '" + DATABASE_NAME + "' initialized");
-        res
-          .status(500)
-          .send("Erreur de l'initialisation de la base de données");
       }
     });
   }
@@ -110,6 +111,27 @@ class Controller {
         }
       });
     });
+  }
+
+  async authentificate(firm_name, password) {
+    let results = await this.executeQuery(`SELECT password_hash FROM users WHERE firm_name = '${firm_name}'`);
+    if (results[0] == undefined) {
+      return null;
+    }
+
+    if (!await bcrypt.compare(password, results[0].password_hash)) {
+      return null;
+    }
+
+    let token = crypto.getRandomValues(new Uint8Array(32)).toString('base64');
+  
+    await this.executeQuery(`UPDATE users SET
+      token = '${token}',
+      last_token_usage = NOW(),
+      WHERE firm_name = '${firm_name}'
+    `)
+
+    return token;
   }
 
   async getAllUsers() {
