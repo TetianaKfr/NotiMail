@@ -7,7 +7,7 @@ import { NavLink } from 'react-router-dom';
 import ModalNotifier from '../../pages/Notifier/Notifier.jsx';
 
   const PanneauAdmin  = ({ handleBiMailSendClick }) => {
-    const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(true);
   
     const handleCloseModal = () => {
       setShowModal(false);
@@ -103,10 +103,12 @@ import ModalNotifier from '../../pages/Notifier/Notifier.jsx';
           <NavLink to="/entreprises">
             <IoMdAddCircle className="icon-style" />
           </NavLink>
-          <button className="icon-style" onClick={handleBiMailSendClick}></button>
+          {/*<button className="icon-style" onClick={handleBiMailSendClick}></button>*/}
+          <BiMailSend className="icon-style" onclick={handleBiMailSendClick}/>
           <ModalNotifier show={showModal} handleClose={handleCloseModal} handleEnvoi={() => {}} />
         </div>
       </footer>
+      {showModal && <ModalNotifier />}
     </>
   );
 };
