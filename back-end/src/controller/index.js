@@ -233,7 +233,7 @@ class Controller {
       updated_fields.push(`password_hash = '${await bcrypt.hash(password, 12)}'`);
     }
     if (has_mail != undefined) {
-      updated_fields.push(`has_mail = '${has_mail ? 1 : 0}'`);
+      updated_fields.push(`has_mail = b'${has_mail ? 1 : 0}'`);
       if (has_mail) {
         updated_fields.push(`last_received_mail = NOW()`);
       } else {
@@ -241,14 +241,16 @@ class Controller {
       }
     }
     if (is_admin != undefined) {
-      updated_fields.push(`is_admin = '${is_admin}'`);
+      updated_fields.push(`is_admin = b'${is_admin ? 1 : 0}'`);
     }
 
-    await this.executeQuery(`
+    let result = await this.executeQuery(`
       UPDATE users SET 
       ${updated_fields.join(",")}
       WHERE firm_name = '${firm_name}'
     `);
+
+    return result.affectedRows > 0;
   }
 
   async getUser(firm_name) {
