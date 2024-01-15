@@ -11,6 +11,12 @@ import {
   MYSQL_PORT,
 } from "../environment.js";
 
+const SessionState = {
+  NO_SESSION: 0,
+  USER: 1,
+  ADMIN: 2,
+}
+
 class Controller {
   #connection;
 
@@ -111,6 +117,20 @@ class Controller {
         }
       });
     });
+  }
+
+  async verify_session(firm_name, token) {
+    let results = await this.executeQuery(`SELECT is_admin FROM users WHERE
+      firm_name = '${firm_name}' AND
+      token = '${token}' AND
+      last_token_usage > SUBTIME(NOW(), "8:0")
+    `);
+
+    if (results[0] == undefined) {
+      return SessionState.NO_SESSION;
+    }
+
+    return results[0].is_admin ? SessionState.ADMIN : SessionState.USER;
   }
 
   async authentificate(firm_name, password) {
