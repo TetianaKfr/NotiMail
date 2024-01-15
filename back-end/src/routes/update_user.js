@@ -26,7 +26,7 @@ export default Router().put("/update_user", async (req, res) => {
       (typeof phone_number != "string" && typeof phone_number != null) ||
       (typeof password != "string" && typeof password != null) ||
       (typeof has_mail != "boolean" && typeof has_mail != null) ||
-      (typeof is_admin != "boolean" && typeof is_admin != null) ||
+      (typeof is_admin != "boolean" && typeof is_admin != null)
     ) {
       res.sendStatus(400);
       return;
