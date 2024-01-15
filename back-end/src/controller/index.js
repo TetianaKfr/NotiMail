@@ -251,7 +251,7 @@ class Controller {
     `);
   }
 
-  async getUserByFirmName(firm_name) {
+  async getUser(firm_name) {
     const query = `SELECT 
       first_name,
       last_name,
@@ -263,7 +263,7 @@ class Controller {
       is_admin
       FROM users
       WHERE firm_name = '${firm_name}'`;
-    let user = await this.executeQuery(query)[0];
+    let user = (await this.executeQuery(query))[0];
     if (user == undefined) {
       return null;
     }
