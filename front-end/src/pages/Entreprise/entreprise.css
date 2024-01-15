@@ -1,0 +1,46 @@
+.entreprises {
+  width: 321px;
+  background-color: #d9d9d9;
+  height: 474px;
+  top: 246px;
+  left: 46px;
+  border-radius: 52px;
+  display: flex;
+  justify-content: center;
+  border: solid #E3E3E3 2px;
+}
+#form{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+.entreprise-title{
+    font-family: "Kanit", sans-serif; 
+    font-size: 32px;
+    line-height: 47.84px;
+    color: #006C92;
+}
+.button{
+    display:flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+#supprimer{
+    color:white;
+    background-color:#FF3535;
+    border-radius: 43px;
+    width: 116px;
+    height: 44px;
+    top: 648px;
+    left: 73px;
+}
+#terminer{
+    color:white;
+    background-color: #006C92;
+    border-radius: 43px;
+    width: 116px;
+    height: 44px;
+    top: 648px;
+    left: 241px;
+}
