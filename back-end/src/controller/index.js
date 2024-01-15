@@ -1,5 +1,5 @@
 import mysql from "mysql";
-import { Users } from "../model/users.js";
+import bcrypt from "bcrypt";
 
 import {
   DATABASE_HOST,
@@ -8,6 +8,12 @@ import {
   DATABASE_PASSWORD,
   MYSQL_PORT,
 } from "../environment.js";
+
+const SessionState = {
+  NO_SESSION: 0,
+  USER: 1,
+  ADMIN: 2,
+}
 
 class Controller {
   #connection;
@@ -42,9 +48,9 @@ class Controller {
               if (err) {
                 console.error(
                   "Failed to create database '" +
-                    DATABASE_NAME +
-                    "': " +
-                    err.stack
+                  DATABASE_NAME +
+                  "': " +
+                  err.stack
                 );
                 process.exit(-1);
               }
@@ -72,20 +78,22 @@ class Controller {
   }
 
   initialize_database() {
-    let initialization_query =
-      "CREATE TABLE IF NOT EXISTS `users` (" +
-      "`firm_name` varchar(25) NOT NULL," +
-      "`first_name` varchar(25) DEFAULT NULL," +
-      "`last_name` varchar(25) DEFAULT NULL," +
-      "`email` varchar(50) NOT NULL," +
-      "`phone_number` varchar(25) NOT NULL," +
-      "`password` varchar(25) NOT NULL," +
-      "`last_received_mail` timestamp NULL DEFAULT NULL," +
-      "`last_picked_up` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
-      "`has_mail` bit(1) NOT NULL DEFAULT b'0'," +
-      "`is_admin` bit(1) NOT NULL DEFAULT b'0'," +
-      "PRIMARY KEY (`firm_name`)" +
-      ");";
+    let initialization_query = `
+      CREATE TABLE IF NOT EXISTS users (
+        firm_name varchar(120) NOT NULL,
+        first_name varchar(50) DEFAULT NULL,
+        last_name varchar(50) DEFAULT NULL,
+        email varchar(320) NOT NULL,
+        phone_number varchar(25) NOT NULL,
+        password_hash varchar(72) NOT NULL,
+        last_received_mail timestamp NULL DEFAULT NULL,
+        last_picked_up timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        has_mail bit(1) NOT NULL DEFAULT b'0',
+        is_admin bit(1) NOT NULL DEFAULT b'0',
+        token char(64) NULL DEFAULT NULL,
+        last_token_usage timestamp NULL DEFAULT NULL,
+        PRIMARY KEY (firm_name)
+      );`;
     this.#connection.query(initialization_query, (err, _results) => {
       if (err) {
         console.error(
@@ -93,16 +101,13 @@ class Controller {
         );
       } else {
         console.log("Database '" + DATABASE_NAME + "' initialized");
-        res
-          .status(500)
-          .send("Erreur de l'initialisation de la base de données");
       }
     });
   }
 
   async executeQuery(query) {
     return new Promise((resolve, reject) => {
-      this.#connection.query(query, function (error, results, fields) {
+      this.#connection.query(query, function(error, results, fields) {
         if (error) {
           reject(error);
         } else {
@@ -112,140 +117,144 @@ class Controller {
     });
   }
 
-  async getAllUsers() {
-    try {
-      const query = "SELECT * FROM users";
-      let results = await this.executeQuery(query);
+  async verify_session(firm_name, token) {
+    let results = await this.executeQuery(`SELECT is_admin FROM users WHERE
+      firm_name = '${firm_name}' AND
+      token = '${token}' AND
+      last_token_usage > SUBTIME(NOW(), "8:0")
+    `);
 
-      // Vérifier si les résultats sont vides
-      if (results.length === 0) {
-        throw new Error("Aucun utilisateur trouvé");
-      }
-
-      const users = results.map(
-        (result) =>
-          new Users(
-            result.firm_name,
-            result.first_name,
-            result.last_name,
-            result.email,
-            result.phone_number,
-            result.password,
-            result.last_received_mail,
-            result.last_picked_up,
-            result.has_mail[0] != 0,
-            result.is_admin[0] != 0
-          )
-      );
-
-      return users;
-    } catch (error) {
-      // Logguer l'erreur pour le suivi
-      console.error(
-        "Error lors de la récupération des utilisateurs :",
-        error.message
-      );
-      res
-        .status(500)
-        .send("Erreur lors de la récupération des données de l'utilisateur");
+    if (results[0] == undefined) {
+      return SessionState.NO_SESSION;
     }
+
+    return results[0].is_admin ? SessionState.ADMIN : SessionState.USER;
   }
 
-  async insertUser(
+  async authentificate(firm_name, password) {
+    let results = await this.executeQuery(`SELECT password_hash FROM users WHERE firm_name = '${firm_name}'`);
+    if (results[0] == undefined) {
+      return null;
+    }
+
+    if (!await bcrypt.compare(password, results[0].password_hash)) {
+      return null;
+    }
+
+    let token = Buffer.from(crypto.getRandomValues(new Uint8Array(32))).toString('base64');
+
+    await this.executeQuery(`UPDATE users SET
+      token = '${token}',
+      last_token_usage = NOW()
+      WHERE firm_name = '${firm_name}'
+    `)
+
+    return token;
+  }
+
+  async listUsers() {
+    let results = await this.executeQuery("SELECT firm_name FROM users");
+
+    return results.map(
+      (result) => {
+        return result.firm_name;
+      }
+    );
+  }
+
+  async createUser(
     firm_name,
     first_name,
     last_name,
     email,
     phone_number,
     password,
-    last_received_mail,
-    last_picked_up,
     has_mail,
-    is_admin
+    is_admin,
   ) {
-    try {
-      const query = `
-        INSERT INTO users (
-          firm_name,
-          first_name,
-          last_name,
-          email,
-          phone_number,
-          password,
-          last_received_mail,
-          last_picked_up,
-          has_mail,
-          is_admin
-          )
-        VALUES ('${firm_name}', '${first_name}', '${last_name}', '${email}', '${phone_number}', '${password}', '${last_received_mail}', '${last_picked_up}', b'${has_mail}', b'${is_admin}')
-      `;
+    let password_hash = await bcrypt.hash(password, 12);
 
-      await this.executeQuery(query);
-    } catch (error) {
-      res.status(500).send("Echec de l'insertion de l'utilisateur.");
-    }
+    await this.executeQuery(`
+      INSERT INTO users (
+        firm_name,
+        first_name,
+        last_name,
+        email,
+        phone_number,
+        password_hash,
+        has_mail,
+        is_admin
+      )
+      VALUES (
+        '${firm_name}',
+        '${first_name}',
+        '${last_name}',
+        '${email}',
+        '${phone_number}',
+        '${password_hash}',
+        b'${has_mail ? 1 : 0}',
+        b'${is_admin ? 1 : 0}'
+      )
+    `);
   }
 
   async deleteUser(firm_name) {
-    try {
-      const query = `DELETE FROM users WHERE firm_name = '${firm_name}'`;
-      await this.executeQuery(query);
-    } catch (error) {
-      res.status(500).send("Echec de la suppression de l'utilisateur.");
-    }
+    return (await this.executeQuery(`DELETE FROM users WHERE firm_name = '${firm_name}'`)).affectedRows > 0;
   }
 
   async updateUser(
-    new_firm_name,
-    new_first_name,
-    new_last_name,
-    new_email,
-    new_phone_number,
-    new_password,
-    new_last_received_mail,
-    new_last_picked_up,
-    new_has_mail,
-    new_is_admin
+    firm_name,
+    first_name,
+    last_name,
+    email,
+    phone_number,
+    password,
+    has_mail,
+    is_admin
   ) {
-    try {
-      // last_received_mail = ${
-      //   new_has_mail ? `'${new_last_received_mail}'` : "NULL"
-      // },
-      // Met à jour la dernière réception de courrier, ou NULL si has_mail est faux
-      /*
-      last_picked_up = ${new_has_mail ? "NULL" : `'${new_last_picked_up}'`}, 
-      */
-      // Met à jour la dernière récupération de courrier, ou NULL si has_mail est vrai
-      /*
-      has_mail = '${new_has_mail ? 1 : 0}',
-      */
-      // Met à jour l'état du courrier en fonction de new_has_mail
-      const query = `
-    UPDATE users 
-    SET 
-    first_name = '${new_first_name}', 
-    last_name = '${new_last_name}', 
-    email = '${new_email}', 
-    phone_number = '${new_phone_number}',
-    password = '${new_password}', 
-    last_received_mail = ${
-      new_has_mail ? `'${new_last_received_mail}'` : "NULL"
-    }, 
-    last_picked_up = ${new_has_mail ? "NULL" : `'${new_last_picked_up}'`}, 
-    has_mail = '${new_has_mail ? 1 : 0}', 
-    is_admin = '${new_is_admin}'
-    WHERE firm_name = '${new_firm_name}'`;
+    let updated_fields = [];
 
-      console.log(query);
-      await this.executeQuery(query);
-    } catch (error) {
-      res.status(500).send("Echec de la mise à jour de l'utilisateur.");
+    if (firm_name != undefined) {
+      updated_fields.push(`firm_name = '${firm_name}'`);
     }
+    if (first_name != undefined) {
+      updated_fields.push(`first_name = '${first_name}'`);
+    }
+    if (last_name != undefined) {
+      updated_fields.push(`last_name = '${last_name}'`);
+    }
+    if (email != undefined) {
+      updated_fields.push(`email = '${email}'`);
+    }
+    if (phone_number != undefined) {
+      updated_fields.push(`phone_number = '${phone_number}'`);
+    }
+    if (password != undefined) {
+      updated_fields.push(`password_hash = '${await bcrypt.hash(password, 12)}'`);
+    }
+    if (has_mail != undefined) {
+      updated_fields.push(`has_mail = b'${has_mail ? 1 : 0}'`);
+      if (has_mail) {
+        updated_fields.push(`last_received_mail = NOW()`);
+      } else {
+        updated_fields.push(`last_picked_up = NOW()`);
+      }
+    }
+    if (is_admin != undefined) {
+      updated_fields.push(`is_admin = b'${is_admin ? 1 : 0}'`);
+    }
+
+    let result = await this.executeQuery(`
+      UPDATE users SET 
+      ${updated_fields.join(",")}
+      WHERE firm_name = '${firm_name}'
+    `);
+
+    return result.affectedRows > 0;
   }
 
-  async getUserByFirmName(firm_name) {
-    try {
-      const query = `SELECT 
+  async getUser(firm_name) {
+    const query = `SELECT 
       first_name,
       last_name,
       email,
@@ -256,96 +265,16 @@ class Controller {
       is_admin
       FROM users
       WHERE firm_name = '${firm_name}'`;
-      let result = await this.executeQuery(query);
-
-      if (result && result.length > 0) {
-        // Vérifie si des résultats sont renvoyés et s'il y a au moins une ligne dans les résultats
-        // Convertit le champ is_admin de Buffer à boolean
-        result[0].is_admin = result[0].is_admin[0] != 0; // Convertit de Buffer à boolean
-        // Convertit le champ has_mail de Buffer à boolean
-
-        result[0].has_mail = result[0].has_mail[0] != 0;
-
-        // Retourne le premier objet du tableau (première ligne de résultats)
-        return result[0];
-      }
-
-      return result;
-    } catch (error) {
-      console.error(
-        "Error lors de la récupérationde l'utilisateur par nom de société :",
-        error.message
-      );
-      res
-        .status(500)
-        .send(
-          "Error lors de la récupérationde l'utilisateur par nom de société :"
-        );
+    let user = (await this.executeQuery(query))[0];
+    if (user == undefined) {
+      return null;
     }
-  }
 
-  async updateLastPickedUp(firm_name) {
-    try {
-      // Met à jour last_picked_up et has_mail
-      const updateQuery = `
-        UPDATE users 
-        SET last_picked_up = CURRENT_TIMESTAMP,
-            has_mail = b'0'
-        WHERE firm_name = '${firm_name}'`;
-      await this.executeQuery(updateQuery);
+    user.has_mail = user.has_mail[0] != 0;
+    user.is_admin = user.is_admin[0] != 0;
 
-      // Retourner uniquement le firm_name
-    } catch (error) {
-      console.error(
-        "Error lors de la mise à jour la dernière récupération de l'utilisateur :",
-        error.message
-      );
-      res
-        .status(500)
-        .send(
-          "Error lors de la mise à jour la dernière récupération de l'utilisateur :"
-        );
-    }
+    return user;
   }
 }
 
-export let controller = new Controller();
-
-// async LastMessage() {
-//   try {
-//     const query = "SELECT * FROM users ORDER BY last_picked_up DESC LIMIT 1";
-//     let results = await this.executeQuery(query);
-
-//     // Vérifier si les résultats sont vides
-//     if (results.length === 0) {
-//       throw new Error("Aucun utilisateur trouvé");
-//     }
-
-//     const users = results.map(
-//       (result) =>
-//         new Users(
-//           result.firm_name,
-//           result.first_name,
-//           result.last_name,
-//           result.email,
-//           result.phone_number,
-//           result.password,
-//           result.last_received_mail,
-//           result.last_picked_up,
-//           result.has_mail[0] != 0,
-//           result.is_admin[0] != 0
-//         )
-//     );
-
-//     return users;
-//   } catch (error) {
-//     // Logguer l'erreur pour le suivi
-//     console.error(
-//       "Error lors de la récupération du dernier utilisateur :",
-//       error.message
-//     );
-//     res
-//       .status(500)
-//       .send("Error lors de la récupération du dernier utilisateur :");
-//   }
-// }
+export default new Controller();
