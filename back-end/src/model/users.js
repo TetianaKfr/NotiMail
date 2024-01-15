@@ -1,4 +1,4 @@
-export class Users {
+export default class User {
   constructor(
     firm_name,
     first_name,

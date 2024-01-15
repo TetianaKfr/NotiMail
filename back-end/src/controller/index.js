@@ -1,8 +1,6 @@
 import mysql from "mysql";
 import bcrypt from "bcrypt";
 
-import { Users } from "../model/users.js";
-
 import {
   DATABASE_HOST,
   DATABASE_NAME,
@@ -50,9 +48,9 @@ class Controller {
               if (err) {
                 console.error(
                   "Failed to create database '" +
-                    DATABASE_NAME +
-                    "': " +
-                    err.stack
+                  DATABASE_NAME +
+                  "': " +
+                  err.stack
                 );
                 process.exit(-1);
               }
@@ -109,7 +107,7 @@ class Controller {
 
   async executeQuery(query) {
     return new Promise((resolve, reject) => {
-      this.#connection.query(query, function (error, results, fields) {
+      this.#connection.query(query, function(error, results, fields) {
         if (error) {
           reject(error);
         } else {
@@ -154,36 +152,57 @@ class Controller {
     return token;
   }
 
-  async getAllUsers() {
-    const query = "SELECT firm_name FROM users";
-    let results = await this.executeQuery(query);
+  async listUsers() {
+    let results = await this.executeQuery("SELECT firm_name FROM users");
 
-    // Vérifier si les résultats sont vides
-    if (results.length === 0) {
-      throw new Error("Aucun utilisateur trouvé");
-    }
-
-    const users = results.map(
-      (result) =>
-        new Users(
-          result.firm_name,
-          result.first_name,
-          result.last_name,
-          result.email,
-          result.phone_number,
-          result.password,
-          result.last_received_mail,
-          result.last_picked_up,
-          result.has_mail[0] != 0,
-          result.is_admin[0] != 0
-        )
+    return results.map(
+      (result) => {
+        return result.firm_name;
+      }
     );
-    console.log(users);
-
-    return users;
   }
 
-  async insertUser(
+  async createUser(
+    firm_name,
+    first_name,
+    last_name,
+    email,
+    phone_number,
+    password,
+    has_mail,
+    is_admin,
+  ) {
+    let password_hash = await bcrypt.hash(password, 12);
+
+    await this.executeQuery(`
+      INSERT INTO users (
+        firm_name,
+        first_name,
+        last_name,
+        email,
+        phone_number,
+        password_hash,
+        has_mail,
+        is_admin
+      )
+      VALUES (
+        '${firm_name}',
+        '${first_name}',
+        '${last_name}',
+        '${email}',
+        '${phone_number}',
+        '${password_hash}',
+        b'${has_mail ? 1 : 0}',
+        b'${is_admin ? 1 : 0}'
+      )
+    `);
+  }
+
+  async deleteUser(firm_name) {
+    return await this.executeQuery(`DELETE FROM users WHERE firm_name = '${firm_name}'`).affectedRows > 0;
+  }
+
+  async updateUser(
     firm_name,
     first_name,
     last_name,
@@ -193,98 +212,43 @@ class Controller {
     has_mail,
     is_admin
   ) {
-    let password_hash = await bcrypt.hash(password, 12);
-    
-    const query = `
-        INSERT INTO users (
-          firm_name,
-          first_name,
-          last_name,
-          email,
-          phone_number,
-          password_hash,
-          has_mail,
-          is_admin
-        )
-        VALUES (
-          '${firm_name}',
-          '${first_name}',
-          '${last_name}',
-          '${email}',
-          '${phone_number}',
-          '${password_hash}',
-          b'${has_mail ? 1 : 0}',
-          b'${is_admin ? 1 : 0}'
-        )
-      `;
-
-    await this.executeQuery(query);
-  }
-
-  async deleteUser(firm_name) {
-    const query = `DELETE FROM users WHERE firm_name = '${firm_name}'`;
-    await this.executeQuery(query);
-  }
-
-  async updateUser(
-    new_firm_name,
-    new_first_name,
-    new_last_name,
-    new_email,
-    new_phone_number,
-    new_password,
-    new_has_mail,
-    new_is_admin
-  ) {
     let updated_fields = [];
 
-    if (new_firm_name != undefined) {
-      updated_fields.push(`firm_name = '${new_firm_name}'`);
+    if (firm_name != undefined) {
+      updated_fields.push(`firm_name = '${firm_name}'`);
     }
-
-    if (new_first_name != undefined) {
-      updated_fields.push(`first_name = '${new_first_name}'`);
+    if (first_name != undefined) {
+      updated_fields.push(`first_name = '${first_name}'`);
     }
-
-    if (new_last_name != undefined) {
-      updated_fields.push(`last_name = '${new_last_name}'`);
+    if (last_name != undefined) {
+      updated_fields.push(`last_name = '${last_name}'`);
     }
-
-    if (new_email != undefined) {
-      updated_fields.push(`email = '${new_email}'`);
+    if (email != undefined) {
+      updated_fields.push(`email = '${email}'`);
     }
-
-    if (new_phone_number != undefined) {
-      updated_fields.push(`phone_number = '${new_phone_number}'`);
+    if (phone_number != undefined) {
+      updated_fields.push(`phone_number = '${phone_number}'`);
     }
-
-    if (new_password != undefined) {
-      updated_fields.push(`password = '${new_password}'`);
+    if (password != undefined) {
+      updated_fields.push(`password = '${password}'`);
     }
-
-    if (new_has_mail != undefined) {
-      updated_fields.push(`has_mail = '${new_has_mail ? 1 : 0}'`);
-      if (new_has_mail) {
+    if (has_mail != undefined) {
+      updated_fields.push(`has_mail = '${has_mail ? 1 : 0}'`);
+      if (has_mail) {
         updated_fields.push(`last_received_mail = NOW()`);
       } else {
         updated_fields.push(`last_picked_up = NOW()`);
       }
     }
-
-    if (new_is_admin != undefined) {
-      updated_fields.push(`is_admin = '${new_is_admin}'`);
+    if (is_admin != undefined) {
+      updated_fields.push(`is_admin = '${is_admin}'`);
     }
 
-    const querybody = updated_fields.join(",");
-
-    const query = `
-    UPDATE users 
-    SET 
-    ${querybody}
-    WHERE firm_name = '${new_firm_name}'`;
-
-    console.log(query);
-    await this.executeQuery(query);
+    await this.executeQuery(`
+      UPDATE users SET 
+      ${updated_fields.join(",")}
+      WHERE firm_name = '${firm_name}'
+    `);
   }
 
   async getUserByFirmName(firm_name) {
@@ -299,34 +263,16 @@ class Controller {
       is_admin
       FROM users
       WHERE firm_name = '${firm_name}'`;
-    let result = await this.executeQuery(query);
-
-    if (result && result.length > 0) {
-      // Vérifie si des résultats sont renvoyés et s'il y a au moins une ligne dans les résultats
-      // Convertit le champ is_admin de Buffer à boolean
-      result[0].is_admin = result[0].is_admin[0] != 0; // Convertit de Buffer à boolean
-      // Convertit le champ has_mail de Buffer à boolean
-
-      result[0].has_mail = result[0].has_mail[0] != 0;
-
-      // Retourne le premier objet du tableau (première ligne de résultats)
-      return result[0];
+    let user = await this.executeQuery(query)[0];
+    if (user == undefined) {
+      return null;
     }
 
-    return result;
-  }
+    user.has_mail = user.has_mail[0] != 0;
+    user.is_admin = user.is_admin[0] != 0;
 
-  async updateLastPickedUp(firm_name) {
-    // Met à jour last_picked_up et has_mail
-    const updateQuery = `
-        UPDATE users 
-        SET last_picked_up = CURRENT_TIMESTAMP,
-            has_mail = b'0'
-        WHERE firm_name = '${firm_name}'`;
-    await this.executeQuery(updateQuery);
-
-    // Retourner uniquement le firm_name
+    return user;
   }
 }
 
-export let controller = new Controller();
+export default new Controller();
