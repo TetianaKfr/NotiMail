@@ -180,7 +180,7 @@ class Controller {
     has_mail,
     is_admin,
   ) {
-    if (this.verify_session(session_firm_name, session_token) != SessionState.ADMIN) {
+    if (await this.verify_session(session_firm_name, session_token) != SessionState.ADMIN) {
       throw new PermissionException();
     }
 
@@ -211,7 +211,7 @@ class Controller {
   }
 
   async deleteUser(session_firm_name, session_token, firm_name) {
-    if (this.verify_session(session_firm_name, session_token) != SessionState.ADMIN) {
+    if (await this.verify_session(session_firm_name, session_token) != SessionState.ADMIN) {
       throw new PermissionException();
     }
 
@@ -230,7 +230,7 @@ class Controller {
     has_mail,
     is_admin
   ) {
-    let session_state = this.verify_session(session_firm_name, session_token)
+    let session_state = await this.verify_session(session_firm_name, session_token)
     if (session_state == SessionState.NO_SESSION) {
       throw new PermissionException();
     }
@@ -290,7 +290,7 @@ class Controller {
   }
 
   async getUser(session_firm_name, session_token, firm_name) {
-    let session_state = this.verify_session(session_firm_name, session_token);
+    let session_state = await this.verify_session(session_firm_name, session_token);
     if (session_state == SessionState.NO_SESSION || (session_state == SessionState.USER && firm_name != session_firm_name)) {
       throw new PermissionException();
     }
