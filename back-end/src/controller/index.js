@@ -134,7 +134,7 @@ class Controller {
       return SessionState.NO_SESSION;
     }
 
-    return results[0].is_admin ? SessionState.ADMIN : SessionState.USER;
+    return results[0].is_admin[0] == 1 ? SessionState.ADMIN : SessionState.USER;
   }
 
   async authentificate(firm_name, password) {
