@@ -121,24 +121,10 @@ class Controller {
       throw new Error("Aucun utilisateur trouvé");
     }
 
-    const users = results.map(
-      (result) =>
-        new Users(
-          result.firm_name,
-          result.first_name,
-          result.last_name,
-          result.email,
-          result.phone_number,
-          result.password,
-          result.last_received_mail,
-          result.last_picked_up,
-          result.has_mail[0] != 0,
-          result.is_admin[0] != 0
-        )
-    );
-    console.log(users);
+    // Extraire les valeurs de firm_name sans le libellé
+    const firmNames = results.map((result) => result.firm_name);
 
-    return users;
+    return firmNames;
   }
 
   async insertUser(

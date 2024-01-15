@@ -139,13 +139,3 @@ router.put("/picked_up_mail", async (req, res) => {
       .send("Erreur lors de la récupération des données de l'utilisateur");
   }
 });
-
-router.get("/get_last_users", async (req, res) => {
-  try {
-    const results = await controller.LastMessage();
-    res.json(results);
-  } catch (error) {
-    console.error("Erreur : " + error.stack);
-    res.status(500).send("Erreur lors de la récupération des données");
-  }
-});
