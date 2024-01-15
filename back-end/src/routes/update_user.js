@@ -5,13 +5,13 @@ export default Router().put("/update_user", async (req, res) => {
   try {
     const {
       firm_name,
-      new_first_name,
-      new_last_name,
-      new_email,
-      new_phone_number,
-      new_password,
-      new_has_mail,
-      new_is_admin,
+      first_name,
+      last_name,
+      email,
+      phone_number,
+      password,
+      has_mail,
+      is_admin,
     } = req.body;
 
     if (typeof firm_name != "string") {
@@ -21,13 +21,13 @@ export default Router().put("/update_user", async (req, res) => {
 
     await controller.updateUser(
       firm_name,
-      new_first_name,
-      new_last_name,
-      new_email,
-      new_phone_number,
-      new_password,
-      new_has_mail,
-      new_is_admin
+      first_name,
+      last_name,
+      email,
+      phone_number,
+      password,
+      has_mail,
+      is_admin
     );
     res.sendStatus(200);
   } catch (err) {
