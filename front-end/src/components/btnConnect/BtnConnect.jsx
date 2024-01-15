@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Button from "react-bootstrap/Button";
 
 const BtnConnect = () => {
   //utilise plusieurs hooks pour stocker l’état local du formulaire de connexion
@@ -31,7 +30,7 @@ const BtnConnect = () => {
       setIsAdmin(false);
       navigate("/user");
     } else {
-      setErrorMessage("Mot de passe incorrect.");
+      // setErrorMessage("Mot de passe incorrect.");
       setTimeout(() => {
         setErrorMessage("");
       }, 10000);
@@ -39,22 +38,16 @@ const BtnConnect = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="password">Mot de passe:</label>
+    <form className="password-input" onSubmit={handleSubmit}>
         <input
           type="password"
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-      </div>
-      <div>
-        <Button variant="primary" type="submit">
-          Se connecter
-        </Button>
-      </div>
-      {/* Affichez le message d'erreur si le mot de passe est incorrect */}
+      
+      <img src="src/assets/images/padlock.png" alt="submit" onClick={handleSubmit} />
+     
       {errorMessage && <div>{errorMessage}</div>}
       {/* Affichez un message de confirmation si l'utilisateur est connecté en tant qu'administrateur */}
       {isAdmin && (
