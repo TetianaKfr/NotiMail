@@ -123,10 +123,14 @@ class Controller {
     });
   }
 
-  async verify_session(firm_name, token) {
+  async verify_session(session) {
+    if (session.firm_name == undefined | session.token == undefined) {
+      return SessionState.NO_SESSION;
+    }
+    
     let results = await this.executeQuery(`SELECT is_admin FROM users WHERE
-      firm_name = '${firm_name}' AND
-      token = '${token}' AND
+      firm_name = '${session.firm_name}' AND
+      token = '${session.token}' AND
       last_token_usage > SUBTIME(NOW(), "8:0")
     `);
 
@@ -155,7 +159,7 @@ class Controller {
       WHERE firm_name = '${firm_name}'
     `)
 
-    return token;
+    return token + ":" + firm_name;
   }
 
   async listUsers() {
@@ -169,8 +173,7 @@ class Controller {
   }
 
   async createUser(
-    session_firm_name,
-    session_token,
+    session,
     firm_name,
     first_name,
     last_name,
@@ -179,7 +182,7 @@ class Controller {
     password,
     is_admin,
   ) {
-    if (await this.verify_session(session_firm_name, session_token) != SessionState.ADMIN) {
+    if (await this.verify_session(session) != SessionState.ADMIN) {
       throw new PermissionException();
     }
 
@@ -214,8 +217,8 @@ class Controller {
     return true;
   }
 
-  async deleteUser(session_firm_name, session_token, firm_name) {
-    if (await this.verify_session(session_firm_name, session_token) != SessionState.ADMIN) {
+  async deleteUser(session, firm_name) {
+    if (await this.verify_session(session) != SessionState.ADMIN) {
       throw new PermissionException();
     }
 
@@ -223,8 +226,7 @@ class Controller {
   }
 
   async updateUser(
-    session_firm_name,
-    session_token,
+    session,
     firm_name,
     first_name,
     last_name,
@@ -234,7 +236,7 @@ class Controller {
     has_mail,
     is_admin
   ) {
-    let session_state = await this.verify_session(session_firm_name, session_token)
+    let session_state = await this.verify_session(session)
     if (session_state == SessionState.NO_SESSION) {
       throw new PermissionException();
     }
@@ -293,8 +295,8 @@ class Controller {
     return result.affectedRows > 0;
   }
 
-  async getUser(session_firm_name, session_token, firm_name) {
-    let session_state = await this.verify_session(session_firm_name, session_token);
+  async getUser(session, firm_name) {
+    let session_state = await this.verify_session(session);
     if (session_state == SessionState.NO_SESSION || (session_state == SessionState.USER && firm_name != session_firm_name)) {
       throw new PermissionException();
     }

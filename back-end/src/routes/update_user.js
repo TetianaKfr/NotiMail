@@ -4,8 +4,6 @@ import controller, { PermissionException } from "../controller/index.js";
 export default Router().put("/update_user", async (req, res) => {
   try {
     const {
-      session_firm_name,
-      session_token,
       firm_name,
       first_name,
       last_name,
@@ -17,8 +15,6 @@ export default Router().put("/update_user", async (req, res) => {
     } = req.body;
 
     if (
-      (typeof session_firm_name != "string" && typeof session_firm_name != null) ||
-      (typeof session_token != "string" && typeof session_token != null) ||
       typeof firm_name != "string" ||
       (typeof first_name != "string" && typeof first_name != null) ||
       (typeof last_name != "string" && typeof last_name != null) ||
@@ -33,8 +29,7 @@ export default Router().put("/update_user", async (req, res) => {
     }
 
     if (await controller.updateUser(
-      session_firm_name,
-      session_token,
+      req.session,
       firm_name,
       first_name,
       last_name,

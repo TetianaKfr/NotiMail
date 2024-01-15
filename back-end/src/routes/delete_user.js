@@ -4,22 +4,14 @@ import controller, { PermissionException } from "../controller/index.js";
 
 export default Router().delete("/delete_user", async (req, res) => {
   try {
-    const {
-      session_firm_name,
-      session_token,
-      firm_name
-    } = req.body;
+    const { firm_name } = req.body;
 
-    if (
-      (typeof session_firm_name != "string" && typeof session_firm_name != null) ||
-      (typeof session_token != "string" && typeof session_token != null) ||
-      typeof firm_name != "string"
-    ) {
+    if (typeof firm_name != "string") {
       res.sendStatus(400);
       return;
     }
 
-    if (await controller.deleteUser(session_firm_name, session_token, firm_name)) {
+    if (await controller.deleteUser(req.session, firm_name)) {
       res.sendStatus(200);
     } else {
       res.sendStatus(404);

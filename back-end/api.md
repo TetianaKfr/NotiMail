@@ -13,10 +13,8 @@ output {
 }
 ```
 
-Fields `session_firm_name` should be the last `firm_name` used in `authentificate`
-Fields `session_token` should be the last token `session_token` returned by `authentificate`
-
-These two value should be stored on [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+The returned token should be stored on [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+And should be send on every next request to api with the `Authorization: Bearer ${token}` header
 </details>
 
 <details>
@@ -32,8 +30,6 @@ output [ firm_name: string ]
 
 ```ts
 input {
-    session_firm_name: string,
-    session_token:     string,
     firm_name:    string,
     first_name:   string,
     last_name:    string,
@@ -50,8 +46,6 @@ input {
 
 ```ts
 input {
-    session_firm_name: string,
-    session_token:     string,
     firm_name: string,
 }
 ```
@@ -62,29 +56,22 @@ input {
 
 ```ts
 input {
-    session_firm_name: string,
-    session_token:     string,
     firm_name:    string,
     first_name:   string | undefined,
     last_name:    string | undefined,
     email:        string | undefined,
     phone_number: string | undefined,
     password:     string | undefined,
-    has_mai:  boolean | undefined,
+    has_mail:  boolean | undefined,
     is_admin: boolean | undefined,
 }
 ```
 </details>
 
 <details>
-  <summary>POST - get_user</summary>
+  <summary>GET - get_user/:user</summary>
 
 ```ts
-input {
-    session_firm_name: string,
-    session_token:     string,
-    firm_name:    string,
-}
 output {
     first_name:   string,
     last_name:    string,

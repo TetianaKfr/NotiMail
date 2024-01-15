@@ -2,24 +2,16 @@ import { Router } from "express";
 
 import controller, { PermissionException } from "../controller/index.js";
 
-export default Router().post("/get_user", async (req, res) => {
+export default Router().get("/get_user/:firm_name", async (req, res) => {
   try {
-    const {
-      session_firm_name,
-      session_token,
-      firm_name,
-    } = req.body;
+    const { firm_name } = req.params;
 
-    if (
-      (typeof session_firm_name != "string" && typeof session_firm_name != null) ||
-      (typeof session_token != "string" && typeof session_token != null) ||
-      typeof firm_name != "string"
-    ) {
+    if (typeof firm_name != "string") {
       res.sendStatus(400);
       return;
     }
 
-    const user = await controller.getUser(session_firm_name, session_token, firm_name);
+    const user = await controller.getUser(req.session, firm_name);
     if (user == null) {
       res.sendStatus(404);
       return;
