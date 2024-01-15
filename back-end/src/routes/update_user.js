@@ -1,5 +1,5 @@
 import { Router } from "express";
-import controller from "../controller/index.js";
+import controller, { PermissionException } from "../controller/index.js";
 
 export default Router().put("/update_user", async (req, res) => {
   try {
