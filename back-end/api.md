@@ -50,7 +50,7 @@ output [ firm_name: string ]
 #### Example
 
 ```js
-const response = await fetch("http://localhost:3000/list_users" {
+const response = await fetch("http://localhost:3000/list_users", {
   method: "GET",
 });
 
