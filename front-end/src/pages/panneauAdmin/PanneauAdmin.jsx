@@ -11,24 +11,6 @@ import ModalNotifier from "../../pages/Notifier/Notifier.jsx";
 const PanneauAdmin = () => {
   const [showModal, setShowModal] = useState(false);
 
-  const [toggleStates, setToggleStates] = useState({
-    cmnToggle1: false,
-    cmnToggle2: false,
-    cmnToggle3: false,
-    cmnToggle4: false,
-    cmnToggle5: false
-  });
-
-  // Fonction pour gérer le changement d'état de la case à cocher "toggleicon"
-  // Cette fonction sera appelée à chaque fois que l'utilisateur clique sur la case à cocher
-  const handleCheckboxChange = (id) => {
-    setToggleStates(prevState => ({
-      ...prevState,
-      [id]: !prevState[id]
-    }));
-  };
-  
-
   return (
     <>
       <div className="bandeau">
@@ -38,7 +20,9 @@ const PanneauAdmin = () => {
         </div>
       </div>
       <div className="cards">
-        <Card toggleStates={toggleStates} handleCheckboxChange={handleCheckboxChange}/>
+        <Card id="1" />
+        <Card id="2" />
+        <Card id="3"/>
       </div>
       <footer>
         <div className="logos-footer">
