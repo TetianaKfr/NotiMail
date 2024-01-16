@@ -11,5 +11,12 @@
     "express-bearer-token": "^2.4.0",
     "mysql": "^2.18.1"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "esdoc": "^1.1.0",
+    "esdoc-standard-plugin": "^1.0.0"
+  },
+  "scripts": {
+    "doc": "./node_modules/.bin/esdoc"
+  }
 }
