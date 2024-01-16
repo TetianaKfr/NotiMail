@@ -19,13 +19,13 @@ Et être envoyé dans les prochaines requêtes dans le header `Authorization: Be
 #### Example
 
 ```js
-const response = await fetch("http://localhost:3000/authentificate"), {
+const response = await fetch("http://localhost:3000/authentificate", {
   method: "POST",
   body: {
     firm_name: `${firm_name}`,
     password: `${password}`,
   }
-};
+});
 
 if (response.ok()) {
   // Authentification réussi
@@ -50,9 +50,9 @@ output [ firm_name: string ]
 #### Example
 
 ```js
-const response = await fetch("http://localhost:3000/list_users"), {
+const response = await fetch("http://localhost:3000/list_users", {
   method: "GET",
-};
+});
 
 if response.ok() {
   let user_list = response.body();
@@ -84,7 +84,7 @@ input {
 #### Example
 
 ```js
-const response = await fetch("http://localhost:3000/create_user"), {
+const response = await fetch("http://localhost:3000/create_user", {
   method: "POST",
   headers: { Authorization: `Bearer ${window.localStorage.getItem("token")}` },
   body: {
@@ -96,7 +96,7 @@ const response = await fetch("http://localhost:3000/create_user"), {
     password: `${password}`,
     is_admin: `${is_admin}`,
   }
-};
+});
 if (!response.ok()) {
   // Creation réussi
 } else {
@@ -120,13 +120,13 @@ input {
 #### Example
 
 ```js
-const response = await fetch("http://localhost:3000/delete_user"), {
+const response = await fetch("http://localhost:3000/delete_user", {
   method: "DELETE",
   headers: { Authorization: `Bearer ${window.localStorage.getItem("token")}` },
   body: {
     firm_name: `${firm_name}`,
   }
-};
+});
 if (!response.ok()) {
   // Suppression réussi
 } else {
@@ -159,14 +159,14 @@ input {
 ##### Notifier d'un nouveau courrier
 
 ```js
-const response = await fetch("http://localhost:3000/update_user"), {
+const response = await fetch("http://localhost:3000/update_user", {
   method: "PUT",
   headers: { Authorization: `Bearer ${window.localStorage.getItem("token")}` },
   body: {
     firm_name: `${firm_name}`,
     has_mail: true,
   }
-};
+});
 if (!response.ok()) {
   // Changement réussi
 } else {
@@ -177,14 +177,14 @@ if (!response.ok()) {
 ##### Récupération d'un courrier
 
 ```js
-const response = await fetch("http://localhost:3000/update_user"), {
+const response = await fetch("http://localhost:3000/update_user", {
   method: "PUT",
   headers: { Authorization: `Bearer ${window.localStorage.getItem("token")}` },
   body: {
     firm_name: `${firm_name}`,
     has_mail: false,
   }
-};
+});
 if (!response.ok()) {
   // Changement réussi
 } else {
@@ -195,7 +195,7 @@ if (!response.ok()) {
 ##### Modification des informations
 
 ```js
-const response = await fetch("http://localhost:3000/update_user"), {
+const response = await fetch("http://localhost:3000/update_user", {
   method: "PUT",
   headers: { Authorization: `Bearer ${window.localStorage.getItem("token")}` },
   body: {
@@ -208,7 +208,7 @@ const response = await fetch("http://localhost:3000/update_user"), {
     password:     `${password}`,
     is_admin: `${is_admin}`,
   }
-};
+});
 if (!response.ok()) {
   // Changement réussi
 } else {
@@ -239,10 +239,10 @@ output {
 #### Example
 
 ```js
-const response = await fetch(`http://localhost:3000/get_user/${firm_name}`), {
+const response = await fetch(`http://localhost:3000/get_user/${firm_name}`, {
   method: "GET",
   headers: { Authorization: `Bearer ${window.localStorage.getItem("token")}` },
-};
+});
 if (!response.ok()) {
   // Changement réussi
   const user = response.json();
@@ -260,10 +260,10 @@ if (!response.ok()) {
   <summary>POST - disconnect</summary>
 
 ```js
-const response = await fetch("http://localhost:3000/disconnect"), {
+const response = await fetch("http://localhost:3000/disconnect", {
   method: "POST",
   headers: { Authorization: `Bearer ${window.localStorage.getItem("token")}` },
-};
+});
 if (!response.ok()) {
   // Déconnection réussi
 } else {
