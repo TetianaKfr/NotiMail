@@ -11,11 +11,8 @@ const Home = () => {
     const fetchEntreprises = async () => {
       setIsLoading(true);
       try {
-        const firmList = [
-          "Firm 1", "Firm 2", "Firm 3"
-        ]
-        // const reponse = await fetch('API');
-        // const firmList = await reponse.json();
+        const reponse = await fetch('http://localhost:3000/list_users', { method: "GET" });
+        const firmList = await reponse.json();
 
         setEntreprises(firmList.slice(0, 5)); // Prend les 5 premières entreprises
       } catch (erreur) {
@@ -29,25 +26,25 @@ const Home = () => {
 
   return (
     <>
-    <div className="header">
+      <div className="header">
         <img className="home-logo" src="src/assets/images/LogoByMathysG.jpg" alt="Logo" />
-    </div>
-    <div className='connexion'>
-      <div className='company-select'>
-      <select disabled={isLoading}>
-      <option value="">Entreprise</option>
-
-      {entreprises.map(entreprise => (
-      <option key={entreprise.id} value={entreprise.id}>
-          {entreprise.nom}
-      </option>
-      ))}
-    </select>
-    </div>
-    <div className="password-input">
-        <BtnConnect></BtnConnect>
       </div>
-    </div>
+      <div className='connexion'>
+        <div className='company-select'>
+          <select disabled={isLoading}>
+            <option value="">Entreprise</option>
+
+            {entreprises.map(entreprise => (
+              <option key={entreprise.id} value={entreprise.id}>
+                {entreprise.nom}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="password-input">
+          <BtnConnect></BtnConnect>
+        </div>
+      </div>
     </>
   );
 };
