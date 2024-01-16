@@ -1,3 +1,16 @@
+details > summary {
+  list-style: none; /* Supprime la flèche/liste par défaut */
+  cursor: pointer;
+}
+.wrapper-details{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  background-color: #D9D9D9;
+  border-bottom-left-radius: 35px;
+  border-bottom-right-radius: 35px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 .cards {
     display: flex;
     flex-wrap: wrap;
