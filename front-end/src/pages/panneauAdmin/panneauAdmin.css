@@ -3,18 +3,23 @@
     align-items: center;
     justify-content: center;
 }
+.search-icon{
+    color: white;
+}
+.text-input::placeholder {
+    color: white;
+    font-size: 16px;
+}
 .search-bar {    
     display: flex;
     align-items: center;
     margin-top: 40px;
     margin-bottom: 40px;
-    width: 330px; 
+    width: 310px; 
     height: 50px; 
-    /* padding: 0.5em 0; */
+    padding-inline: 10px;
     background: #E3E3E3; 
-    border-radius: 80px;
-    border: none;
-    color: #787878; 
+    border-radius: 80px; 
     font-size: 24px; 
     font-family: Arial, sans-serif;
     font-weight: 400;
