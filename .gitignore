@@ -4,3 +4,4 @@ node_modules/
 .vscode/
 /back-end/rest/
 /back-end/.env
+/back-end/docs/
