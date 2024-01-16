@@ -9,6 +9,12 @@ import {
   MYSQL_PORT,
 } from "../environment.js";
 
+export class PermissionException extends Error {
+  constructor() {
+    super("Unauthorized");
+  }
+}
+
 const SessionState = {
   NO_SESSION: 0,
   USER: 1,
@@ -16,14 +22,14 @@ const SessionState = {
 }
 
 class Controller {
-  #connection;
+  connection;
 
   constructor() {
     this.connect();
   }
 
   connect() {
-    this.#connection = mysql.createConnection({
+    this.connection = mysql.createConnection({
       host: DATABASE_HOST,
       user: DATABASE_USER,
       password: DATABASE_PASSWORD,
@@ -31,7 +37,7 @@ class Controller {
       port: MYSQL_PORT,
     });
 
-    this.#connection.connect((err) => {
+    this.connection.connect((err) => {
       if (err) {
         console.log(err.errno);
         if (err.errno == 1049 /* Database doesn't exists */) {
@@ -94,7 +100,7 @@ class Controller {
         last_token_usage timestamp NULL DEFAULT NULL,
         PRIMARY KEY (firm_name)
       );`;
-    this.#connection.query(initialization_query, (err, _results) => {
+    this.connection.query(initialization_query, (err, _results) => {
       if (err) {
         console.error(
           "Failed to setup database '" + DATABASE_NAME + "': " + err.stack
@@ -107,7 +113,7 @@ class Controller {
 
   async executeQuery(query) {
     return new Promise((resolve, reject) => {
-      this.#connection.query(query, function(error, results, fields) {
+      this.connection.query(query, function(error, results, fields) {
         if (error) {
           reject(error);
         } else {
@@ -117,10 +123,14 @@ class Controller {
     });
   }
 
-  async verify_session(firm_name, token) {
+  async verify_session(session) {
+    if (session.firm_name == undefined | session.token == undefined) {
+      return SessionState.NO_SESSION;
+    }
+    
     let results = await this.executeQuery(`SELECT is_admin FROM users WHERE
-      firm_name = '${firm_name}' AND
-      token = '${token}' AND
+      firm_name = '${session.firm_name}' AND
+      token = '${session.token}' AND
       last_token_usage > SUBTIME(NOW(), "8:0")
     `);
 
@@ -128,7 +138,7 @@ class Controller {
       return SessionState.NO_SESSION;
     }
 
-    return results[0].is_admin ? SessionState.ADMIN : SessionState.USER;
+    return results[0].is_admin[0] == 1 ? SessionState.ADMIN : SessionState.USER;
   }
 
   async authentificate(firm_name, password) {
@@ -149,7 +159,7 @@ class Controller {
       WHERE firm_name = '${firm_name}'
     `)
 
-    return token;
+    return token + ":" + firm_name;
   }
 
   async listUsers() {
@@ -163,18 +173,21 @@ class Controller {
   }
 
   async createUser(
+    session,
     firm_name,
     first_name,
     last_name,
     email,
     phone_number,
     password,
-    has_mail,
     is_admin,
   ) {
-    let password_hash = await bcrypt.hash(password, 12);
+    if (await this.verify_session(session) != SessionState.ADMIN) {
+      throw new PermissionException();
+    }
 
-    await this.executeQuery(`
+    try {
+      await this.executeQuery(`
       INSERT INTO users (
         firm_name,
         first_name,
@@ -182,7 +195,6 @@ class Controller {
         email,
         phone_number,
         password_hash,
-        has_mail,
         is_admin
       )
       VALUES (
@@ -191,18 +203,30 @@ class Controller {
         '${last_name}',
         '${email}',
         '${phone_number}',
-        '${password_hash}',
-        b'${has_mail ? 1 : 0}',
+        '${await bcrypt.hash(password, 12)}',
         b'${is_admin ? 1 : 0}'
       )
     `);
+    } catch (err) {
+      if (err.code == "ER_DUP_ENTRY") {
+        return false;
+      }
+      throw err;
+    }
+
+    return true;
   }
 
-  async deleteUser(firm_name) {
+  async deleteUser(session, firm_name) {
+    if (await this.verify_session(session) != SessionState.ADMIN) {
+      throw new PermissionException();
+    }
+
     return (await this.executeQuery(`DELETE FROM users WHERE firm_name = '${firm_name}'`)).affectedRows > 0;
   }
 
   async updateUser(
+    session,
     firm_name,
     first_name,
     last_name,
@@ -212,28 +236,41 @@ class Controller {
     has_mail,
     is_admin
   ) {
+    let session_state = await this.verify_session(session)
+    if (session_state == SessionState.NO_SESSION) {
+      throw new PermissionException();
+    }
+
+    let require_admin = false;
+
     let updated_fields = [];
 
     if (firm_name != undefined) {
       updated_fields.push(`firm_name = '${firm_name}'`);
+      require_admin = true;
     }
     if (first_name != undefined) {
       updated_fields.push(`first_name = '${first_name}'`);
+      require_admin = true;
     }
     if (last_name != undefined) {
       updated_fields.push(`last_name = '${last_name}'`);
+      require_admin = true;
     }
     if (email != undefined) {
       updated_fields.push(`email = '${email}'`);
+      require_admin = true;
     }
     if (phone_number != undefined) {
       updated_fields.push(`phone_number = '${phone_number}'`);
+      require_admin = true;
     }
     if (password != undefined) {
       updated_fields.push(`password_hash = '${await bcrypt.hash(password, 12)}'`);
+      require_admin = true;
     }
     if (has_mail != undefined) {
-      updated_fields.push(`has_mail = '${has_mail ? 1 : 0}'`);
+      updated_fields.push(`has_mail = b'${has_mail ? 1 : 0}'`);
       if (has_mail) {
         updated_fields.push(`last_received_mail = NOW()`);
       } else {
@@ -241,17 +278,29 @@ class Controller {
       }
     }
     if (is_admin != undefined) {
-      updated_fields.push(`is_admin = '${is_admin}'`);
+      updated_fields.push(`is_admin = b'${is_admin ? 1 : 0}'`);
+      require_admin = true;
     }
 
-    await this.executeQuery(`
+    if (require_admin && session_state != SessionState.ADMIN) {
+      throw new PermissionException();
+    }
+
+    let result = await this.executeQuery(`
       UPDATE users SET 
       ${updated_fields.join(",")}
       WHERE firm_name = '${firm_name}'
     `);
+
+    return result.affectedRows > 0;
   }
 
-  async getUser(firm_name) {
+  async getUser(session, firm_name) {
+    let session_state = await this.verify_session(session);
+    if (session_state == SessionState.NO_SESSION || (session_state == SessionState.USER && firm_name != session_firm_name)) {
+      throw new PermissionException();
+    }
+
     const query = `SELECT 
       first_name,
       last_name,
@@ -272,6 +321,14 @@ class Controller {
     user.is_admin = user.is_admin[0] != 0;
 
     return user;
+  }
+
+  async disconnect(session) {
+    if (await this.verify_session(session) == SessionState.NO_SESSION) {
+      throw new PermissionException();
+    }
+
+    this.executeQuery(`UPDATE users SET token = NULL where firm_name = ${session.firm_name}`);
   }
 }
 

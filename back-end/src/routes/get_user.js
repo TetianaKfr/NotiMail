@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import controller from "../controller/index.js";
+import controller, { PermissionException } from "../controller/index.js";
 
 export default Router().get("/get_user/:firm_name", async (req, res) => {
   try {
@@ -11,14 +11,19 @@ export default Router().get("/get_user/:firm_name", async (req, res) => {
       return;
     }
 
-    const user = await controller.getUser(firm_name);
+    const user = await controller.getUser(req.session, firm_name);
     if (user == null) {
       res.sendStatus(404);
       return;
     }
-    
+
     res.json(user);
   } catch (err) {
+    if (err instanceof PermissionException) {
+      res.sendStatus(401);
+      return;
+    }
+
     console.error("Error : " + err.stack);
     res.sendStatus(500);
   }

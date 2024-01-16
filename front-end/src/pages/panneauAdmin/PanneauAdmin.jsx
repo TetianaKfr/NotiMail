@@ -4,9 +4,8 @@ import { FaSearch } from "react-icons/fa";
 import { IoMdAddCircle } from "react-icons/io";
 import { BiMailSend } from "react-icons/bi";
 import { NavLink } from "react-router-dom";
+import { Card } from "../../components/Card/Card";
 import ModalNotifier from "../../pages/Notifier/Notifier.jsx";
-// import 'react-responsive-modal/styles.css';
-// import { Modal } from 'react-responsive-modal';
 
 const PanneauAdmin = () => {
   const [showModal, setShowModal] = useState(false);
@@ -25,7 +24,6 @@ const PanneauAdmin = () => {
     // Met à jour l'état 'isChecked' avec la noucelle valeur de la case à cocher
     setIsChecked(event.target.checked);
   };
-
   return (
     <>
       <div className="bandeau">
@@ -35,117 +33,26 @@ const PanneauAdmin = () => {
         </div>
       </div>
       <div className="cards">
-        <div className="card" id="Entreprise1">
-          <div className="c-toggleicon02">
-            {/* Input de type checkbox
-            'checked' lie l'état de la checkbox à l'état 'isChecked'
-            'onChange' déclenche 'handleCheckboxChange' lors d'un clic sur la checkbox */}
-            <input
-              type="checkbox"
-              checked={isChecked}
-              onChange={handleCheckboxChange}
-            />
-            <span className="icon"></span>
-          </div>
-          <h3>Entreprise 1</h3>
-          <ul className="inline-items">
-            <li>Nom</li>
-            <li>Contact</li>
-            <li>Date</li>
-          </ul>
-        </div>
-        <div className="card" id="Entreprise2">
-          <div className="c-toggleicon02">
-            <input
-              type="checkbox"
-              checked={isChecked}
-              onChange={handleCheckboxChange}
-            />
-            <span className="icon"></span>
-          </div>
-          <h3>Entreprise 2</h3>
-          <ul className="inline-items">
-            <li>Nom</li>
-            <li>Contact</li>
-            <li>Date</li>
-          </ul>
-        </div>
-        <div className="card" id="Entreprise3">
-          <div className="c-toggleicon02">
-            <input
-              type="checkbox"
-              checked={isChecked}
-              onChange={handleCheckboxChange}
-            />
-            <span className="icon"></span>
-          </div>
-          <h3>Entreprise 3</h3>
-          <ul className="inline-items">
-            <li>Nom</li>
-            <li>Contact</li>
-            <li>Date</li>
-          </ul>
-        </div>
-        <div className="card" id="Entreprise4">
-          <div className="c-toggleicon02">
-            <input
-              type="checkbox"
-              checked={isChecked}
-              onChange={handleCheckboxChange}
-            />
-            <span className="icon"></span>
-          </div>
-          <h3>Entreprise 4</h3>
-          <ul className="inline-items">
-            <li>Nom</li>
-            <li>Contact</li>
-            <li>Date</li>
-          </ul>
-        </div>
-        <div className="card" id="Entreprise5">
-          <div className="c-toggleicon02">
-            <input
-              type="checkbox"
-              checked={isChecked}
-              onChange={handleCheckboxChange}
-            />
-            <span className="icon"></span>
-          </div>
-          <h3>Entreprise 5</h3>
-          <ul className="inline-items">
-            <li>Nom</li>
-            <li>Contact</li>
-            <li>Date</li>
-          </ul>
-        </div>
+        <Card id="1" />
+        <Card id="2" />
+        <Card id="3" />
+      </div>
+      <div className="logos-footer">
         <NavLink to="/entreprises">
-            <IoMdAddCircle className="icon-style" />
-          </NavLink>
-          {/*<button className="icon-style" onClick={handleBiMailSendClick}></button>*/}
-          <BiMailSend
-            className="icon-style"
-            onClick={() => {
-              setShowModal(!showModal);
-            }}
-          />
+          <IoMdAddCircle className="icon-style" />
+        </NavLink>
+        <BiMailSend
+          className="icon-style"
+          onClick={() => {
+            setShowModal(!showModal);
+          }}
+        />
 
-          {showModal && (
-            <ModalNotifier
-            /* show={showModal}
-              handleClose={handleCloseModal}
-              handleEnvoi={() => {}} */
-            />
-          )}
+        {showModal && <ModalNotifier />}
       </div>
       <footer>
-        <div className="logos-footer">
-          
-        </div>
+        <div className="logos-footer"></div>
       </footer>
-      {/*<button onClick={onOpenModal}>Open modal</button>
-      <Modal open={open} onClose={onCloseModal} center>
-        <h2>Simple centered modal</h2>
-          </Modal>*/}
     </>
   );
 };

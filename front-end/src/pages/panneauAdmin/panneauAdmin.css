@@ -21,6 +21,7 @@
   word-wrap: break-word;
   gap: 10px;
 }
+<<<<<<< HEAD
 .cards {
   display: flex;
   flex-wrap: wrap;
@@ -69,6 +70,18 @@ footer {
   height: 60px;
   position:absolute;
   
+=======
+  footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: hsla(0, 0%, 100%, 0.6); /* Couleur de fond du footer */
+    color: #006c92; /* Couleur du texte du footer */
+    text-align: center;
+    padding: 10px 0; /* Ajustez le padding selon vos besoins */
+    height: 60px;    
+>>>>>>> 876f994acb86ef5795d3050914393cd8d07f3b4a
 }
 .logos-footer {
   display: flex;
@@ -76,6 +89,7 @@ footer {
 }
 .icon-style {
   color: #006c92;
+<<<<<<< HEAD
   height: 20px;
   font-size: 100px; /* une icone se comporte comme un caractère */
   
@@ -133,3 +147,14 @@ footer {
     }
   }
 }
+=======
+  height: 60px;
+  font-size: 100px;
+}
+
+
+/* display: flex;
+    justify-content: space-between;
+    width: 100%;
+} */
+>>>>>>> 876f994acb86ef5795d3050914393cd8d07f3b4a

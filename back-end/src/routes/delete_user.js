@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import controller from "../controller/index.js";
+import controller, { PermissionException } from "../controller/index.js";
 
 export default Router().delete("/delete_user", async (req, res) => {
   try {
@@ -11,13 +11,18 @@ export default Router().delete("/delete_user", async (req, res) => {
       return;
     }
 
-    if (await controller.deleteUser(firm_name)) {
+    if (await controller.deleteUser(req.session, firm_name)) {
       res.sendStatus(200);
     } else {
       res.sendStatus(404);
     }
-    
+
   } catch (err) {
+    if (err instanceof PermissionException) {
+      res.sendStatus(401);
+      return;
+    }
+
     console.log("Error : " + err.stack);
     res.sendStatus(500);
   }
