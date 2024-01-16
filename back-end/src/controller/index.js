@@ -9,27 +9,48 @@ import {
   MYSQL_PORT,
 } from "../environment.js";
 
+/**
+ * Throw quand une `Session` n'as pas les permissions requise pour executer un requête
+ */
 export class PermissionException extends Error {
   constructor() {
     super("Unauthorized");
   }
 }
 
+/**
+ * @desc Etat et permissions d'une `Session`
+ */
 const SessionState = {
   NO_SESSION: 0,
   USER: 1,
   ADMIN: 2,
 }
 
+/**
+ * Gère toutes les intéraction avec la base de données
+ *
+ * Ne doit pas être directement construit, voir (@link controller)
+ */
 class Controller {
-  #connection;
+  connection;
 
+  /**
+   * Initialise la connection à la base de données
+   *
+   * Créer la base de données si elle n'existe pas
+   */
   constructor() {
     this.connect();
   }
 
+  /**
+   * Initialise la connection à la base de données
+   *
+   * Créer la base de données si elle n'existe pas
+   */
   connect() {
-    this.#connection = mysql.createConnection({
+    this.connection = mysql.createConnection({
       host: DATABASE_HOST,
       user: DATABASE_USER,
       password: DATABASE_PASSWORD,
@@ -37,7 +58,7 @@ class Controller {
       port: MYSQL_PORT,
     });
 
-    this.#connection.connect((err) => {
+    this.connection.connect((err) => {
       if (err) {
         console.log(err.errno);
         if (err.errno == 1049 /* Database doesn't exists */) {
@@ -83,6 +104,9 @@ class Controller {
     });
   }
 
+  /**
+   * Créer la base de données
+   */
   initialize_database() {
     let initialization_query = `
       CREATE TABLE IF NOT EXISTS users (
@@ -100,7 +124,7 @@ class Controller {
         last_token_usage timestamp NULL DEFAULT NULL,
         PRIMARY KEY (firm_name)
       );`;
-    this.#connection.query(initialization_query, (err, _results) => {
+    this.connection.query(initialization_query, (err, _results) => {
       if (err) {
         console.error(
           "Failed to setup database '" + DATABASE_NAME + "': " + err.stack
@@ -111,9 +135,14 @@ class Controller {
     });
   }
 
+  /**
+   * Execute la requête sql `query` et renvoie le résultat de la requête
+   * @param {string} query - The sql query to be executed
+   * @return {any} the result of the sql request
+  */
   async executeQuery(query) {
     return new Promise((resolve, reject) => {
-      this.#connection.query(query, function(error, results, fields) {
+      this.connection.query(query, function(error, results, fields) {
         if (error) {
           reject(error);
         } else {
@@ -123,11 +152,16 @@ class Controller {
     });
   }
 
+  /**
+   * Verifie le niveau de permission d'une session
+   * @param {Session} session - session dont le niveau de permission va être vérifié
+   * @return {SessionState} niveau de permission de la session
+   */
   async verify_session(session) {
     if (session.firm_name == undefined | session.token == undefined) {
       return SessionState.NO_SESSION;
     }
-    
+
     let results = await this.executeQuery(`SELECT is_admin FROM users WHERE
       firm_name = '${session.firm_name}' AND
       token = '${session.token}' AND
@@ -141,6 +175,12 @@ class Controller {
     return results[0].is_admin[0] == 1 ? SessionState.ADMIN : SessionState.USER;
   }
 
+  /**
+   * Créer un token de connection pour les indentifiants donné
+   * @param {string} firm_name - Le nom de l'entreprise avec laquelle se connecter
+   * @param {string} password - Le mot de passe avec lequelle se connecter
+   * @return {string | null} Le token de connection sous la forme "token:firm_name"
+   */
   async authentificate(firm_name, password) {
     let results = await this.executeQuery(`SELECT password_hash FROM users WHERE firm_name = '${firm_name}'`);
     if (results[0] == undefined) {
@@ -162,6 +202,10 @@ class Controller {
     return token + ":" + firm_name;
   }
 
+  /**
+   * Renvoie la liste des noms d'entreprises
+   * @return {[string]} Le liste des noms d'entreprises
+   */
   async listUsers() {
     let results = await this.executeQuery("SELECT firm_name FROM users");
 
@@ -172,6 +216,19 @@ class Controller {
     );
   }
 
+  /**
+   * Créer un utilisateur avec à partir des arguments
+   * @throws {PermissionException} Throw quand le session n'as pas les permissions administateurs
+   * @param {Session} session - Session utilisé pour créer l'utilisateur
+   * @param {string} firm_name - Nom de l'entreprise à créer
+   * @param {string} first_name - Prénom du contact
+   * @param {string} last_name - Nom du contact
+   * @param {string} email - Email  sur laquelle seront envoyées les notifications de courrier
+   * @param {string} phone_number - Numéro de téléphone sur lequelle seront envoyées les notifications de courrier
+   * @param {string} password - Mot de passe
+   * @param {boolean} is_admin - Définit si l'utilisateur sera un administrateur
+   * @returns {boolean} Renvoie `false` si le nom d'entreprise est déjà utilisé et que l'opération à échoué, `true` sinon
+   */
   async createUser(
     session,
     firm_name,
@@ -217,6 +274,12 @@ class Controller {
     return true;
   }
 
+  /**
+   * Supprime un utilisateur
+   * @throws {PermissionException} Throw quand le session n'as pas les permissions administateurs
+   * @param {Session} session - Session utilisé pour supprimer l'utilisateur
+   * @param {string} firm_name - Nom de l'entreprise à supprimer
+   */
   async deleteUser(session, firm_name) {
     if (await this.verify_session(session) != SessionState.ADMIN) {
       throw new PermissionException();
@@ -225,6 +288,23 @@ class Controller {
     return (await this.executeQuery(`DELETE FROM users WHERE firm_name = '${firm_name}'`)).affectedRows > 0;
   }
 
+  /**
+   * Modifie des informations liée à un utilisateur
+   * @throws {PermissionException} Throw quand le session n'as pas les permissions administrateur
+             sauf si seulement has_mail est définit et le session correspond à l'utilisateur modifier
+   * @param {Session} session - Session utilisé pour modifier l'utilisateur
+   * @param {string | undefined} firm_name - Nom de l'entreprise à modifier
+   * @param {string | undefined} first_name - Nouveau prénom du contact
+   * @param {string | undefined} last_name - Nouveau nom du contact
+   * @param {string | undefined} email - Nouvel email sur laquelle seront envoyées les notifications de courrier
+   * @param {string | undefined} phone_number - Nouveau numéro de téléphone sur lequelle seront envoyées les notifications de courrier
+   * @param {string | undefined} password - Nouveau mot de passe
+   * @param {boolean | undefined} has_mail - Définit si l'utilisateur à recu un mail ou non,
+            utiliser `true` pour signaler l'arrivée d'un nouveau courrier,
+            `false` pour signaler la récupération d'un courrier
+   * @param {boolean | undefined} is_admin - Définit si l'utilisateur sera un administrateur
+   * @returns {boolean} Renvoie `false` si le nom d'entreprise n'est pas enregistré et que l'opération à échoué, `true` sinon
+   */
   async updateUser(
     session,
     firm_name,
@@ -237,7 +317,10 @@ class Controller {
     is_admin
   ) {
     let session_state = await this.verify_session(session)
-    if (session_state == SessionState.NO_SESSION) {
+    if (
+      session_state == SessionState.NO_SESSION ||
+      (session_state == SessionState.USER && session.firm_name != firm_name)
+    ) {
       throw new PermissionException();
     }
 
@@ -295,6 +378,15 @@ class Controller {
     return result.affectedRows > 0;
   }
 
+  /**
+   * Renvoie les information d'un utilisateur
+   * @throws {PermissionException} Throw quand le session n'as pas les permissions administrateur
+             sauf si le nom d'entreprise correspond au nom d'entreprise de la session 
+   * @param {Session} session - Session utilisé pour obtenir l'utilisateur
+   * @param {string} firm_name - Le nom de l'entreprise dont les informations doivent être renvoyé 
+   * @returns {* | null} - Retourne first_name, last_name, email, phone_number,
+              last_received_mail, last_picked_up, has_mail, is_admin 
+   */
   async getUser(session, firm_name) {
     let session_state = await this.verify_session(session);
     if (session_state == SessionState.NO_SESSION || (session_state == SessionState.USER && firm_name != session_firm_name)) {
@@ -323,6 +415,11 @@ class Controller {
     return user;
   }
 
+  /**
+   * Déconnecte la session utilisé, suppriment le token de la base de données
+   * @throws {PermissionException} Throw quand le session n'est pas valide
+   * @param {Session} session - La session à déconnecter
+   */
   async disconnect(session) {
     if (await this.verify_session(session) == SessionState.NO_SESSION) {
       throw new PermissionException();
