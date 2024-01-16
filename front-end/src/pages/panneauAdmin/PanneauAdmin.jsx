@@ -11,10 +11,6 @@ import ModalNotifier from "../../pages/Notifier/Notifier.jsx";
 const PanneauAdmin = () => {
   const [showModal, setShowModal] = useState(false);
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-
   const [isChecked, setIsChecked] = useState(false);
 
   // const [open, setOpen] = useState(false);
@@ -122,10 +118,7 @@ const PanneauAdmin = () => {
             <li>Date</li>
           </ul>
         </div>
-      </div>
-      <footer>
-        <div className="logos-footer">
-          <NavLink to="/entreprises">
+        <NavLink to="/entreprises">
             <IoMdAddCircle className="icon-style" />
           </NavLink>
           {/*<button className="icon-style" onClick={handleBiMailSendClick}></button>*/}
@@ -143,6 +136,10 @@ const PanneauAdmin = () => {
               handleEnvoi={() => {}} */
             />
           )}
+      </div>
+      <footer>
+        <div className="logos-footer">
+          
         </div>
       </footer>
       {/*<button onClick={onOpenModal}>Open modal</button>
