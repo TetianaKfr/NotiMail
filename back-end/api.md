@@ -14,7 +14,7 @@ output {
 ```
 
 The returned token should be stored on [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
-And should be send on every next request to api with the `Authorization: Bearer ${token}` header
+And should be sent on every next request to api with the `Authorization: Bearer ${token}` header
 </details>
 
 <details>
