@@ -11,14 +11,13 @@ import ModalNotifier from "./pages/Notifier/Notifier.jsx";
 import Notification from "./pages/notification/notification.jsx";
 
 // Importez vos autres composants ici
-let user = { companyName: 'entreprise 1' }
+// let user = { companyName: 'entreprise 1' }
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <Navbar></Navbar>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/entreprise" element={<Entreprises user={user} />} />
         <Route path="/admin" element={<PanneauAdmin />} />
         <Route path="/user" element={<PanneauUser />} />
         <Route path="/entreprises" element={<Entreprises />} />

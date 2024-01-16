@@ -16,13 +16,19 @@ const PanneauAdmin = () => {
       <div className="bandeau">
         <div className="search-bar">
           <FaSearch className="search-icon" />
-          <input type="text" placeholder="Rechercher..." />
+          <input 
+          type="text" 
+          placeholder="Rechercher" 
+          className="text-input"
+          />
         </div>
       </div>
       <div className="cards">
         <Card id="1" />
         <Card id="2" />
         <Card id="3"/>
+        <Card id="4"/>
+        <Card id="5"/>
       </div>
       <footer>
         <div className="logos-footer">
