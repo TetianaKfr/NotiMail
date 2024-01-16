@@ -14,7 +14,7 @@ import disconnect from "./disconnect.js";
 
 let router = express.Router();
 
-app.use(cors())
+router.use(cors())
 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
