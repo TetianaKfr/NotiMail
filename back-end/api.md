@@ -84,3 +84,10 @@ output {
 }
 ```
 </details>
+
+<details>
+  <summary>POST - disconnect</summary>
+
+Only the Authorization header
+
+</details>
