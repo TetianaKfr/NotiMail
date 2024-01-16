@@ -322,6 +322,14 @@ class Controller {
 
     return user;
   }
+
+  async disconnect(session) {
+    if (await this.verify_session(session) == SessionState.NO_SESSION) {
+      throw new PermissionException();
+    }
+
+    this.executeQuery(`UPDATE users SET token = NULL where firm_name = ${session.firm_name}`);
+  }
 }
 
 export default new Controller();

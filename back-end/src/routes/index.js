@@ -9,6 +9,7 @@ import create_user from "./create_user.js";
 import delete_user from "./delete_user.js";
 import update_user from "./update_user.js";
 import get_user from "./get_user.js";
+import disconnect from "./disconnect.js";
 
 let router = express.Router();
 
@@ -26,5 +27,6 @@ router.use(create_user);
 router.use(delete_user);
 router.use(update_user);
 router.use(get_user);
+router.use(disconnect);
 
 export default router;
