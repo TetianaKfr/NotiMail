@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import bearerToken from "express-bearer-token";
+import cors from "cors";
 
 import Session from "../session.js";
 import authentificate from "./authentificate.js";
@@ -12,6 +13,8 @@ import get_user from "./get_user.js";
 import disconnect from "./disconnect.js";
 
 let router = express.Router();
+
+app.use(cors())
 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
