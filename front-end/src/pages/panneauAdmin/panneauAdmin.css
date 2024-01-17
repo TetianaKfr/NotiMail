@@ -1,8 +1,27 @@
 .bandeau {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+<<<<<<< HEAD
+.search-bar {
+  display: flex;
+  align-items: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  width: 330px;
+  height: 50px;
+  /* padding: 0.5em 0; */
+  background: #e3e3e3;
+  border-radius: 80px;
+  border: none;
+  color: #787878;
+  font-size: 24px;
+  font-family: Arial, sans-serif;
+  font-weight: 400;
+  word-wrap: break-word;
+  gap: 10px;
+=======
 .search-icon{
     color: white;
 }
@@ -25,7 +44,58 @@
     font-weight: 400;
     word-wrap: break-word; 
     gap: 10px;
+>>>>>>> 64dfb80505286cfc906d6d470ea2c4ad25c0dbc2
 }
+<<<<<<< HEAD
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px; /* Espacement entre les cartes */
+  font-family: "Kanit-Regular", Helvetica;
+  font-weight: 400;
+  color: #006c92;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.card {
+  background-color: #e3e3e3; /* Couleur de fond des cartes */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre pour un effet 3D */
+  border-radius: 10px; /* Bords arrondis */
+  padding: 15px; /* Espace intérieur */
+  width: 300px; /* Largeur fixe pour chaque carte */
+  
+}
+
+.card h3 {
+  margin-top: 0;
+  font-family: "Kanit-Bold", Helvetica;
+  font-weight: 700;
+  color: #006c92;
+  font-size: 20px;
+  letter-spacing: 0;
+}
+.inline-items li {
+  list-style-type: none; /* Enlève les puces */
+  padding-left: 0; /* Enlève le padding à gauche souvent ajouté par défaut */
+  
+}
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: white; /* Couleur de fond du footer */
+  color: #006c92; /* Couleur du texte du footer */
+  text-align: center;
+  padding: 10px 0; /* Ajustez le padding selon vos besoins */
+  height: 60px;
+  position:absolute;
+  
+=======
   footer {
     position: fixed;
     left: 0;
@@ -36,13 +106,72 @@
     text-align: center;
     padding: 10px 0; /* Ajustez le padding selon vos besoins */
     height: 60px;    
+>>>>>>> 876f994acb86ef5795d3050914393cd8d07f3b4a
 }
 .logos-footer {
-    display: flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-around;
 }
 .icon-style {
   color: #006c92;
+<<<<<<< HEAD
+  height: 20px;
+  font-size: 100px; /* une icone se comporte comme un caractère */
+  
+}
+.c-toggleicon02 {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 35px;
+  
+  input {
+    width: 50px;
+    height: 25px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    cursor: pointer;
+    &:checked {
+      + .icon {
+        background-color: #2196f3;
+      }
+      + .icon:after {
+        transform: translateX(26px);
+      }
+    }
+    &:focus + .icon {
+      box-shadow: 0 0 1px #2196f3;
+    }
+  }
+  .icon {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+    border-radius: 50px;
+    
+    &:after {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: 0.3s;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+  }
+}
+=======
   height: 60px;
   font-size: 100px;
 }
@@ -52,3 +181,4 @@
     justify-content: space-between;
     width: 100%;
 } */
+>>>>>>> 876f994acb86ef5795d3050914393cd8d07f3b4a

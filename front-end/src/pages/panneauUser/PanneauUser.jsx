@@ -3,8 +3,8 @@ import { IoMdMail } from "react-icons/io";
 import { useState } from "react";
 
 const PanneauUser = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [hasMail, setHasMail] = useState(false);
+  const [showModal, setShowModal] = useState(true);
+  const [hasMail, setHasMail] = useState(true);
 
   return (
     <>
