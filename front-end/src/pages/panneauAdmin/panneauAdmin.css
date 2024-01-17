@@ -3,6 +3,7 @@
   align-items: center;
   justify-content: center;
 }
+<<<<<<< HEAD
 .search-bar {
   display: flex;
   align-items: center;
@@ -20,6 +21,30 @@
   font-weight: 400;
   word-wrap: break-word;
   gap: 10px;
+=======
+.search-icon{
+    color: white;
+}
+.text-input::placeholder {
+    color: white;
+    font-size: 16px;
+}
+.search-bar {    
+    display: flex;
+    align-items: center;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    width: 310px; 
+    height: 50px; 
+    padding-inline: 10px;
+    background: #E3E3E3; 
+    border-radius: 80px; 
+    font-size: 24px; 
+    font-family: Arial, sans-serif;
+    font-weight: 400;
+    word-wrap: break-word; 
+    gap: 10px;
+>>>>>>> 64dfb80505286cfc906d6d470ea2c4ad25c0dbc2
 }
 <<<<<<< HEAD
 .cards {
@@ -101,7 +126,6 @@ footer {
   height: 35px;
   
   input {
-    opacity: 0;
     width: 50px;
     height: 25px;
     position: absolute;

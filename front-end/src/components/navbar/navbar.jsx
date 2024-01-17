@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import './navbar.css';
-import logoMail from '../../assets/images/logo-notimail.png';
+// import logoMail from "/Users/malika.mezaoui/Documents/Ferhat/Cours imts/NotiMail/front-end/src/assets/images/logo-by-notimail.png";
 
 const Navbar = () => {
   const location = useLocation();
@@ -23,7 +23,7 @@ const Navbar = () => {
       <div className='ma-navbar'>
         <div className='left'>
           <nav className='logomail'>
-            <img src={logoMail} alt="logo-note-mail" />
+            {/*<img src={logoMail} alt="logo-note-mail" />*/}
           </nav>
         </div>
         <div className="right">

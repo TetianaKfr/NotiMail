@@ -29,7 +29,11 @@ const PanneauAdmin = () => {
       <div className="bandeau">
         <div className="search-bar">
           <FaSearch className="search-icon" />
-          <input type="text" placeholder="Rechercher..." />
+          <input 
+          type="text" 
+          placeholder="Rechercher" 
+          className="text-input"
+          />
         </div>
       </div>
       <div className="cards">
@@ -41,6 +45,10 @@ const PanneauAdmin = () => {
         <NavLink to="/entreprises">
           <IoMdAddCircle className="icon-style" />
         </NavLink>
+        
+      </div>
+      <footer>
+        <div className="logos-footer"></div>
         <BiMailSend
           className="icon-style"
           onClick={() => {
@@ -49,9 +57,9 @@ const PanneauAdmin = () => {
         />
 
         {showModal && <ModalNotifier />}
-      </div>
-      <footer>
-        <div className="logos-footer"></div>
+        <Card id="3"/>
+        <Card id="4"/>
+        <Card id="5"/>
       </footer>
     </>
   );
