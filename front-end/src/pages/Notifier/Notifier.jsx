@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import "../../pages/Notifier/notifier.css";
+import { NavLink } from "react-router-dom";
 
 // Composant Modal
-const Modal = ({ show, handleClose, handleEnvoi }) => {
+const Modal = ({ show, setShowModal, handleEnvoi }) => {
   // État local
   const [data, setData] = useState([]); // Données récupérées de l'API
-  const [selectedCompany, setSelectedCompany] = useState("");// Entreprise sélectionnée dans la liste déroulante
-  const [companies, setCompanies] = useState([// Liste des entreprises
+  const [selectedCompany, setSelectedCompany] = useState(""); // Entreprise sélectionnée dans la liste déroulante
+  const [companies, setCompanies] = useState([
+    // Liste des entreprises
     "Microsoft",
     "Microsoft",
     "Google",
@@ -22,6 +24,11 @@ const Modal = ({ show, handleClose, handleEnvoi }) => {
     "Tesla Motors",
     "Space X",
   ]);
+  const [isLoading, setIsLoading] = useState(false); // État du chargement
+  const handleClose = () => {
+    setShowModal(false);
+  };
+
   // Effet secondaire pour récupérer des données de l'API lors du montage
   useEffect(() => {
     fetch("/api/data")
@@ -60,6 +67,9 @@ const Modal = ({ show, handleClose, handleEnvoi }) => {
           </div>
         </div>
       </section>
+      <NavLink to="/admin" onClick={handleClose}>
+        Close
+      </NavLink>
     </div>
   );
 };
