@@ -1,6 +1,8 @@
 import React from "react";
 import { TiArrowLeftThick } from "react-icons/ti";
 import "../Entreprise/entreprise.css";
+import { BsFillArrowLeftSquareFill } from "react-icons/bs";
+
 
 const Entreprises = () => {
   const [values, setValues] = React.useState({
@@ -30,12 +32,14 @@ const Entreprises = () => {
 
   return (
     <>
+    <div className="retour">
+    <BsFillArrowLeftSquareFill id="retour-icon" />
     <h2 className="entreprise-title">Entreprise</h2>
+    </div>
+    
     <div className="entreprises">
     <form id="form" onSubmit={handleSubmit}>
-      <div className="header-entreprise">
-        <span> <TiArrowLeftThick className="back-icon" /></span>
-      </div>
+      
         
       <div className="entreprise">
         <label>

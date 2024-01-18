@@ -4,11 +4,9 @@ import "../../pages/Notifier/notifier.css";
 
 // Composant Modal
 const Modal = ({ show, handleClose, handleEnvoi }) => {
-  // État local
-  const [data, setData] = useState([]); // Données récupérées de l'API
-  const [selectedCompany, setSelectedCompany] = useState("");// Entreprise sélectionnée dans la liste déroulante
-  const [companies, setCompanies] = useState([// Liste des entreprises
-    "Microsoft",
+  const [data, setData] = useState([]);
+  const [selectedCompany, setSelectedCompany] = useState("");
+  const [companies, setCompanies] = useState([
     "Microsoft",
     "Google",
     "Meta",
@@ -22,13 +20,13 @@ const Modal = ({ show, handleClose, handleEnvoi }) => {
     "Tesla Motors",
     "Space X",
   ]);
-  // Effet secondaire pour récupérer des données de l'API lors du montage
+
   useEffect(() => {
     fetch("/api/data")
       .then((response) => response.json())
       .then((data) => setData(data));
   }, []);
-  // Fonction de gestion du changement d'entreprise dans la liste déroulante
+
   const handleCompanyChange = (event) => {
     setSelectedCompany(event.target.value);
   };
