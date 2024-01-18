@@ -89,7 +89,7 @@ export const EMAIL_SERVICE = email_service;
 
 
 /**
- * Email utilisé pour envoyer les notification de colis recus
+ * Address email utilisé pour envoyer les notification de colis recus
  * stocké dans le .env
  * @type {string}
  */
@@ -102,7 +102,7 @@ if (EMAIL == undefined) {
 }
 
 /**
- * Email utilisé pour envoyer les notification de colis recus
+ * Mot de passe de l'addresse email utilisé pour envoyer les notification de colis recus
  * stocké dans le .env
  * @type {string}
  */
