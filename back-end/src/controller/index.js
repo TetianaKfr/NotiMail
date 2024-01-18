@@ -10,6 +10,7 @@ import {
 } from "../environment.js";
 import PermissionException from "./permission_exception.js";
 import { SessionState } from "../session.js"
+import notify from "../notify.js"
 
 /**
  * Gère toutes les intéraction avec la base de données
@@ -100,8 +101,8 @@ class Controller {
         firm_name varchar(120) NOT NULL,
         first_name varchar(50) DEFAULT NULL,
         last_name varchar(50) DEFAULT NULL,
-        email varchar(320) NOT NULL,
-        phone_number varchar(25) NOT NULL,
+        email varchar(320) NULL,
+        phone_number varchar(25) NULL,
         password_hash varchar(72) NOT NULL,
         last_received_mail timestamp NULL DEFAULT NULL,
         last_picked_up timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -390,6 +391,16 @@ class Controller {
     );
 
     if (should_notify) {
+      const contact_information = (await this.executeQuery(
+        'SELECT email phone_number FROM users WHERE firm_name = ?',
+        firm_name
+      ))[0];
+      if (contact_information != undefined) {
+        const { email, phone_number } = contact_information;
+        notify(email, phone_number);
+      } else {
+        console.error(`Error: Failed to query contact informations for notifying '${firm_name}'`);
+      }
       // TODO
     }
 

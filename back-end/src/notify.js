@@ -11,12 +11,14 @@ const EMAIL_TRANSPORTER = nodemailer.createTransport({
 });
 
 export default function notify(email, phone_number) {
-  EMAIL_TRANSPORTER.sendMail({
-    from: EMAIL,
-    to: email,
-    subject: "You have received a mail",
-    text: "TODO",
-  }, (err) => {
-    console.error("Error: Failed to send mail: " + err);
-  });
+  if (email != null) {
+    EMAIL_TRANSPORTER.sendMail({
+      from: EMAIL,
+      to: email,
+      subject: "You have received a mail",
+      text: "TODO",
+    }, (err) => {
+      console.error("Error: Failed to send mail: " + err);
+    });
+  }
 }
