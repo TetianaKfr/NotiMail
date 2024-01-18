@@ -309,6 +309,7 @@ class Controller {
     }
 
     let require_admin = false;
+    let should_notify = false;
 
     let updated_fields = [];
 
@@ -344,8 +345,9 @@ class Controller {
         updated_fields.push(`last_picked_up = NOW()`);
       }
 
-      if (has_mail == true) {
+      if (has_mail) {
         require_admin = true;
+        should_notify = true;
       }
     }
     if (is_admin != undefined) {
@@ -362,6 +364,10 @@ class Controller {
       ${updated_fields.join(",")}
       WHERE firm_name = '${firm_name}'
     `);
+
+    if (should_notify) {
+      // TODO
+    }
 
     return result.affectedRows > 0;
   }
