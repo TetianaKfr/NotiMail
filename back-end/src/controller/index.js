@@ -138,11 +138,11 @@ class Controller {
   /**
    * Execute la requête sql `query` et renvoie le résultat de la requête
    * @param {string} query - The sql query to be executed
-   * @return {any} the result of the sql request
+   * @return {Promise<any>} the result of the sql request
   */
   async executeQuery(query) {
     return new Promise((resolve, reject) => {
-      this.connection.query(query, function(error, results, fields) {
+      this.connection.query(query, function(error, results, _fields) {
         if (error) {
           reject(error);
         } else {
@@ -155,7 +155,7 @@ class Controller {
   /**
    * Verifie le niveau de permission d'une session
    * @param {Session} session - session dont le niveau de permission va être vérifié
-   * @return {SessionState} niveau de permission de la session
+   * @return {Promise<SessionState>} niveau de permission de la session
    */
   async verify_session(session) {
     if (session.firm_name == undefined | session.token == undefined) {
@@ -179,7 +179,7 @@ class Controller {
    * Créer un token de connection pour les indentifiants donné
    * @param {string} firm_name - Le nom de l'entreprise avec laquelle se connecter
    * @param {string} password - Le mot de passe avec lequelle se connecter
-   * @return {string | null} Le token de connection sous la forme "token:firm_name"
+   * @return {Promise<string | null>} Le token de connection sous la forme "token:firm_name"
    */
   async authentificate(firm_name, password) {
     let results = await this.executeQuery(`SELECT password_hash FROM users WHERE firm_name = '${firm_name}'`);
@@ -204,7 +204,7 @@ class Controller {
 
   /**
    * Renvoie la liste des noms d'entreprises
-   * @return {[string]} Le liste des noms d'entreprises
+   * @return {Promise<[string]>} Le liste des noms d'entreprises
    */
   async listUsers() {
     let results = await this.executeQuery("SELECT firm_name FROM users");
@@ -227,7 +227,7 @@ class Controller {
    * @param {string} phone_number - Numéro de téléphone sur lequelle seront envoyées les notifications de courrier
    * @param {string} password - Mot de passe
    * @param {boolean} is_admin - Définit si l'utilisateur sera un administrateur
-   * @returns {boolean} Renvoie `false` si le nom d'entreprise est déjà utilisé et que l'opération à échoué, `true` sinon
+   * @returns {Promise<boolean>} Renvoie `false` si le nom d'entreprise est déjà utilisé et que l'opération à échoué, `true` sinon
    */
   async createUser(
     session,
@@ -278,7 +278,7 @@ class Controller {
    * Supprime un utilisateur
    * @throws {PermissionException} Throw quand le session n'as pas les permissions administateurs
    * @param {Session} session - Session utilisé pour supprimer l'utilisateur
-   * @param {string} firm_name - Nom de l'entreprise à supprimer
+   * @param {Promise<string>} firm_name - Nom de l'entreprise à supprimer
    */
   async deleteUser(session, firm_name) {
     if (await this.verify_session(session) != SessionState.ADMIN) {
@@ -303,7 +303,7 @@ class Controller {
             utiliser `true` pour signaler l'arrivée d'un nouveau courrier,
             `false` pour signaler la récupération d'un courrier
    * @param {boolean | undefined} is_admin - Définit si l'utilisateur sera un administrateur
-   * @returns {boolean} Renvoie `false` si le nom d'entreprise n'est pas enregistré et que l'opération à échoué, `true` sinon
+   * @returns {Promise<boolean>} Renvoie `false` si le nom d'entreprise n'est pas enregistré et que l'opération à échoué, `true` sinon
    */
   async updateUser(
     session,
@@ -388,7 +388,7 @@ class Controller {
              sauf si le nom d'entreprise correspond au nom d'entreprise de la session 
    * @param {Session} session - Session utilisé pour obtenir l'utilisateur
    * @param {string} firm_name - Le nom de l'entreprise dont les informations doivent être renvoyé 
-   * @returns {* | null} - Retourne first_name, last_name, email, phone_number,
+   * @returns {Promise<* | null>} - Retourne first_name, last_name, email, phone_number,
               last_received_mail, last_picked_up, has_mail, is_admin 
    */
   async getUser(session, firm_name) {
