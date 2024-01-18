@@ -1,9 +1,9 @@
-import { get_token, SERVER_ADDRESS } from "./index.js";
+import { getToken, SERVER_ADDRESS } from "./index.js";
 
 export default async function delete_user(firm_name) {
   const response = await fetch(SERVER_ADDRESS + "delete_user", {
     method: "DELETE",
-    headers: { Authorization: `Bearer ${get_token()}` },
+    headers: { Authorization: `Bearer ${getToken()}` },
     body: {
       firm_name: firm_name,
     }

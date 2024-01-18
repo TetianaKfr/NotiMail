@@ -1,6 +1,6 @@
-import { get_token } from "./index.js";
+import { getToken } from "./index.js";
 
-export default async function create_user(
+export default async function createUser(
   firm_name,
   first_name,
   last_name,
@@ -11,7 +11,7 @@ export default async function create_user(
 ) {
   const response = await fetch(SERVER_ADRESS + "create_user", {
     method: "POST",
-    headers: { Authorization: `Bearer ${get_token()}` },
+    headers: { Authorization: `Bearer ${getToken()}` },
     body: {
       firm_name: firm_name,
       first_name: first_name,

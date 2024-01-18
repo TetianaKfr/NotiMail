@@ -1,11 +1,11 @@
 export const SERVER_ADDRESS = "http://localhost:3000/"
 
-export function get_token() {
+export function getToken() {
   return window.localStorage.getItem("token");
 }
 
-export function get_firm_name() {
-  let token = get_token();
+export function getFirmName() {
+  let token = getToken();
   if (token == null) {
     return null;
   }

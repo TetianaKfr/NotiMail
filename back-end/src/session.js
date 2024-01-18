@@ -28,3 +28,12 @@ export default class Session {
     this.firm_name = firm_name_parts.join(':');
   }
 }
+
+/**
+ * @desc Etat et permissions d'une `Session`
+ */
+export const SessionState = {
+  NO_SESSION: 0,
+  USER: 1,
+  ADMIN: 2,
+}
