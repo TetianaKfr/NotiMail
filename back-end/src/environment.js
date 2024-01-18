@@ -61,16 +61,55 @@ if (DATABASE_PASSWORD == undefined) {
   process.exit(-1);
 }
 
-/**
- * Port de la base de données mysql,
- * stocké dans le .env ou 3306 par défaut
- * @type {string}
- */
 let mysql_port = process.env.NOTIMAIL_MYSQL_PORT;
 if (mysql_port == undefined) {
   console.log(
     "The 'NOTIMAIL_MYSQL_PORT' environment variable is not set, defaulting to 3306"
   );
-  mysql_port = 3306;
+  mysql_port = "3306";
 }
+/**
+ * Port de la base de données mysql,
+ * stocké dans le .env ou 3306 par défaut
+ * @type {string}
+ */
 export const MYSQL_PORT = mysql_port;
+
+let email_service = process.env.NOTIMAIL_EMAIL_SERVICE;
+if (email_service == undefined) {
+  console.log("The 'NOTIMAIL_EMAIL_SERVICE' environment variable is not set, defaulting to 'gmail'");
+  email_service = "gmail";
+}
+/**
+ * Service nodemailer utilisé pour envoyer les notification de colis recus, exemple: 'gmail'
+ * stocké dans le .env
+ * @type {string}
+ */
+export const EMAIL_SERVICE = email_service;
+
+
+/**
+ * Email utilisé pour envoyer les notification de colis recus
+ * stocké dans le .env
+ * @type {string}
+ */
+export const EMAIL = process.env.NOTIMAIL_EMAIL;
+if (EMAIL == undefined) {
+  console.error(
+    "The 'NOTIMAIL_EMAIL' environment variable should be set"
+  );
+  process.exit(-1);
+}
+
+/**
+ * Email utilisé pour envoyer les notification de colis recus
+ * stocké dans le .env
+ * @type {string}
+ */
+export const EMAIL_PASSWORD = process.env.NOTIMAIL_EMAIL_PASSWORD;
+if (EMAIL_PASSWORD == undefined) {
+  console.error(
+    "The 'NOTIMAIL_EMAIL_PASSWORD' environment variable should be set"
+  );
+  process.exit(-1);
+}
