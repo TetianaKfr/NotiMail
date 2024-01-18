@@ -359,6 +359,10 @@ class Controller {
       } else {
         updated_fields.push(`last_picked_up = NOW()`);
       }
+
+      if (has_mail == true) {
+        require_admin = true;
+      }
     }
     if (is_admin != undefined) {
       updated_fields.push(`is_admin = b'${is_admin ? 1 : 0}'`);
