@@ -8,24 +8,8 @@ import {
   DATABASE_PASSWORD,
   MYSQL_PORT,
 } from "../environment.js";
-
-/**
- * Throw quand une `Session` n'as pas les permissions requise pour executer un requête
- */
-export class PermissionException extends Error {
-  constructor() {
-    super("Unauthorized");
-  }
-}
-
-/**
- * @desc Etat et permissions d'une `Session`
- */
-const SessionState = {
-  NO_SESSION: 0,
-  USER: 1,
-  ADMIN: 2,
-}
+import PermissionException from "./permission_exception.js";
+import { SessionState } from "../session.js"
 
 /**
  * Gère toutes les intéraction avec la base de données

@@ -1,6 +1,7 @@
 import { Router } from "express";
 
-import controller, { PermissionException } from "../controller/index.js"
+import controller from "../controller/index.js"
+import PermissionException from "../controller/permission_exception.js";
 
 export default Router().post("/disconnect", (req, res) => {
   try {
