@@ -158,7 +158,7 @@ class Controller {
         token = ? AND
         last_token_usage > SUBTIME(NOW(), "8:0")
       `,
-      [session.firm_name, session_token]
+      [session.firm_name, session.token]
     );
 
     if (results[0] == undefined) {
