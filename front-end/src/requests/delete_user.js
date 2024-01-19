@@ -9,7 +9,7 @@ export default async function delete_user(firm_name) {
     }
   });
 
-  if (!response.ok()) {
+  if (!response.ok) {
     return true;
   } else {
     return false;
