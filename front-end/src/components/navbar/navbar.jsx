@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import './navbar.css';
-import logoMail from "/Users/malika.mezaoui/Documents/Ferhat/Cours imts/NotiMail/front-end/src/assets/images/logo-by-notimail.png";
+import logoMail from "../../assets/images/logo-navbar.svg";
 
 const Navbar = () => {
   const location = useLocation();
