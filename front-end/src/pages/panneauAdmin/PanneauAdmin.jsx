@@ -1,103 +1,84 @@
-import { useState } from "react"; //Importe le hook useState
-import "./panneauAdmin.css";
-import { FaSearch } from "react-icons/fa";
+import React, { useState } from 'react'; //Importe le hook useState
+import "./panneauAdmin.css"
+import { FaSearch } from 'react-icons/fa';
 import { IoMdAddCircle } from "react-icons/io";
 import { BiMailSend } from "react-icons/bi";
-import { NavLink } from "react-router-dom";
-import { Card } from "../../components/Card/Card";
+import { Link } from 'react-router-dom';
+import { Card } from '../../components/Card/Card';
 import ModalNotifier from "../../pages/Notifier/Notifier.jsx";
 
 const PanneauAdmin = () => {
   const [showModal, setShowModal] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [companies, setCompanies] = useState([
-    "Microsoft",
-    "Google",
-    "Meta",
-    "Amazon",
-    "Tesla Motors",
-    "Space X",
-    "Microsoft",
-    "Google",
-    "Meta",
-    "Amazon",
-    "Tesla Motors",
-    "Space X",
-  ]);
+  const [searchFirm, setSearchFirm] = useState('');
+  const [filterFirm, setFilterFirm] = useState([]);
+  const [users, setUsers] = useState([])
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
+  // Utilise le hook useEffect pour effectuer une action après le rendu initial du composant
+  React.useEffect(() => {
+    // Effectue une requête GET pour récupérer les recettes depuis l'API
+    fetch(`http://localhost:3000/list_users`)
+      .then(result => result.json())
+      .then(data => {
+        console.log(data);
+        // Met à jour le state 'recettes' avec les données récupérées
+        setUsers(data);
+        // Initialise les recettes filtrées avec toutes les recettes au départ
+        setFilterFirm(data);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }, []);
 
-  const filteredCompanies = companies.filter((company) =>
-    company.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleSearch = (e) => {
+    e.preventDefault()
+    //valeur actuelle, ce qui est tapé par l'utilisateur
+    const word = e.target.value
+    setSearchFirm(word)
+    // Filtrer les recettes en fonction du terme de recherche
+    const filtered = users.filter(user =>
+      user.firm_name.toLowerCase().includes(word.toLowerCase())
+    );
 
-  const [isChecked, setIsChecked] = useState(false);
+    // Met à jour le state 'filteredRecettes' avec les recettes filtrées
+    setFilterFirm(filtered);
+  }
 
-  const [open, setOpen] = useState(false);
-
-  const onOpenModal = () => setOpen(true);
-  const onCloseModal = () => setOpen(false);
-
-  // Fonction pour gérer le changement d'état de la case à cocher "toggleicon"
-  // Cette fonction sera appelée à chaque fois que l'utilisateur clique sur la case à cocher
-
-  const handleCheckboxChange = (event) => {
-    // Met à jour l'état 'isChecked' avec la noucelle valeur de la case à cocher
-    setIsChecked(event.target.checked);
-  };
   return (
     <>
       <div className="bandeau">
         <div className="search-bar">
           <FaSearch className="search-icon" />
-          <div className="bandeau2">
-          <div className="search-bar2">
-            <input
-              type="text"
-              placeholder="Rechercher"
-              className="text-input"
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-          </div>
-        </div>
-        <div className="cards">
-          {filteredCompanies.map((company) => (
-            <Card key={company.id} company={company} />
-          ))}
-        </div>
+          <input
+            type="text"
+            placeholder="Rechercher"
+            className="text-input"
+            value={searchFirm}
+            onChange={handleSearch}
+          />
         </div>
       </div>
-      <div className="cards">
-        <Card id="1" />
-        <Card id="2" />
-        <Card id="3" />
-      </div>
-      <div className="logos-footer">
-        <NavLink to="/entreprises">
-          <IoMdAddCircle className="icon-style" />
-        </NavLink>
-      </div>
+      {filterFirm.map((firm) => (
+        <div key={firm.id} className="cards">
+          <Card />
+        </div>
+      ))}
       <footer>
-        <div className="logos-footer2"></div>
-        <NavLink to="/notifier">
-        <BiMailSend
-        className="icon-style"
-        onClick={() => {
-          setShowModal(true);
-        }}
-      />
-      {showModal && (
-        <ModalNotifier show={showModal} setShowModal={setShowModal} />
-      )}
-      </NavLink>
-        
-        <Card id="3" />
-        <Card id="4" />
-        <Card id="5" />
-        
+        <div className="logos-footer">
+          <Link to="/entreprises">
+            <IoMdAddCircle className="icon-style" />
+          </Link>
+          <BiMailSend
+            className="icon-style"
+            onClick={() => {
+              setShowModal(!showModal);
+            }}
+          />
+          {showModal && (
+            <ModalNotifier
+            />
+          )}
+        </div>
       </footer>
     </>
   );

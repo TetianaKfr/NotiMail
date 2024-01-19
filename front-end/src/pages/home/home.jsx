@@ -3,12 +3,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "./home.css";
+import authentificate from '../../requests/authentificate';
+import get_user from '../../requests/get_user';
 
 const Home = () => {
   // Utilisation du hook useState pour gérer l'état des entreprises
   const [entreprises, setEntreprises] = useState([]);
   const [firmName, setFirmName] = useState('')
   const [password, setPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const navigate = useNavigate()
   // Utilisation du hook useEffect pour effectuer une action au chargement du composant
   useEffect(() => {
 
@@ -38,7 +42,25 @@ const Home = () => {
   const passwordChange = (e) => {
     setPassword(e.target.value)
   }
+  // cree une fonction par "...(e) =>..."
   const handleSubmit = (e) => {
+    //execute la fonction par authentificate avec ses arguments entre parentheses
+    authentificate(firmName, password).then((result) => {
+      if (result == false) {
+        setErrorMessage ("Identifiant invalide") 
+          return 
+      }
+      get_user(firmName).then((user)=>{
+        if (user == null) {
+          return
+        }
+        if (user.is_admin) { 
+          navigate('/admin')
+        } else {
+          navigate('/user')
+        } 
+      })
+    })
     //empeche le rechargement de la page
     e.preventDefault() 
   }
@@ -81,7 +103,7 @@ const Home = () => {
             <img src="../../src/assets/images/padlock.svg" alt="submit" />
             </button>
           </div>
-
+                {errorMessage != null && <h4>{errorMessage}</h4>}
 
         </div>
       </form>
