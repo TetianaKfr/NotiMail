@@ -1,5 +1,4 @@
 import express from "express";
-import bodyParser from "body-parser";
 import bearerToken from "express-bearer-token";
 import cors from "cors";
 
@@ -16,8 +15,8 @@ let router = express.Router();
 
 router.use(cors())
 
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(bodyParser.json());
+router.use(express.urlencoded({ extended: true }));
+router.use(express.json());
 router.use(bearerToken());
 router.use((req, res, next) => {
   req.session = new Session(req);
