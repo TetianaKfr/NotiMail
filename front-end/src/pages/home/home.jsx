@@ -1,4 +1,4 @@
-// Importation du composant BtnConnect depuis le chemin spécifié
+import listUsers from "../../requests/list_users"
 // Importation des hooks useState et useEffect depuis React
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -11,17 +11,18 @@ const Home = () => {
   const [password, setPassword] = useState('')
   // Utilisation du hook useEffect pour effectuer une action au chargement du composant
   useEffect(() => {
-
     // Fonction asynchrone pour récupérer la liste des entreprises depuis l'API
     const fetchEntreprises = async () => {
-
       try {
-        // Appel à l'API pour récupérer la liste des entreprises
-        const reponse = await fetch('http://localhost:3000/list_users', { method: "GET" });
-        // Conversion de la réponse en format JSON
-        const user_list = await reponse.json();
-        // Mise à jour de l'état entreprises avec la liste récupérée
-        setEntreprises(user_list);
+        // Récupère la liste des entreprise à partir de l'api
+        let firm_list = await listUsers();
+        // Vérifie que la liste à bien pu être récupéré
+        if (firm_list == null) {
+          throw Error("Impossible de récupérer la liste des utilisateurs");
+        }
+
+        // Met à jour de la liste d'entreprises à partir des données le l'api
+        setEntreprises(firm_list);
       } catch (erreur) {
         // Affichage de l'erreur en cas d'échec de la récupération des entreprises
         console.error('Erreur lors de la récupération des entreprises:', erreur);
@@ -51,21 +52,23 @@ const Home = () => {
 
         <img className="home-logo" src="../../src/assets/images/logo-home.svg" alt="Logo" />
       </div>
+      {/* Section de connexion */}
       <form className='connexion' onSubmit={handleSubmit}>
-        <div className="custom-select">
-
+        {/* Sélecteur d'entreprise avec la possibilité de le désactiver pendant le chargement */}
+        <div className='company-select'>
           <label className='firm-select'>
-            <select id="id-1" onChange={firmNameChange}>
-              <option value="">Entreprise</option>
+            <select disabled={entreprises.length == 0} defaultValue={"DEFAULT"}>
+              <option disabled value="DEFAULT">Entreprise</option>
               {/* Affichage des options basées sur la liste des entreprises récupérées */}
-              {entreprises.map((entreprise, index) => (
-                <option key={index} value={entreprise}>
-                  {entreprise}
+            
+              {entreprises.map(firm_name => (
+                <option key={firm_name}>
+                  {firm_name}
                 </option>
-              ))}
+              ))
+            }
             </select>
           </label>
-
         </div>
 
         {/* Zone d'entrée du mot de passe avec le composant BtnConnect */}

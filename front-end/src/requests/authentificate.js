@@ -15,7 +15,7 @@ export default async function authentificate(firm_name, password) {
     }
   });
 
-  if (response.ok()) {
+  if (response.ok) {
     window.localStorage.setItem("token", response.json().token);
     return true;
   } else {
