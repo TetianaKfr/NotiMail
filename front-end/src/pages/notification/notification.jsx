@@ -6,6 +6,7 @@ import './notification.css';
 const Modal = (props) => {
     return (
         <>
+        <div className="panneau">
             <div style={{ background: 'red' }}>
                 Modal
                 <div>
@@ -13,6 +14,7 @@ const Modal = (props) => {
                     {/* Le bouton "annuler" utilise la fonction passée via props pour changer l'état de isOpen */}
                     <button onClick={() => { props.cancel(false) }}>annuler</button>
                 </div>
+            </div>
             </div>
         </>
     );

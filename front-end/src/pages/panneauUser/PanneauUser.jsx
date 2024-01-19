@@ -6,6 +6,7 @@ const PanneauUser = () => {
 
   return (
     <>
+    <div className="panneau">
       <img src="../../src/assets/images/mail-reddot.svg"/>
       <h2>{hasMail ? "Vous avez du courrier en attente" : "Aucun courrier en attente"}</h2>
       <button onClick={() => setShowModal(true)}>Réceptionner</button>
@@ -16,6 +17,7 @@ const PanneauUser = () => {
           <button onClick={() => alert("Courrier reçu")}>Valider</button>
         </div>
       )}
+      </div>
     </>
   );
 };
