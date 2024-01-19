@@ -4,20 +4,15 @@ import "../../pages/Notifier/notifier.css";
 import { NavLink } from "react-router-dom";
 
 // Composant Modal
-<<<<<<< HEAD
 const Modal = ({ show, setShowModal, handleEnvoi }) => {
   // État local
   const [data, setData] = useState([]); // Données récupérées de l'API
   const [selectedCompany, setSelectedCompany] = useState(""); // Entreprise sélectionnée dans la liste déroulante
-  const [companies, setCompanies] = useState([
-    // Liste des entreprises
-    "Microsoft",
-=======
-const Modal = ({ show, handleClose, handleEnvoi }) => {
+
+const Modal = ({ show, handleEnvoi }) => {
   const [data, setData] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState("");
   const [companies, setCompanies] = useState([
->>>>>>> 9e053863aa22ceee2775bd08f8ae5de3f2ece1e6
     "Microsoft",
     "Google",
     "Meta",
@@ -31,16 +26,12 @@ const Modal = ({ show, handleClose, handleEnvoi }) => {
     "Tesla Motors",
     "Space X",
   ]);
-<<<<<<< HEAD
   const [isLoading, setIsLoading] = useState(false); // État du chargement
   const handleClose = () => {
     setShowModal(false);
   };
 
   // Effet secondaire pour récupérer des données de l'API lors du montage
-=======
-
->>>>>>> 9e053863aa22ceee2775bd08f8ae5de3f2ece1e6
   useEffect(() => {
     fetch("/api/data")
       .then((response) => response.json())
@@ -98,6 +89,6 @@ Modal.propTypes = {
   show: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   handleEnvoi: PropTypes.func.isRequired,
-};
+};}
 // Export du composant Modal
 export default Modal;

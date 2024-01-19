@@ -9,6 +9,29 @@ import ModalNotifier from "../../pages/Notifier/Notifier.jsx";
 
 const PanneauAdmin = () => {
   const [showModal, setShowModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [companies, setCompanies] = useState([
+    "Microsoft",
+    "Google",
+    "Meta",
+    "Amazon",
+    "Tesla Motors",
+    "Space X",
+    "Microsoft",
+    "Google",
+    "Meta",
+    "Amazon",
+    "Tesla Motors",
+    "Space X",
+  ]);
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredCompanies = companies.filter((company) =>
+    company.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const [isChecked, setIsChecked] = useState(false);
 
@@ -29,7 +52,22 @@ const PanneauAdmin = () => {
       <div className="bandeau">
         <div className="search-bar">
           <FaSearch className="search-icon" />
-          <input type="text" placeholder="Rechercher" className="text-input" />
+          <div className="bandeau2">
+          <div className="search-bar2">
+            <input
+              type="text"
+              placeholder="Rechercher"
+              className="text-input"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+          </div>
+        </div>
+        <div className="cards">
+          {filteredCompanies.map((company) => (
+            <Card key={company.id} company={company} />
+          ))}
+        </div>
         </div>
       </div>
       <div className="cards">
