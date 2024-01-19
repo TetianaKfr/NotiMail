@@ -35,10 +35,10 @@ const PanneauAdmin = () => {
 
   const [isChecked, setIsChecked] = useState(false);
 
-  // const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  // const onOpenModal = () => setOpen(true);
-  // const onCloseModal = () => setOpen(false);
+  const onOpenModal = () => setOpen(true);
+  const onCloseModal = () => setOpen(false);
 
   // Fonction pour gérer le changement d'état de la case à cocher "toggleicon"
   // Cette fonction sera appelée à chaque fois que l'utilisateur clique sur la case à cocher
@@ -81,20 +81,23 @@ const PanneauAdmin = () => {
         </NavLink>
       </div>
       <footer>
-        <div className="logos-footer"></div>
+        <div className="logos-footer2"></div>
+        <NavLink to="/notifier">
         <BiMailSend
-          className="icon-style"
-          onClick={() => {
-            setShowModal(!showModal);
-          }}
-        />
-
-        {showModal && (
-          <ModalNotifier show={showModal} setShowModal={setShowModal} />
-        )}
+        className="icon-style"
+        onClick={() => {
+          setShowModal(true);
+        }}
+      />
+      {showModal && (
+        <ModalNotifier show={showModal} setShowModal={setShowModal} />
+      )}
+      </NavLink>
+        
         <Card id="3" />
         <Card id="4" />
         <Card id="5" />
+        
       </footer>
     </>
   );
