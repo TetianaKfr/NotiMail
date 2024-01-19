@@ -44,8 +44,9 @@ const Entreprises = () => {
       <div className="entreprise">
         <label>
           Entreprise :
-          <input type="text" name="entreprise" value={values.entreprise} onChange={handleChange} />
+          
         </label>
+        <input type="text" name="entreprise" value={values.entreprise} onChange={handleChange} />
       </div>
 
       <div className="contact">
@@ -80,7 +81,7 @@ const Entreprises = () => {
       <div className="admin">
         <label>
           Admin :
-          <input type="checkbox" name="admin" checked={values.admin} onChange={handleChange} />
+          <input id="checkbox" type="checkbox" name="admin" checked={values.admin} onChange={handleChange} />
         </label>
       </div>
 
