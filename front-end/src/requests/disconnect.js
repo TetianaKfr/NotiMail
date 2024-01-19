@@ -8,7 +8,7 @@ export default async function disconnect() {
     },
   });
 
-  window.localStorage.setItem("token", undefined);
+  window.localStorage.removeItem("token");
 
   if (!response.ok) {
     return true;

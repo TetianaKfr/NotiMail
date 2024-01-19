@@ -37,12 +37,6 @@ const Home = () => {
     fetchEntreprises();
   }, []);
 
-  const firmNameChange = (e) => {
-    setFirmName(e.target.value)
-  }
-  const passwordChange = (e) => {
-    setPassword(e.target.value)
-  }
   // cree une fonction par "...(e) =>..."
   const handleSubmit = (e) => {
     //execute la fonction par authentificate avec ses arguments entre parentheses
@@ -82,6 +76,7 @@ const Home = () => {
               className="home_firm_input home_input"
               disabled={entreprises.length == 0}
               defaultValue={"DEFAULT"}
+              onChange={(e) => setFirmName(e.target.value)}
             >
               <option disabled value="DEFAULT">Entreprise</option>
               {/* Affichage des options basées sur la liste des entreprises récupérées */}
@@ -96,7 +91,7 @@ const Home = () => {
           </label>
 
         {/* Zone d'entrée du mot de passe avec le composant BtnConnect */}
-        <label className="home_password_label home_label" onSubmit={passwordChange}>
+        <label className="home_password_label home_label">
           <input
             className="home_password_input home_input"
             type="password"

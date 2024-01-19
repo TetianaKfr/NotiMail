@@ -9,6 +9,9 @@ import { SERVER_ADDRESS } from "./index.js";
 export default async function authentificate(firm_name, password) {
   const response = await fetch(SERVER_ADDRESS + "authentificate", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({
       firm_name: firm_name,
       password: password,
@@ -16,7 +19,7 @@ export default async function authentificate(firm_name, password) {
   });
 
   if (response.ok) {
-    window.localStorage.setItem("token", response.json().token);
+    window.localStorage.setItem("token", (await response.json()).token);
     return true;
   } else {
     return false;
