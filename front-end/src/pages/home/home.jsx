@@ -48,67 +48,69 @@ const Home = () => {
     //execute la fonction par authentificate avec ses arguments entre parentheses
     authentificate(firmName, password).then((result) => {
       if (result == false) {
-        setErrorMessage ("Identifiant invalide") 
-          return 
+        setErrorMessage("Identifiant invalide")
+        return
       }
-      get_user(firmName).then((user)=>{
+      get_user(firmName).then((user) => {
         if (user == null) {
           return
         }
-        if (user.is_admin) { 
+        if (user.is_admin) {
           navigate('/admin')
         } else {
           navigate('/user')
-        } 
+        }
       })
     })
     //empeche le rechargement de la page
-    e.preventDefault() 
+    e.preventDefault()
   }
 
   // Rendu du composant Home
   return (
     <>
+      <header className="home_header">
+      <img className="home_logo" src="../../src/assets/images/logo-home.svg" alt="Logo" />
+      </header>
 
-      <div className="header">
-
-        <img className="home-logo" src="../../src/assets/images/logo-home.svg" alt="Logo" />
-      </div>
       {/* Section de connexion */}
-      <form className='connexion' onSubmit={handleSubmit}>
+      <form className='home_form' onSubmit={handleSubmit}>
+
         {/* Sélecteur d'entreprise avec la possibilité de le désactiver pendant le chargement */}
-        <div className='company-select'>
-          <label className='firm-select'>
-            <select disabled={entreprises.length == 0} defaultValue={"DEFAULT"}>
+          <label className='home_firm_label home_label'>
+            <select
+              className="home_firm_input home_input"
+              disabled={entreprises.length == 0}
+              defaultValue={"DEFAULT"}
+            >
               <option disabled value="DEFAULT">Entreprise</option>
               {/* Affichage des options basées sur la liste des entreprises récupérées */}
-            
+
               {entreprises.map(firm_name => (
                 <option key={firm_name}>
                   {firm_name}
                 </option>
               ))
-            }
+              }
             </select>
           </label>
-        </div>
 
         {/* Zone d'entrée du mot de passe avec le composant BtnConnect */}
-        <div className="password-input">
-          <div className="password-input" onSubmit={passwordChange}>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button type='submit'>
-            <img src="../../src/assets/images/padlock.svg" alt="submit" />
-            </button>
-          </div>
-                {errorMessage != null && <h4>{errorMessage}</h4>}
+        <label className="home_password_label home_label" onSubmit={passwordChange}>
+          <input
+            className="home_password_input home_input"
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button className="home_submit" type='submit'>
+            <img className="home_submit_img" src="../../src/assets/images/padlock.svg" alt="submit" />
+          </button>
+        </label>
 
-        </div>
+        {errorMessage != null && <h4 class="home_error">{errorMessage}</h4>}
+
       </form>
     </>
   );
