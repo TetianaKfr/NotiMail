@@ -5,26 +5,14 @@ import { NavLink } from "react-router-dom";
 
 // Composant Modal
 const Modal = ({ show, setShowModal, handleEnvoi }) => {
-  // État local
-  const [data, setData] = useState([]); // Données récupérées de l'API
-  const [selectedCompany, setSelectedCompany] = useState(""); // Entreprise sélectionnée dans la liste déroulante
-
-const Modal = ({ show, handleEnvoi }) => {
   const [data, setData] = useState([]);
-  const [selectedCompany, setSelectedCompany] = useState("");
-  const [companies, setCompanies] = useState([
-    "Microsoft",
-    "Google",
-    "Meta",
-    "Amazon",
-    "Tesla Motors",
-    "Space X",
-    "Microsoft",
-    "Google",
-    "Meta",
-    "Amazon",
-    "Tesla Motors",
-    "Space X",
+  const [selectedCompany, setSelectedCompany] = useState([
+    "microsoft",
+    "google",
+    "meta",
+    "amazon",
+    "tesla",
+    "space",
   ]);
   const [isLoading, setIsLoading] = useState(false); // État du chargement
   const handleClose = () => {
@@ -38,27 +26,17 @@ const Modal = ({ show, handleEnvoi }) => {
       .then((data) => setData(data));
   }, []);
 
-  const handleCompanyChange = (event) => {
-    setSelectedCompany(event.target.value);
-  };
   // Rendu JSX du composant Modal
   return (
     <div>
       <section className="modal-main">
         <div className="cadre">
           <h2>Vous vous apprêtez à notifier :</h2>
-          <select
-            className="selected"
-            value={selectedCompany}
-            onChange={handleCompanyChange}
-            multiple
-          >
-            {companies.map((company) => (
-              <option key={company} value={company}>
-                {company}
-              </option>
-            ))}
-          </select>
+          {selectedCompany.map((company) => (
+            <option key={company} value={company}>
+              {company}
+            </option>
+          ))}
           <div className="container">
             <button className="close" onClick={handleClose}>
               Annuler
@@ -84,11 +62,12 @@ const MyComponent = ({ show }) => {
     </div>
   );
 };
-// Propriétés PropTypes pour le composant Modal
+
 Modal.propTypes = {
   show: PropTypes.bool.isRequired,
+  setShowModal: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   handleEnvoi: PropTypes.func.isRequired,
-};}
+};
 // Export du composant Modal
 export default Modal;

@@ -3,7 +3,6 @@
   align-items: center;
   justify-content: center;
 }
-<<<<<<< HEAD
 .search-bar {
   display: flex;
   align-items: center;
@@ -21,7 +20,6 @@
   font-weight: 400;
   word-wrap: break-word;
   gap: 10px;
-=======
 .search-icon{
     color: white;
 }
@@ -44,9 +42,7 @@
     font-weight: 400;
     word-wrap: break-word; 
     gap: 10px;
->>>>>>> 64dfb80505286cfc906d6d470ea2c4ad25c0dbc2
 }
-<<<<<<< HEAD
 .cards {
   display: flex;
   flex-wrap: wrap;
@@ -95,7 +91,6 @@ footer {
   height: 60px;
   position:absolute;
   
-=======
   footer {
     position: fixed;
     left: 0;
@@ -106,7 +101,6 @@ footer {
     text-align: center;
     padding: 10px 0; /* Ajustez le padding selon vos besoins */
     height: 60px;    
->>>>>>> 876f994acb86ef5795d3050914393cd8d07f3b4a
 }
 .logos-footer {
   display: flex;
@@ -114,7 +108,6 @@ footer {
 }
 .icon-style {
   color: #006c92;
-<<<<<<< HEAD
   height: 20px;
   font-size: 100px; /* une icone se comporte comme un caractère */
   
@@ -171,14 +164,13 @@ footer {
     }
   }
 }
-=======
+}
   height: 60px;
   font-size: 100px;
 }
 
-
-/* display: flex;
+/* 
+ display: flex;
     justify-content: space-between;
     width: 100%;
-} */
->>>>>>> 876f994acb86ef5795d3050914393cd8d07f3b4a
+ */

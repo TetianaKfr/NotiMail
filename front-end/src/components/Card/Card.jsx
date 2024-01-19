@@ -15,12 +15,16 @@ export const Card = ({ id }) => {
   // Gere si la carte est cliquee
   const [isClicked, setIsClicked] = useState(false);
 
+  // Nouvel état pour gérer l'ouverture des détails (pour l'effet de glissement des détails)
+  const [detailsOpen, setDetailsOpen] = useState(false); 
+
   const handleClick = () => {
     setIsClicked(prevState => !prevState); // Inverse l'état précédent
+    setDetailsOpen(prevState => !prevState); // Basculer l'état des détails lors du clic
   };
 
   const cardStyle = {
-    borderRadius: isClicked ? '35px 35px 0 0' : '35px 35px 35px 35px'
+    borderRadius: isClicked ? '35px 35px 0 0' : '35px 35px 35px 35px',    
   };
 
   // Gere le click sur l'image "option.png" qui navigate à /entreprises
@@ -35,7 +39,7 @@ export const Card = ({ id }) => {
 
   return (
     <details>
-      <summary>
+      <summary className={detailsOpen ? 'details-open' : ''}> {/*Condition pour le glissement en css*/}
         <div className="card" style={cardStyle} onClick={handleClick} id={`Entreprise-${id}`}>
           {/* Contenu de gauche de la carte */}
 
@@ -62,7 +66,7 @@ export const Card = ({ id }) => {
             <input
               className="img-button"
               type="image"
-              src="src/assets/images/option.png"
+              src="../../src/assets/images/option.svg"
               alt="Submit"
               onClick={handleModif}
             />
