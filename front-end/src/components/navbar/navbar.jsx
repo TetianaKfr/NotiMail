@@ -11,7 +11,7 @@ const Navbar = () => {
   if (pathname === '/' || pathname === '/entreprises') {
     return null;
   }
-  
+
   const handleLogout = () => {
     console.log("Déconnexion");
     navigate('/'); // Navigue vers la page d'accueil

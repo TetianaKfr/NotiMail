@@ -8,24 +8,9 @@ import {
   DATABASE_PASSWORD,
   MYSQL_PORT,
 } from "../environment.js";
-
-/**
- * Throw quand une `Session` n'as pas les permissions requise pour executer un requête
- */
-export class PermissionException extends Error {
-  constructor() {
-    super("Unauthorized");
-  }
-}
-
-/**
- * @desc Etat et permissions d'une `Session`
- */
-const SessionState = {
-  NO_SESSION: 0,
-  USER: 1,
-  ADMIN: 2,
-}
+import PermissionException from "./permission_exception.js";
+import { SessionState } from "../session.js"
+import notify from "../notify.js"
 
 /**
  * Gère toutes les intéraction avec la base de données
@@ -33,6 +18,9 @@ const SessionState = {
  * Ne doit pas être directement construit, voir (@link controller)
  */
 class Controller {
+  /**
+   * @type {Connection}
+   */
   connection;
 
   /**
@@ -113,8 +101,8 @@ class Controller {
         firm_name varchar(120) NOT NULL,
         first_name varchar(50) DEFAULT NULL,
         last_name varchar(50) DEFAULT NULL,
-        email varchar(320) NOT NULL,
-        phone_number varchar(25) NOT NULL,
+        email varchar(320) NULL,
+        phone_number varchar(25) NULL,
         password_hash varchar(72) NOT NULL,
         last_received_mail timestamp NULL DEFAULT NULL,
         last_picked_up timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -138,11 +126,12 @@ class Controller {
   /**
    * Execute la requête sql `query` et renvoie le résultat de la requête
    * @param {string} query - The sql query to be executed
-   * @return {any} the result of the sql request
+   * @param {[string] | undefined} values - Remplace les '?' dans la requête par les éléments de la liste
+   * @return {Promise<any>} the result of the sql request
   */
-  async executeQuery(query) {
+  async executeQuery(query, values) {
     return new Promise((resolve, reject) => {
-      this.connection.query(query, function(error, results, fields) {
+      this.connection.query(query, values, function(error, results, _fields) {
         if (error) {
           reject(error);
         } else {
@@ -155,18 +144,22 @@ class Controller {
   /**
    * Verifie le niveau de permission d'une session
    * @param {Session} session - session dont le niveau de permission va être vérifié
-   * @return {SessionState} niveau de permission de la session
+   * @return {Promise<SessionState>} niveau de permission de la session
    */
   async verify_session(session) {
     if (session.firm_name == undefined | session.token == undefined) {
       return SessionState.NO_SESSION;
     }
 
-    let results = await this.executeQuery(`SELECT is_admin FROM users WHERE
-      firm_name = '${session.firm_name}' AND
-      token = '${session.token}' AND
-      last_token_usage > SUBTIME(NOW(), "8:0")
-    `);
+    let results = await this.executeQuery(
+      `
+        SELECT is_admin FROM users WHERE
+        firm_name = ? AND
+        token = ? AND
+        last_token_usage > SUBTIME(NOW(), "8:0")
+      `,
+      [session.firm_name, session_token]
+    );
 
     if (results[0] == undefined) {
       return SessionState.NO_SESSION;
@@ -179,7 +172,7 @@ class Controller {
    * Créer un token de connection pour les indentifiants donné
    * @param {string} firm_name - Le nom de l'entreprise avec laquelle se connecter
    * @param {string} password - Le mot de passe avec lequelle se connecter
-   * @return {string | null} Le token de connection sous la forme "token:firm_name"
+   * @return {Promise<string | null>} Le token de connection sous la forme "token:firm_name"
    */
   async authentificate(firm_name, password) {
     let results = await this.executeQuery(`SELECT password_hash FROM users WHERE firm_name = '${firm_name}'`);
@@ -193,18 +186,22 @@ class Controller {
 
     let token = Buffer.from(crypto.getRandomValues(new Uint8Array(32))).toString('base64');
 
-    await this.executeQuery(`UPDATE users SET
-      token = '${token}',
-      last_token_usage = NOW()
-      WHERE firm_name = '${firm_name}'
-    `)
+    await this.executeQuery(
+      `
+        UPDATE users SET
+        token = ?,
+        last_token_usage = NOW()
+        WHERE firm_name = ?
+      `,
+      [token, firm_name]
+    )
 
     return token + ":" + firm_name;
   }
 
   /**
    * Renvoie la liste des noms d'entreprises
-   * @return {[string]} Le liste des noms d'entreprises
+   * @return {Promise<[string]>} Le liste des noms d'entreprises
    */
   async listUsers() {
     let results = await this.executeQuery("SELECT firm_name FROM users");
@@ -227,7 +224,7 @@ class Controller {
    * @param {string} phone_number - Numéro de téléphone sur lequelle seront envoyées les notifications de courrier
    * @param {string} password - Mot de passe
    * @param {boolean} is_admin - Définit si l'utilisateur sera un administrateur
-   * @returns {boolean} Renvoie `false` si le nom d'entreprise est déjà utilisé et que l'opération à échoué, `true` sinon
+   * @returns {Promise<boolean>} Renvoie `false` si le nom d'entreprise est déjà utilisé et que l'opération à échoué, `true` sinon
    */
   async createUser(
     session,
@@ -244,26 +241,28 @@ class Controller {
     }
 
     try {
-      await this.executeQuery(`
-      INSERT INTO users (
-        firm_name,
-        first_name,
-        last_name,
-        email,
-        phone_number,
-        password_hash,
-        is_admin
-      )
-      VALUES (
-        '${firm_name}',
-        '${first_name}',
-        '${last_name}',
-        '${email}',
-        '${phone_number}',
-        '${await bcrypt.hash(password, 12)}',
-        b'${is_admin ? 1 : 0}'
-      )
-    `);
+      await this.executeQuery(
+        `
+          INSERT INTO users (
+            firm_name,
+            first_name,
+            last_name,
+            email,
+            phone_number,
+            password_hash,
+            is_admin
+          )
+          VALUES (? ? ? ? ? ? b'${is_admin ? 1 : 0}')
+        `,
+        [
+          firm_name,
+          first_name,
+          last_name,
+          email,
+          phone_number,
+          await bcrypt.hash(password, 12),
+        ]
+      );
     } catch (err) {
       if (err.code == "ER_DUP_ENTRY") {
         return false;
@@ -278,14 +277,14 @@ class Controller {
    * Supprime un utilisateur
    * @throws {PermissionException} Throw quand le session n'as pas les permissions administateurs
    * @param {Session} session - Session utilisé pour supprimer l'utilisateur
-   * @param {string} firm_name - Nom de l'entreprise à supprimer
+   * @param {Promise<string>} firm_name - Nom de l'entreprise à supprimer
    */
   async deleteUser(session, firm_name) {
     if (await this.verify_session(session) != SessionState.ADMIN) {
       throw new PermissionException();
     }
 
-    return (await this.executeQuery(`DELETE FROM users WHERE firm_name = '${firm_name}'`)).affectedRows > 0;
+    return (await this.executeQuery(`DELETE FROM users WHERE firm_name = ?`, firm_name)).affectedRows > 0;
   }
 
   /**
@@ -303,7 +302,7 @@ class Controller {
             utiliser `true` pour signaler l'arrivée d'un nouveau courrier,
             `false` pour signaler la récupération d'un courrier
    * @param {boolean | undefined} is_admin - Définit si l'utilisateur sera un administrateur
-   * @returns {boolean} Renvoie `false` si le nom d'entreprise n'est pas enregistré et que l'opération à échoué, `true` sinon
+   * @returns {Promise<boolean>} Renvoie `false` si le nom d'entreprise n'est pas enregistré et que l'opération à échoué, `true` sinon
    */
   async updateUser(
     session,
@@ -325,31 +324,39 @@ class Controller {
     }
 
     let require_admin = false;
+    let should_notify = false;
 
     let updated_fields = [];
+    let updated_values = [];
 
     if (firm_name != undefined) {
-      updated_fields.push(`firm_name = '${firm_name}'`);
+      updated_fields.push(`firm_name = ?`);
+      updated_values.push(firm_name);
       require_admin = true;
     }
     if (first_name != undefined) {
-      updated_fields.push(`first_name = '${first_name}'`);
+      updated_fields.push(`first_name = ?`);
+      updated_values.push(first_name);
       require_admin = true;
     }
     if (last_name != undefined) {
-      updated_fields.push(`last_name = '${last_name}'`);
+      updated_fields.push(`last_name = ?`);
+      updated_values.push(last_name);
       require_admin = true;
     }
     if (email != undefined) {
-      updated_fields.push(`email = '${email}'`);
+      updated_fields.push(`email = ?`);
+      updated_values.push(email);
       require_admin = true;
     }
     if (phone_number != undefined) {
-      updated_fields.push(`phone_number = '${phone_number}'`);
+      updated_fields.push(`phone_number = ?`);
+      updated_values.push(phone_number);
       require_admin = true;
     }
     if (password != undefined) {
-      updated_fields.push(`password_hash = '${await bcrypt.hash(password, 12)}'`);
+      updated_fields.push(`password_hash = ?`);
+      updated_values.push(await bcrypt.hash(password, 12));
       require_admin = true;
     }
     if (has_mail != undefined) {
@@ -358,6 +365,11 @@ class Controller {
         updated_fields.push(`last_received_mail = NOW()`);
       } else {
         updated_fields.push(`last_picked_up = NOW()`);
+      }
+
+      if (has_mail) {
+        require_admin = true;
+        should_notify = true;
       }
     }
     if (is_admin != undefined) {
@@ -369,11 +381,28 @@ class Controller {
       throw new PermissionException();
     }
 
-    let result = await this.executeQuery(`
-      UPDATE users SET 
-      ${updated_fields.join(",")}
-      WHERE firm_name = '${firm_name}'
-    `);
+    let result = await this.executeQuery(
+      `
+        UPDATE users SET 
+        ${updated_fields.join(",")}
+        WHERE firm_name = '${firm_name}'
+      `,
+      updated_values
+    );
+
+    if (should_notify) {
+      const contact_information = (await this.executeQuery(
+        'SELECT email phone_number FROM users WHERE firm_name = ?',
+        firm_name
+      ))[0];
+      if (contact_information != undefined) {
+        const { email, phone_number } = contact_information;
+        notify(email, phone_number);
+      } else {
+        console.error(`Error: Failed to query contact informations for notifying '${firm_name}'`);
+      }
+      // TODO
+    }
 
     return result.affectedRows > 0;
   }
@@ -384,7 +413,7 @@ class Controller {
              sauf si le nom d'entreprise correspond au nom d'entreprise de la session 
    * @param {Session} session - Session utilisé pour obtenir l'utilisateur
    * @param {string} firm_name - Le nom de l'entreprise dont les informations doivent être renvoyé 
-   * @returns {* | null} - Retourne first_name, last_name, email, phone_number,
+   * @returns {Promise<* | null>} - Retourne first_name, last_name, email, phone_number,
               last_received_mail, last_picked_up, has_mail, is_admin 
    */
   async getUser(session, firm_name) {
@@ -393,18 +422,20 @@ class Controller {
       throw new PermissionException();
     }
 
-    const query = `SELECT 
-      first_name,
-      last_name,
-      email,
-      phone_number,
-      last_received_mail,
-      last_picked_up,
-      has_mail,
-      is_admin
-      FROM users
-      WHERE firm_name = '${firm_name}'`;
-    let user = (await this.executeQuery(query))[0];
+    const query = `
+      SELECT
+        first_name,
+        last_name,
+        email,
+        phone_number,
+        last_received_mail,
+        last_picked_up,
+        has_mail,
+        is_admin
+      FROM users WHERE firm_name = ?
+    `;
+
+    let user = (await this.executeQuery(query, [firm_name]))[0];
     if (user == undefined) {
       return null;
     }
@@ -425,7 +456,7 @@ class Controller {
       throw new PermissionException();
     }
 
-    this.executeQuery(`UPDATE users SET token = NULL where firm_name = ${session.firm_name}`);
+    this.executeQuery(`UPDATE users SET token = NULL where firm_name = ?`, session.firm_name);
   }
 }
 
