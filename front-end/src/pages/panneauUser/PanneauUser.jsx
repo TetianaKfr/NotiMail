@@ -1,13 +1,40 @@
-import Logo from "../../assets/images/logo-notimail.png";
-import { IoMdMail } from "react-icons/io";
+import React, { useState } from 'react';
+import Notification from '../notification/notification';
+
 
 const PanneauUser = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [hasMail, setHasMail] = useState(true);
+
+  const handleConfirm = () => {
+    setShowModal(true);
+  };
+
+  const handleCancel = () => {
+    setShowModal(false);
+  };
+
+  const handleValidate = () => {
+    setHasMail(false);
+    setShowModal(false);
+    alert("Courrier reçu");
+  };
+
   return (
     <>
-      <img id="logo" src={Logo} alt="Logo" />
-      <IoMdMail id="mail" />
-      <h2>Aucun courrier en attente</h2>
-      <button>Réceptionner</button>
+      <Notification />
+      <div className="panneau">
+        <img src="../../src/assets/images/mail-reddot.svg" alt="mail icon"/>
+        <h2>{hasMail ? "Vous avez du courrier en attente" : "Aucun courrier en attente"}</h2>
+        <button onClick={handleConfirm}>Réceptionner</button>
+        {showModal && (
+          <div className="modal">
+            <p>Confirmer la réception du courrier</p>
+            <button onClick={handleCancel}>Annuler</button>
+            <button onClick={handleValidate}>Valider</button>
+          </div>
+        )}
+      </div>
     </>
   );
 };

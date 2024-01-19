@@ -1,68 +1,87 @@
-import Logo from "../../assets/images/logo-notimail.png";
+import React, { useState } from 'react'; //Importe le hook useState
+import "./panneauAdmin.css"
 import { FaSearch } from 'react-icons/fa';
 import { IoMdAddCircle } from "react-icons/io";
 import { BiMailSend } from "react-icons/bi";
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { Card } from '../../components/Card/Card';
+import ModalNotifier from "../../pages/Notifier/Notifier.jsx";
 
 const PanneauAdmin = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [searchFirm, setSearchFirm] = useState('');
+  const [filterFirm, setFilterFirm] = useState([]);
+  const [users, setUsers] = useState([])
+
+  // Utilise le hook useEffect pour effectuer une action après le rendu initial du composant
+  React.useEffect(() => {
+    // Effectue une requête GET pour récupérer les recettes depuis l'API
+    fetch(`http://localhost:3000/list_users`)
+      .then(result => result.json())
+      .then(data => {
+        console.log(data);
+        // Met à jour le state 'recettes' avec les données récupérées
+        setUsers(data);
+        // Initialise les recettes filtrées avec toutes les recettes au départ
+        setFilterFirm(data);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }, []);
+
+  const handleSearch = (e) => {
+    e.preventDefault()
+    //valeur actuelle, ce qui est tapé par l'utilisateur
+    const word = e.target.value
+    setSearchFirm(word)
+    // Filtrer les recettes en fonction du terme de recherche
+    const filtered = users.filter(user =>
+      user.firm_name.toLowerCase().includes(word.toLowerCase())
+    );
+
+    // Met à jour le state 'filteredRecettes' avec les recettes filtrées
+    setFilterFirm(filtered);
+  }
 
   return (
     <>
-      <img id="logo" src={Logo} alt="Logo" />
-      <div className="search-bar">
-        <FaSearch className="search-icon" />
-        <input type="text" placeholder="Rechercher..." />
+      <div className="bandeau">
+        <div className="search-bar">
+          <FaSearch className="search-icon" />
+          <input
+            type="text"
+            placeholder="Rechercher"
+            className="text-input"
+            value={searchFirm}
+            onChange={handleSearch}
+          />
+        </div>
       </div>
-      <div id="Entreprises">
-        <div id="Entreprise1">
-          <h3>Entreprise 1</h3>
-          <ul>
-            <li>Nom</li>
-            <li>Contact</li>
-            <li>Date</li>
-          </ul>
+      {filterFirm.map((firm) => (
+        <div key={firm.id} className="cards">
+          <Card />
         </div>
-        <div id="Entreprise2">
-          <h3>Entreprise 2</h3>
-          <ul>
-            <li>Nom</li>
-            <li>Contact</li>
-            <li>Date</li>
-          </ul>
+      ))}
+      <footer>
+        <div className="logos-footer">
+          <Link to="/entreprises">
+            <IoMdAddCircle className="icon-style" />
+          </Link>
+          <BiMailSend
+            className="icon-style"
+            onClick={() => {
+              setShowModal(!showModal);
+            }}
+          />
+          {showModal && (
+            <ModalNotifier
+            />
+          )}
         </div>
-        <div id="Entreprise3">
-          <h3>Entreprise 3</h3>
-          <ul>
-            <li>Nom</li>
-            <li>Contact</li>
-            <li>Date</li>
-          </ul>
-        </div>
-        <div id="Entreprise4">
-          <h3>Entreprise 4</h3>
-          <ul>
-            <li>Nom</li>
-            <li>Contact</li>
-            <li>Date</li>
-          </ul>
-        </div>
-        <div id="Entreprise5">
-          <h3>Entreprise 5</h3>
-          <ul>
-            <li>Nom</li>
-            <li>Contact</li>
-            <li>Date</li>
-          </ul>
-        </div>
-
-      </div>
-      <NavLink to="/entreprises">
-        <IoMdAddCircle id="add" />
-      </NavLink>
-      <BiMailSend id="send-mail" />
-
+      </footer>
     </>
-  )
+  );
 };
 
 export default PanneauAdmin;
