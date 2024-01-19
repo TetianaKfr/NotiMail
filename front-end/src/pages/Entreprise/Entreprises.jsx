@@ -36,7 +36,7 @@ const Entreprises = () => {
     <BsFillArrowLeftSquareFill id="retour-icon" />
     <h2 className="entreprise-title">Entreprise</h2>
     </div>
-    
+    <div className="cardEntreprise">
     <div className="entreprises">
     <form id="form" onSubmit={handleSubmit}>
       
@@ -89,6 +89,7 @@ const Entreprises = () => {
         <button id="supprimer" type="button" onClick={() => { }}>Supprimer</button>
       </div>
     </form>
+    </div>
     </div>
     </>
   );
