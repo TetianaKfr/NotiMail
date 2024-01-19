@@ -16,7 +16,7 @@ export default class Session {
   /**
    * Récupère le token depuis la bearer authentification de la requête
    * @see https://datatracker.ietf.org/doc/html/rfc6750
-   * @param {Request} req - Requête depuis laquelle le token est récupérer
+   * @param {Request} req - Requête depuis laquelle le token est récupéré
    */
   constructor(req) {
     if (req.token == undefined) {
