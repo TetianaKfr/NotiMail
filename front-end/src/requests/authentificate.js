@@ -9,10 +9,10 @@ import { SERVER_ADDRESS } from "./index.js";
 export default async function authentificate(firm_name, password) {
   const response = await fetch(SERVER_ADDRESS + "authentificate", {
     method: "POST",
-    body: {
+    body: JSON.stringify({
       firm_name: firm_name,
       password: password,
-    }
+    })
   });
 
   if (response.ok) {

@@ -11,8 +11,11 @@ export default async function createUser(
 ) {
   const response = await fetch(SERVER_ADRESS + "create_user", {
     method: "POST",
-    headers: { Authorization: `Bearer ${getToken()}` },
-    body: {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify({
       firm_name: firm_name,
       first_name: first_name,
       last_name: last_name,
@@ -20,7 +23,7 @@ export default async function createUser(
       phone_numer: phone_number,
       password: password,
       is_admin: is_admin,
-    }
+    })
   });
 
   if (!response.ok) {
