@@ -35,11 +35,6 @@ const PanneauAdmin = () => {
 
   const [isChecked, setIsChecked] = useState(false);
 
-  const [open, setOpen] = useState(false);
-
-  const onOpenModal = () => setOpen(true);
-  const onCloseModal = () => setOpen(false);
-
   // Fonction pour gérer le changement d'état de la case à cocher "toggleicon"
   // Cette fonction sera appelée à chaque fois que l'utilisateur clique sur la case à cocher
 
@@ -53,27 +48,24 @@ const PanneauAdmin = () => {
         <div className="search-bar">
           <FaSearch className="search-icon" />
           <div className="bandeau2">
-          <div className="search-bar2">
-            <input
-              type="text"
-              placeholder="Rechercher"
-              className="text-input"
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
+            <div className="search-bar2">
+              <input
+                type="text"
+                placeholder="Rechercher"
+                className="text-input"
+                value={searchTerm}
+                onChange={handleSearchChange}
+              />
+            </div>
+          </div>
+          <div className="cards">
+            {companies.filter((company) => (
+              company.toLowerCase().includes(searchTerm.toLowerCase())
+            )).map((company, index) => (
+              <Card key={index} company={company} />
+            ))}
           </div>
         </div>
-        <div className="cards">
-          {filteredCompanies.map((company) => (
-            <Card key={company.id} company={company} />
-          ))}
-        </div>
-        </div>
-      </div>
-      <div className="cards">
-        <Card id="1" />
-        <Card id="2" />
-        <Card id="3" />
       </div>
       <div className="logos-footer">
         <NavLink to="/entreprises">
@@ -82,22 +74,15 @@ const PanneauAdmin = () => {
       </div>
       <footer>
         <div className="logos-footer2"></div>
-        <NavLink to="/notifier">
         <BiMailSend
-        className="icon-style"
-        onClick={() => {
-          setShowModal(true);
-        }}
-      />
-      {showModal && (
-        <ModalNotifier show={showModal} setShowModal={setShowModal} />
-      )}
-      </NavLink>
-        
-        <Card id="3" />
-        <Card id="4" />
-        <Card id="5" />
-        
+          className="icon-style"
+          onClick={() => {
+            setShowModal(true);
+          }}
+        />
+        {showModal && (
+          <ModalNotifier show={showModal} setShowModal={setShowModal} />
+        )}
       </footer>
     </>
   );
