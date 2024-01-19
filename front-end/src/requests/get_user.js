@@ -9,7 +9,7 @@ export default async function getUser(firm_name) {
     },
   });
 
-  if (!response.ok) {
+  if (response.ok) {
     return await response.json();
   } else {
     return null

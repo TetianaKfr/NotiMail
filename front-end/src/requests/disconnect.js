@@ -10,7 +10,7 @@ export default async function disconnect() {
 
   window.localStorage.removeItem("token");
 
-  if (!response.ok) {
+  if (response.ok) {
     return true;
   } else {
     return false;

@@ -13,7 +13,7 @@ export default async function update_user(firm_name, user) {
     })
   });
 
-  if (!response.ok) {
+  if (response.ok) {
     return true;
   } else {
     return false;
