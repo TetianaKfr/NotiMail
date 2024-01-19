@@ -23,7 +23,7 @@ export default async function createUser(
     }
   });
 
-  if (!response.ok()) {
+  if (!response.ok) {
     return true;
   } else {
     return false;
