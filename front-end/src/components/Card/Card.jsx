@@ -4,7 +4,7 @@ import "./card.css"
 import { useNavigate } from 'react-router-dom';
 
 // Définition du composant Card, qui prend un 'id' en tant que prop
-export const Card = ({ id }) => {
+export const Card = ({ user }) => {
 
   //la fonction navigate = useNavigate indispensable pour aller d'une page a une autre
   const navigate = useNavigate()
@@ -24,23 +24,13 @@ export const Card = ({ id }) => {
   };
 
   const cardStyle = {
-    borderRadius: isClicked ? '35px 35px 35px 35px':'35px 35px 0 0' 
-  };
-
-  // Gere le click sur l'image "option.png" qui navigate à /entreprises
-  const handleModif = () => {
-    navigate('/entreprises')
-  };
-
-  // Fonction pour gérer les changements d'état du toggle (interrupteur)
-  const handleToggleChange = () => {
-    setToggleState(!toggleState);
+    borderRadius: isClicked ? '35px 35px 35px 35px' : '35px 35px 0 0'
   };
 
   return (
     <details>
       <summary className={detailsOpen ? 'details-open' : ''}> {/*Condition pour le glissement en css*/}
-        <div className="card" style={cardStyle} onClick={handleClick} id={`Entreprise-${id}`}>
+        <div className="card" style={cardStyle} onClick={handleClick}>
           {/* Contenu de gauche de la carte */}
 
           <div className="content-left">
@@ -55,21 +45,21 @@ export const Card = ({ id }) => {
           <div className="content-right">
             {/* Toggle (interrupteur) */}
             <input
-              id={`cmn-toggle-${id}`}
+              id={`cmn-toggle-${user.firm_name}`}
               className="cmn-toggle cmn-toggle-round"
               type="checkbox"
-              checked={toggleState}
-              onChange={handleToggleChange}
+              checked={user.unstaged_has_mail}
+              onChange={e => { user.unstaged_has_mail = e.target.checked; }}
             />
-            <label htmlFor={`cmn-toggle-${id}`}></label>
+            <label htmlFor={`cmn-toggle-${user.firm_name}`}></label>
 
-            <input
-              className="img-button"
-              type="image"
-              src="../../src/assets/images/option.svg"
-              alt="Submit"
-              onClick={handleModif}
-            />
+            <a href="/entreprises">
+              <img
+                className="img-button"
+                src="../../src/assets/images/option.svg"
+                alt="Submit"
+              />
+            </a>
           </div>
         </div>
       </summary>
