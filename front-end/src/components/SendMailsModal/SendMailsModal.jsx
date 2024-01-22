@@ -3,17 +3,17 @@ import updateUser from "../../requests/update_user.js";
 
 import "./SendMailsModal.css";
 
-export default function SendMailsModal({ modified_users, set_modified_users, set_users, dialog_ref }) {
+export default function SendMailsModal({ modifiedUsers, setModifiedUsers, setUsers, dialogRef }) {
   return (
     <dialog
       className="send_mails_dialog"
-      ref={dialog_ref}
+      ref={dialogRef}
     >
       <form className="send_mails_form" method="dialog">
         <h3 className="send_mails_title">Vous vous apprêter à notifier: </h3>
 
         <ul className="send_mails_users">
-          {modified_users.map(user => {
+          {modifiedUsers.map(user => {
             return <li key={user.firm_name} className="send_mails_user">{user.firm_name}</li>;
           })}
         </ul>
@@ -30,18 +30,18 @@ export default function SendMailsModal({ modified_users, set_modified_users, set
                 return;
               }
 
-              modified_users.forEach(user => {
+              modifiedUsers.forEach(user => {
                 updateUser(user.firm_name, { has_mail: user.unstaged_has_mail })
                   .then(success => {
                     if (success) {
-                      set_users(prev => {
+                      setUsers(prev => {
                         prev.find(e => e.firm_name == user.firm_name).has_mail = user.unstaged_has_mail;
                         return prev;
                       });
                     }
                   });
               });
-              set_modified_users([]);
+              setModifiedUsers([]);
             }}
           >
             Envoyer

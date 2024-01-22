@@ -13,14 +13,14 @@ import getUser from "../../requests/get_user.js";
 const PanneauAdmin = () => {
   const navigate = useNavigate();
 
-  const send_mails_modal = createRef();
+  const sendMailsModal = createRef();
 
   // Liste d'utilisateur tel que retourner par getUser plus le champ unstaged_has_mail
-  const [users, set_users] = useState([])
+  const [users, setUsers] = useState([])
   // Liste d'index dans le state users
-  const [filtered_users, set_filtered_users] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
-  const [modified_users, set_modified_users] = useState([]);
+  const [modifiedUsers, setModifiedUsers] = useState([]);
 
   // Utilise le hook useEffect pour effectuer une action après le rendu initial du composant
   useEffect(() => {
@@ -44,8 +44,8 @@ const PanneauAdmin = () => {
         }));
       })
       .then((users) => {
-        set_users(users);
-        set_filtered_users(Array.from(users.keys()))
+        setUsers(users);
+        setFilteredUsers(Array.from(users.keys()))
       })
       .catch(error => {
         console.error(error);
@@ -55,7 +55,7 @@ const PanneauAdmin = () => {
   const handleSearch = (e) => {
     const filters = e.target.value.split(/[\s,;.:]+/);
 
-    set_filtered_users(Array.from(users.keys()).filter(i => {
+    setFilteredUsers(Array.from(users.keys()).filter(i => {
       let user = users[i];
 
       return filters.every(filter => {
@@ -86,11 +86,11 @@ const PanneauAdmin = () => {
       </div>
 
       <div className="cards">
-        {filtered_users.map(i => <Card
+        {filteredUsers.map(i => <Card
           key={users[i].firm_name}
-          set_users={set_users}
+          set_users={setUsers}
           users={users}
-          set_modified_users={set_modified_users}
+          set_modified_users={setModifiedUsers}
           user={users[i]}
         />)}
       </div>
@@ -103,16 +103,16 @@ const PanneauAdmin = () => {
           <button
             onClick={e => {
               if (e.button == 0) {
-                send_mails_modal.current.showModal();
+                sendMailsModal.current.showModal();
               }
             }}
-            disabled={modified_users.length == 0}
+            disabled={modifiedUsers.length == 0}
           >
             <BiMailSend
               className="icon-style"
             />
           </button>
-          <SendMailsModal modified_users={modified_users} set_modified_users={set_modified_users} set_users={set_users} dialog_ref={send_mails_modal} />
+          <SendMailsModal modifiedUsers={modifiedUsers} setModifiedUsers={setModifiedUsers} setUsers={setUsers} dialogRef={sendMailsModal} />
         </div>
       </footer>
     </>
