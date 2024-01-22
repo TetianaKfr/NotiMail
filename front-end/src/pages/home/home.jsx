@@ -64,31 +64,31 @@ export default () => {
   return (
     <>
       <header className="home_header">
-      <img className="home_logo" src="../../src/assets/images/logo-home.svg" alt="Logo" />
+        <img className="home_logo" src="../../src/assets/images/logo-home.svg" alt="Logo" />
       </header>
 
       {/* Section de connexion */}
       <form className='home_form' onSubmit={handleSubmit}>
 
         {/* Sélecteur d'entreprise avec la possibilité de le désactiver pendant le chargement */}
-          <label className='home_firm_label home_label'>
-            <select
-              className="home_firm_input home_input"
-              disabled={entreprises.length == 0}
-              defaultValue={"DEFAULT"}
-              onChange={(e) => setFirmName(e.target.value)}
-            >
-              <option disabled value="DEFAULT">Entreprise</option>
-              {/* Affichage des options basées sur la liste des entreprises récupérées */}
+        <label className='home_firm_label home_label'>
+          <select
+            className="home_firm_input home_input"
+            disabled={entreprises.length == 0}
+            defaultValue={"DEFAULT"}
+            onChange={(e) => setFirmName(e.target.value)}
+          >
+            <option disabled value="DEFAULT">Entreprise</option>
+            {/* Affichage des options basées sur la liste des entreprises récupérées */}
 
-              {entreprises.map(firm_name => (
-                <option key={firm_name}>
-                  {firm_name}
-                </option>
-              ))
-              }
-            </select>
-          </label>
+            {entreprises.map(firm_name => (
+              <option key={firm_name}>
+                {firm_name}
+              </option>
+            ))
+            }
+          </select>
+        </label>
 
         {/* Zone d'entrée du mot de passe avec le composant BtnConnect */}
         <label className="home_password_label home_label">
