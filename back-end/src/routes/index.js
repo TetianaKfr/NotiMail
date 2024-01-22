@@ -18,7 +18,7 @@ router.use(cors())
 router.use(express.urlencoded({ extended: true }));
 router.use(express.json());
 router.use(bearerToken());
-router.use((req, res, next) => {
+router.use((req, _res, next) => {
   req.session = new Session(req);
   next();
 });
