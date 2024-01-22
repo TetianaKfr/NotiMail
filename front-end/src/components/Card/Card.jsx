@@ -16,7 +16,7 @@ export const Card = ({ id }) => {
   const [isClicked, setIsClicked] = useState(false);
 
   // Nouvel état pour gérer l'ouverture des détails (pour l'effet de glissement des détails)
-  const [detailsOpen, setDetailsOpen] = useState(false); 
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const handleClick = () => {
     setIsClicked(prevState => !prevState); // Inverse l'état précédent
@@ -24,7 +24,7 @@ export const Card = ({ id }) => {
   };
 
   const cardStyle = {
-    borderRadius: isClicked ? '35px 35px 0 0' : '35px 35px 35px 35px',    
+    borderRadius: isClicked ? '35px 35px 35px 35px':'35px 35px 0 0' 
   };
 
   // Gere le click sur l'image "option.png" qui navigate à /entreprises
@@ -74,16 +74,16 @@ export const Card = ({ id }) => {
         </div>
       </summary>
       <div className='wrapper-details'>
-      <div className='details-right'>
-      <p>Email</p>
-      <p>Telephone</p>
-      <p>Identifiant</p>
-      </div>
-      <div className='details-left'>
-      <p>adresse-email@exemple.com</p>
-      <p>+33601020304</p>
-      <p>1337</p>
-      </div>
+        <div className='details-right'>
+          <p>Email</p>
+          <p>Telephone</p>
+          <p>Identifiant</p>
+        </div>
+        <div className='details-left'>
+          <p>adresse-email@exemple.com</p>
+          <p>+33601020304</p>
+          <p>1337</p>
+        </div>
       </div>
     </details>
 

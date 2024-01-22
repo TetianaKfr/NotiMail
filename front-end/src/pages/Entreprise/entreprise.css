@@ -1,16 +1,17 @@
 .entreprises {
-  width: 338px;
-  background-color: #d9d9d9;
-  height: 474px;
-  top: 246px;
-  left: 46px;
-  border-radius: 52px;
-  display: flex;
-  justify-content: center;
-  border: solid #E3E3E3 2px;
-  padding: 40px;
+    width: 338px;
+    background-color: #d9d9d9;
+    height: 474px;
+    top: 246px;
+    left: 46px;
+    border-radius: 52px;
+    display: flex;
+    justify-content: center;
+    border: solid #E3E3E3 2px;
+    padding: 40px;
 }
-#form{
+
+#form {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
@@ -23,28 +24,32 @@
     margin-left: 10px;
     margin-right: 10px;
 }
-.entreprise-title{
-    font-family: "Kanit", sans-serif; 
+
+.entreprise-title {
+    font-family: "Kanit", sans-serif;
     font-size: 32px;
     line-height: 47.84px;
     color: #006C92;
 }
-.button{
-    display:flex;
+
+.button {
+    display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
 }
-#supprimer{
-    color:white;
-    background-color:#FF3535;
+
+#supprimer {
+    color: white;
+    background-color: #FF3535;
     border-radius: 43px;
     width: 116px;
     height: 44px;
     top: 648px;
     left: 73px;
 }
-#terminer{
-    color:white;
+
+#terminer {
+    color: white;
     background-color: #006C92;
     border-radius: 43px;
     width: 116px;
@@ -52,35 +57,40 @@
     top: 648px;
     left: 241px;
 }
-.retour{
-    display:flex;
+
+.retour {
+    display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
 
 }
-#retour-icon{
-    color:#006C92;
+
+#retour-icon {
+    color: #006C92;
     width: 133px;
     height: 35px;
 }
+
 .retour #retour-icon {
     margin-right: 10px;
 
-  }
-input{
-   background-color: #EEEEEE;
-   width: 141px;
-   left: 225px;
-   height: 31px;
-
-}
-#checkbox{
-    width:15px;
-    height:15px;
 }
 
-.cardEntreprise{
+input {
+    background-color: #EEEEEE;
+    width: 141px;
+    left: 225px;
+    height: 31px;
+
+}
+
+#checkbox {
+    width: 15px;
+    height: 15px;
+}
+
+.cardEntreprise {
     display: flex;
     flex-direction: column;
     align-items: center;
