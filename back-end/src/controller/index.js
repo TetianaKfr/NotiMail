@@ -158,7 +158,7 @@ class Controller {
         token = ? AND
         last_token_usage > SUBTIME(NOW(), "8:0")
       `,
-      [session.firm_name, session_token]
+      [session.firm_name, session.token]
     );
 
     if (results[0] == undefined) {
@@ -418,7 +418,7 @@ class Controller {
    */
   async getUser(session, firm_name) {
     let session_state = await this.verify_session(session);
-    if (session_state == SessionState.NO_SESSION || (session_state == SessionState.USER && firm_name != session_firm_name)) {
+    if (session_state == SessionState.NO_SESSION || (session_state == SessionState.USER && firm_name != session.firm_name)) {
       throw new PermissionException();
     }
 

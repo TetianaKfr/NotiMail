@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import './navbar.css';
 import logoMail from "../../assets/images/logo-navbar.svg";
+import disconnect from "../../requests/disconnect.js";
 
 const Navbar = () => {
   const location = useLocation();
@@ -13,7 +14,7 @@ const Navbar = () => {
   }
 
   const handleLogout = () => {
-    console.log("Déconnexion");
+    disconnect();
     navigate('/'); // Navigue vers la page d'accueil
   };
 
