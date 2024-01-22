@@ -17,13 +17,13 @@ export default Router().put("/update_user", async (req, res) => {
 
     if (
       typeof firm_name != "string" ||
-      (typeof first_name != "string" && typeof first_name != null) ||
-      (typeof last_name != "string" && typeof last_name != null) ||
-      (typeof email != "string" && typeof email != null) ||
-      (typeof phone_number != "string" && typeof phone_number != null) ||
-      (typeof password != "string" && typeof password != null) ||
-      (typeof has_mail != "boolean" && typeof has_mail != null) ||
-      (typeof is_admin != "boolean" && typeof is_admin != null)
+      (typeof first_name != "string" && first_name != undefined) ||
+      (typeof last_name != "string" && last_name != undefined) ||
+      (typeof email != "string" && email != undefined) ||
+      (typeof phone_number != "string" && phone_number != undefined) ||
+      (typeof password != "string" && password != undefined) ||
+      (typeof has_mail != "boolean" && has_mail != undefined) ||
+      (typeof is_admin != "boolean" && is_admin != undefined)
     ) {
       res.sendStatus(400);
       return;
