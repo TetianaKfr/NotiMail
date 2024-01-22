@@ -8,14 +8,14 @@ import { SERVER_ADDRESS, getToken } from "./index.js";
  * @returns {Promise<boolean>} Renvoie `true` si la requête à réussi, `false` sinon.
  */
 export default async function disconnect() {
+  window.localStorage.removeItem("token");
+
   const response = await fetch(SERVER_ADDRESS + "disconnect", {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${getToken()}`,
     },
   });
-
-  window.localStorage.removeItem("token");
 
   if (response.ok) {
     return true;
