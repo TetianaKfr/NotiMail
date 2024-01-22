@@ -7,7 +7,7 @@ import { SERVER_ADDRESS } from "./index.js";
  * @param {any} user - Objet contenant des champs optionel à modifier sur l'utilisateur, voir /back-end/api.md pour la liste des champs
  * @returns {Promise<boolean>} Renvoie `true` si la requête est réussi, `false` sinon
  */
-export default async function update_user(firm_name, user) {
+export default async function updateUser(firm_name, user) {
   const response = await fetch(SERVER_ADDRESS + "update_user", {
     method: "PUT",
     headers: {

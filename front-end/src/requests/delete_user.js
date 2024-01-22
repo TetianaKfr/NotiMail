@@ -8,7 +8,7 @@ import { getToken, SERVER_ADDRESS } from "./index.js";
  * @param {string} firm_name - Nom de l'entreprise à supprimer
  * @returns {Promise<boolean>} `true` si la requête à réussi, `false` sinon
  */
-export default async function delete_user(firm_name) {
+export default async function deleteUser(firm_name) {
   const response = await fetch(SERVER_ADDRESS + "delete_user", {
     method: "DELETE",
     headers: {
