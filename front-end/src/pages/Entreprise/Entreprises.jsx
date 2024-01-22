@@ -31,6 +31,9 @@ const Entreprises = () => {
 
   return (
     <>
+      <header className="home_header">
+        <img className="home_logo" src="../../src/assets/images/logo-home.svg" alt="Logo" />
+      </header>
       <div className="retour">
         <ImArrowLeft2 id="retour-icon" />
         <h2 className="entreprise-title">Entreprise</h2>
@@ -75,7 +78,7 @@ const Entreprises = () => {
                 name="telephone"
                 value={values.telephone}
                 onChange={handleChange}
-                placeholder="*********"
+                placeholder="+33***********"
               />
             </div>
 
