@@ -15,7 +15,10 @@ export default async function getUser(firm_name) {
   });
 
   if (response.ok) {
-    return await response.json();
+    return {
+      firm_name: firm_name,
+      ..await response.json()
+    };
   } else {
     return null
   }
