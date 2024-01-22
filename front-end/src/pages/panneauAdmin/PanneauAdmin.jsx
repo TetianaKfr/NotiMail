@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; //Importe le hook useState
+import { createRef, useState, useEffect } from 'react'; //Importe le hook useState
 import { useNavigate } from 'react-router-dom';
 import "./panneauAdmin.css"
 import { FaSearch } from 'react-icons/fa';
@@ -6,27 +6,24 @@ import { IoMdAddCircle } from "react-icons/io";
 import { BiMailSend } from "react-icons/bi";
 import { Link } from 'react-router-dom';
 import { Card } from '../../components/Card/Card';
-import ModalNotifier from "../../pages/Notifier/Notifier.jsx";
+import SendMailsModal from "../../components/SendMailsModal/SendMailsModal.jsx";
 import listUsers from '../../requests/list_users.js';
 import getUser from "../../requests/get_user.js";
 
 const PanneauAdmin = () => {
   const navigate = useNavigate();
 
-  const [showModal, setShowModal] = useState(false);
+  const send_mails_modal = createRef();
+
   // Liste d'utilisateur tel que retourner par getUser plus le champ unstaged_has_mail
   const [users, set_users] = useState([])
   // Liste d'index dans le state users
   const [filtered_users, set_filtered_users] = useState([]);
-  const [has_mail_changed, set_has_mail_changed] = useState(false);
 
-  React.useEffect(
-    () => { users.some(user => user.has_mail != user.unstaged_has_mail); },
-    [users],
-  );
+  const [modified_users, set_modified_users] = useState([]);
 
   // Utilise le hook useEffect pour effectuer une action après le rendu initial du composant
-  React.useEffect(() => {
+  useEffect(() => {
     // Effectue une requête GET pour récupérer les recettes depuis l'API
     listUsers()
       .then(firm_names => {
@@ -89,9 +86,13 @@ const PanneauAdmin = () => {
       </div>
 
       <div className="cards">
-        {filtered_users.map(i => {
-          return <Card key={i} user={users[i]} />;
-        })}
+        {filtered_users.map(i => <Card
+          key={users[i].firm_name}
+          set_users={set_users}
+          users={users}
+          set_modified_users={set_modified_users}
+          user={users[i]}
+        />)}
       </div>
 
       <footer>
@@ -99,16 +100,19 @@ const PanneauAdmin = () => {
           <Link to="/entreprises">
             <IoMdAddCircle className="icon-style" />
           </Link>
-          <BiMailSend
-            className="icon-style"
-            onClick={() => {
-              setShowModal(!showModal);
+          <button
+            onClick={e => {
+              if (e.button == 0) {
+                send_mails_modal.current.showModal();
+              }
             }}
-          />
-          {showModal && (
-            <ModalNotifier
+            disabled={modified_users.length == 0}
+          >
+            <BiMailSend
+              className="icon-style"
             />
-          )}
+          </button>
+          <SendMailsModal modified_users={modified_users} set_modified_users={set_modified_users} set_users={set_users} dialog_ref={send_mails_modal} />
         </div>
       </footer>
     </>

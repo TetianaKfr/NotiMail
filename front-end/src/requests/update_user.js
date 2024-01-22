@@ -1,4 +1,4 @@
-import { SERVER_ADDRESS } from "./index.js";
+import { SERVER_ADDRESS, getToken } from "./index.js";
 
 /**
  * Modifie des informations d'un utilisateur
@@ -12,7 +12,7 @@ export default async function updateUser(firm_name, user) {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${get_token()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
     body: JSON.stringify({
       firm_name: firm_name,

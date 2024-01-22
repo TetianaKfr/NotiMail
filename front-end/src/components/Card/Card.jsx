@@ -4,7 +4,7 @@ import "./card.css"
 import { useNavigate } from 'react-router-dom';
 
 // Définition du composant Card, qui prend un 'id' en tant que prop
-export const Card = ({ user }) => {
+export const Card = ({ set_users, users, set_modified_users, user }) => {
 
   //la fonction navigate = useNavigate indispensable pour aller d'une page a une autre
   const navigate = useNavigate()
@@ -35,9 +35,9 @@ export const Card = ({ user }) => {
 
           <div className="content-left">
             <div className="inline-items">
-              <h3>Entreprise</h3>
-              <p>Nom contact</p>
-              <p>Date</p>
+              <h3>{user.firm_name}</h3>
+              <p>{`${user.last_name} ${user.first_name}`}</p>
+              <p>{user.creation_date}</p>
             </div>
           </div>
 
@@ -48,8 +48,14 @@ export const Card = ({ user }) => {
               id={`cmn-toggle-${user.firm_name}`}
               className="cmn-toggle cmn-toggle-round"
               type="checkbox"
-              checked={user.unstaged_has_mail}
-              onChange={e => { user.unstaged_has_mail = e.target.checked; }}
+              defaultChecked={user.has_mail}
+              onChange={e => {
+                set_users(prev => {
+                  prev.find(e => e.firm_name == user.firm_name).unstaged_has_mail = e.target.checked;
+                  return prev;
+                });
+                set_modified_users(users.filter(user => user.has_mail != user.unstaged_has_mail));
+              }}
             />
             <label htmlFor={`cmn-toggle-${user.firm_name}`}></label>
 
@@ -66,13 +72,11 @@ export const Card = ({ user }) => {
       <div className='wrapper-details'>
         <div className='details-right'>
           <p>Email</p>
-          <p>Telephone</p>
-          <p>Identifiant</p>
+          <p>Téléphone</p>
         </div>
         <div className='details-left'>
-          <p>adresse-email@exemple.com</p>
-          <p>+33601020304</p>
-          <p>1337</p>
+          <p>{user.email}</p>
+          <p>{user.phone_number}</p>
         </div>
       </div>
     </details>
