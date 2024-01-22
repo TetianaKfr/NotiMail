@@ -6,6 +6,7 @@ import { BiMailSend } from "react-icons/bi";
 import { Link } from 'react-router-dom';
 import { Card } from '../../components/Card/Card';
 import ModalNotifier from "../../pages/Notifier/Notifier.jsx";
+import listUsers from '../../requests/list_users.js';
 
 const PanneauAdmin = () => {
   const [showModal, setShowModal] = useState(false);
@@ -16,9 +17,11 @@ const PanneauAdmin = () => {
   // Utilise le hook useEffect pour effectuer une action après le rendu initial du composant
   React.useEffect(() => {
     // Effectue une requête GET pour récupérer les recettes depuis l'API
-    fetch(`http://localhost:3000/list_users`)
-      .then(result => result.json())
+      listUsers()
       .then(data => {
+        if(data == null){
+          return 
+        }
         console.log(data);
         // Met à jour le state 'recettes' avec les données récupérées
         setUsers(data);
