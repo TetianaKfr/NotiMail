@@ -6,7 +6,7 @@ import "./home.css";
 import authentificate from '../../requests/authentificate';
 import get_user from '../../requests/get_user';
 
-const Home = () => {
+export default () => {
   // Utilisation du hook useState pour gérer l'état des entreprises
   const [entreprises, setEntreprises] = useState([]);
   const [firmName, setFirmName] = useState('')
@@ -111,5 +111,3 @@ const Home = () => {
   );
 };
 
-// Exportation du composant Home comme composant par défaut
-export default Home;
