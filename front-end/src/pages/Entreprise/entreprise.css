@@ -8,7 +8,10 @@
   display: flex;
   justify-content: center;
   border: solid #e3e3e3 2px;
-  padding: 40px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 40px;
+  padding-bottom: 10px;
 }
 #form {
   display: flex;
@@ -33,6 +36,8 @@
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
+  border:none;
+  padding: 15px;
 }
 #supprimer {
   color: white;
@@ -57,11 +62,17 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  color: #006c92;
 }
 #retour-icon {
-  color: #006c92;
   width: 133px;
   height: 35px;
+  color: white;
+  background-color: #006c92;
+  z-index: 1000;
+  border-radius: 35px;
+  top: 205px;
+  left: 69px;
 }
 .retour #retour-icon {
   margin-right: 10px;
@@ -69,8 +80,15 @@
 input {
   background-color: #eeeeee;
   width: 141px;
-  left: 225px;
+  /* left: 225px; */
   height: 31px;
+  border-radius: 33px;
+  border: none;
+  font-size: 24px;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #006c92;
+  font-family: "Kanit", sans-serif;
 }
 #checkbox {
   width: 15px;
@@ -82,4 +100,25 @@ input {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+.formulaire {
+  width: 100%;
+  display: flex;
+  gap: 30px;
+  justify-content: space-between;
+}
+.formulaireContact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.entreprise-title {
+  margin: 0;
+}
+input::placeholder {
+  display: flex;
+  color: #006c92;
+  font-family: "Kanit", sans-serif;
 }

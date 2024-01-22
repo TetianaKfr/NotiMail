@@ -22,18 +22,10 @@ const PanneauUser = () => {
 
   return (
     <>
-      <Notification />
       <div className="panneau">
         <img src="../../src/assets/images/mail-reddot.svg" alt="mail icon"/>
-        <h2>{hasMail ? "Vous avez du courrier en attente" : "Aucun courrier en attente"}</h2>
-        <button onClick={handleConfirm}>Réceptionner</button>
-        {showModal && (
-          <div className="modal">
-            <p>Confirmer la réception du courrier</p>
-            <button onClick={handleCancel}>Annuler</button>
-            <button onClick={handleValidate}>Valider</button>
-          </div>
-        )}
+
+      <Notification />
       </div>
     </>
   );

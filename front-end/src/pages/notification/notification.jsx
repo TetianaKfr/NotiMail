@@ -18,15 +18,16 @@ const Modal = (props) => {
     return (
         <>
         <div className="modal-overlay">
-        </div>
+        
         <dialog ref={dialog}>
-        <p>Je suis le dialogue</p>
+        <p>Confirmer la réception du courrier</p>
         <button onClick={() => { props.cancel(false) }}>annuler</button>
                     <button onClick={() => { props.validate(true) }}>valider</button>
       </dialog>
       <button type="button" onClick={openHandler}>
         Réceptionner
       </button>
+      </div>
         </>
     );
 }
@@ -54,10 +55,9 @@ const Notification = () => {
     return (
         <>
             <div className='alert'>
-                <span>{`Confirmer la réception du courrier : `} </span>
                 <div className="button-container">
                     {/* Bouton pour déclencher la confirmation et afficher le Modal */}
-                    <button onClick={onConfirm}>confirmer la reception</button>
+                    <span onClick={onConfirm}>Vous avez du courrier en attente</span>
                 </div>
             
             {/* Affiche le Modal si isOpen est vrai */}

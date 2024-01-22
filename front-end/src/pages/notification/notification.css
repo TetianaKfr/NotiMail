@@ -10,3 +10,17 @@
     justify-content: center;
     flex-direction:column;
 }
+.button-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "kanit", sans-serif;
+    color:#006c92;
+}
+.modal-overlay{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width:321px;
+
+}
