@@ -36,7 +36,7 @@
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
-  border:none;
+  border: none !important;
   padding: 15px;
 }
 #supprimer {
@@ -47,6 +47,8 @@
   height: 44px;
   top: 648px;
   left: 73px;
+  border: none;
+  font-size: 20px;
 }
 #terminer {
   color: white;
@@ -56,6 +58,8 @@
   height: 44px;
   top: 648px;
   left: 241px;
+  border: none;
+  font-size: 20px;
 }
 .retour {
   display: flex;

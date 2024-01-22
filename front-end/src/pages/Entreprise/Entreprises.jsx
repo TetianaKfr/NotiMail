@@ -3,8 +3,6 @@ import { TiArrowLeftThick } from "react-icons/ti";
 import "../Entreprise/entreprise.css";
 import { ImArrowLeft2 } from "react-icons/im";
 
-
-
 const Entreprises = () => {
   const [values, setValues] = React.useState({
     entreprise: "",
@@ -53,21 +51,21 @@ const Entreprises = () => {
             <div className="formulaire">
               <label>Contact :</label>
               <div className="formulaireContact">
-              <input
-              type="text"
-              name="nom"
-              placeholder="Nom"
-              value={values.contact}
-              onChange={handleChange}
-            />
-            <input
-              type="text"
-              name="prenom"
-              placeholder="Prenom"
-              value={values.contact}
-              onChange={handleChange}
-            />
-            </div>
+                <input
+                  type="text"
+                  name="nom"
+                  placeholder="Nom"
+                  value={values.contact}
+                  onChange={handleChange}
+                />
+                <input
+                  type="text"
+                  name="prenom"
+                  placeholder="Prenom"
+                  value={values.contact}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
 
             <div className="formulaire">
@@ -103,7 +101,6 @@ const Entreprises = () => {
               />
             </div>
 
-
             <div className="formulaire">
               <label>
                 Admin :
@@ -118,7 +115,7 @@ const Entreprises = () => {
             </div>
 
             <div className="button">
-              <button id="terminer" type="submit">
+              <button style={{border:"unset !important"}} id="terminer" type="submit">
                 Terminer
               </button>
               <button id="supprimer" type="button" onClick={() => {}}>
