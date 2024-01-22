@@ -8,7 +8,7 @@ import PanneauAdmin from "./pages/panneauAdmin/PanneauAdmin.jsx";
 import Entreprises from './pages/Entreprise/Entreprises.jsx';
 import PanneauUser from "./pages/panneauUser/PanneauUser.jsx";
 import ModalNotifier from "./pages/Notifier/Notifier.jsx";
-import Notification from "./pages/notification/notification.jsx";
+import Notification from "./components/notification/Notification.jsx";
 
 // Importez vos autres composants ici
 // let user = { companyName: 'entreprise 1' }
