@@ -18,6 +18,12 @@ const PanneauAdmin = () => {
   const [users, set_users] = useState([])
   // Liste d'index dans le state users
   const [filtered_users, set_filtered_users] = useState([]);
+  const [has_mail_changed, set_has_mail_changed] = useState(false);
+
+  React.useEffect(
+    () => { users.some(user => user.has_mail != user.unstaged_has_mail); },
+    [users],
+  );
 
   // Utilise le hook useEffect pour effectuer une action après le rendu initial du composant
   React.useEffect(() => {
