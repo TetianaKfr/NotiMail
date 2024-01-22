@@ -2,6 +2,7 @@ import { SERVER_ADDRESS } from "./index.js";
 
 /**
  * Génère une token d'authentification qui sera utilisé dans les prochaines requêtes
+ *
  * @param {string} firm_name - Nom de l'entreprise à authentifier
  * @param {string} password - Mot de passe de l'entreprise à authentifier
  * @returns {Promise<boolean>} Retourne `true` si l'authentication à réussi, sinon renvoie `false`
