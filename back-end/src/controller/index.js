@@ -1,5 +1,6 @@
 import mysql from "mysql";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 
 import {
   DATABASE_HOST,
