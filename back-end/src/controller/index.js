@@ -253,7 +253,7 @@ class Controller {
             password_hash,
             is_admin
           )
-          VALUES (? ? ? ? ? ? b'${is_admin ? 1 : 0}')
+          VALUES (?, ?, ?, ?, ?, ?, b'${is_admin ? 1 : 0}')
         `,
         [
           firm_name,
@@ -262,6 +262,7 @@ class Controller {
           email,
           phone_number,
           await bcrypt.hash(password, 12),
+          is_admin ? "1" : "0",
         ]
       );
     } catch (err) {
