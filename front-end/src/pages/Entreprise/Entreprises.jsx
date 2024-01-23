@@ -105,6 +105,7 @@ const Entreprises = () => {
                 value={firmName}
                 onChange={e => setFirmName(e.target.value)}
                 placeholder="*********"
+                disabled={user != undefined}
               />
             </div>
             <div className="formulaire">
