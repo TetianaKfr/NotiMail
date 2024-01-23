@@ -5,12 +5,13 @@ import { ImArrowLeft2 } from "react-icons/im";
 
 const Entreprises = () => {
   const [values, setValues] = React.useState({
-    entreprise: "",
-    contact: "",
-    telephone: "",
+    firm_name: "",
+    first_name: "",
+    last_name: "",
+    phone_number: "",
     email: "",
-    identifiant: "",
-    admin: false,
+    password: "",
+    is_admin: false,
   });
 
   const handleChange = (event) => {
@@ -32,7 +33,11 @@ const Entreprises = () => {
   return (
     <>
       <header className="home_header">
-        <img className="home_logo" src="../../src/assets/images/logo-home.svg" alt="Logo" />
+        <img
+          className="home_logo"
+          src="../../src/assets/images/logo-home.svg"
+          alt="Logo"
+        />
       </header>
       <div className="retour">
         <ImArrowLeft2 id="retour-icon" />
@@ -45,8 +50,8 @@ const Entreprises = () => {
               <label>Entreprise :</label>
               <input
                 type="text"
-                name="entreprise"
-                value={values.entreprise}
+                name="firm_name"
+                value={values.firm_name}
                 onChange={handleChange}
                 placeholder="*********"
               />
@@ -56,16 +61,16 @@ const Entreprises = () => {
               <div className="formulaireContact">
                 <input
                   type="text"
-                  name="nom"
+                  name="last_name"
                   placeholder="Nom"
-                  value={values.contact}
+                  value={values.last_name}
                   onChange={handleChange}
                 />
                 <input
                   type="text"
-                  name="prenom"
+                  name="first_name"
                   placeholder="Prenom"
-                  value={values.contact}
+                  value={values.first_name}
                   onChange={handleChange}
                 />
               </div>
@@ -75,8 +80,8 @@ const Entreprises = () => {
               <label>Téléphone :</label>
               <input
                 type="text"
-                name="telephone"
-                value={values.telephone}
+                name="phone_number"
+                value={values.phone_number}
                 onChange={handleChange}
                 placeholder="+33***********"
               />
@@ -97,8 +102,8 @@ const Entreprises = () => {
               <label>Identifiant :</label>
               <input
                 type="text"
-                name="identifiant"
-                value={values.identifiant}
+                name="password"
+                value={values.password}
                 onChange={handleChange}
                 placeholder="****"
               />
@@ -110,15 +115,19 @@ const Entreprises = () => {
                 <input
                   id="checkbox"
                   type="checkbox"
-                  name="admin"
-                  checked={values.admin}
+                  name="is_admin"
+                  checked={values.is_admin}
                   onChange={handleChange}
                 />
               </label>
             </div>
 
             <div className="button">
-              <button style={{border:"unset !important"}} id="terminer" type="submit">
+              <button
+                style={{ border: "unset !important" }}
+                id="terminer"
+                type="submit"
+              >
                 Terminer
               </button>
               <button id="supprimer" type="button" onClick={() => {}}>

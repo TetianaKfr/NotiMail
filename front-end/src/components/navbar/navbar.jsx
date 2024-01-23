@@ -10,7 +10,7 @@ const Navbar = () => {
   const navigate = useNavigate(); // Instance de useNavigate
 
   // Ne pas afficher la Navbar sur les pages spécifiées
-  if (pathname === '/' || pathname === '/entreprises') {
+  if (pathname === '/' || pathname === '/Entreprises') {
     return null;
   }
 
