@@ -116,6 +116,20 @@ if (EMAIL_PASSWORD == undefined) {
   is_environment_missing = true;
 }
 
+
+/**
+ * Mot de passe de l'addresse email utilisé pour envoyer les notification de colis recus
+ * stocké dans le .env
+ * @type {string}
+ */
+export const FRONT_END_ADDRESS = process.env.NOTIMAIL_FRONT_END_ADDRESS;
+if (EMAIL_PASSWORD == undefined) {
+  console.error(
+    "Error: The 'NOTIMAIL_FRONT_END_ADDRESS' environment variable should be set"
+  );
+  is_environment_missing = true;
+}
+
 if (is_environment_missing) {
   process.exit(-1);
 }
