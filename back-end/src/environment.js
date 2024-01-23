@@ -123,7 +123,7 @@ if (EMAIL_PASSWORD == undefined) {
  * @type {string}
  */
 export const FRONT_END_ADDRESS = process.env.NOTIMAIL_FRONT_END_ADDRESS;
-if (EMAIL_PASSWORD == undefined) {
+if (FRONT_END_ADDRESS == undefined) {
   console.error(
     "Error: The 'NOTIMAIL_FRONT_END_ADDRESS' environment variable should be set"
   );

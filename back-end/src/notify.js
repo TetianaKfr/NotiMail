@@ -17,7 +17,7 @@ export default function notify(email, phone_number) {
         from: EMAIL,
         to: email,
         subject: "Vous avez recu un courrier",
-        html: `Rendez vous sur <a href='${FRONT_END_ADDRESS}'>Notimail</a>' pour confirmer sa réception`,
+        html: `Rendez vous sur ${FRONT_END_ADDRESS} pour confirmer sa réception`,
       },
       (err, info) => {
         if (err) {
@@ -42,6 +42,7 @@ export default function notify(email, phone_number) {
     fetch(
       "https://api.allmysms.com/sms/send/",
       {
+        method: "POST",
         headers: {
           "Authorization": "Bearer " + ALLMYSMS_TOKEN,
           "Content-Type": "application/json"
@@ -52,6 +53,10 @@ export default function notify(email, phone_number) {
           text: `Vous avez recu un courrier: Rendez vous sur ${FRONT_END_ADDRESS} pour confirmer sa réception`,
         }),
       }
-    )
+    ).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.error("Failed to send sms: " + error);
+    });
   }
 }
