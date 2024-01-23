@@ -23,10 +23,7 @@ export default function notify(email, phone_number) {
         if (err) {
           console.error("Error: Failed to send mail: " + err);
           return;
-        } else {
-          console.log(info);
         }
-
       });
   }
 
@@ -38,7 +35,7 @@ export default function notify(email, phone_number) {
     if (phone_number.startsWith("+")) {
       phone_number = phone_number.slice(1);
     }
-    
+
     fetch(
       "https://api.allmysms.com/sms/send/",
       {
@@ -53,10 +50,9 @@ export default function notify(email, phone_number) {
           text: `Vous avez recu un courrier: Rendez vous sur ${FRONT_END_ADDRESS} pour confirmer sa réception`,
         }),
       }
-    ).then(response => {
-      console.log(response);
-    }).catch(error => {
-      console.error("Failed to send sms: " + error);
-    });
+    )
+      .catch(error => {
+        console.error("Failed to send sms: " + error);
+      });
   }
 }
