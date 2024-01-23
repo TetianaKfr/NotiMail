@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TiArrowLeftThick } from "react-icons/ti";
 import "../Entreprise/entreprise.css";
+
 import { ImArrowLeft2 } from "react-icons/im";
 import getUser from "../../requests/get_user.js";
 import createUser from "../../requests/create_user.js";
@@ -9,6 +10,7 @@ import deleteUser from "../../requests/delete_user.js";
 import updateUser from "../../requests/update_user.js";
 
 const Entreprises = () => {
+<<<<<<< HEAD
   const navigate = useNavigate();
   const [user, set_user] = useState(undefined);
   const [firmName, setFirmName] = useState("");
@@ -18,6 +20,17 @@ const Entreprises = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
+=======
+  const [values, setValues] = React.useState({
+    firm_name: "",
+    first_name: "",
+    last_name: "",
+    phone_number: "",
+    email: "",
+    password: "",
+    is_admin: false,
+  });
+>>>>>>> 4b42f416dd1c2de9ec0195ea77753fdcade4e252
 
   const param_firm_name = useParams().firm_name;
 
@@ -81,10 +94,16 @@ const Entreprises = () => {
   return (
     <>
       <header className="home_header">
-        <img className="home_logo" src="../../src/assets/images/logo-home.svg" alt="Logo" />
+        <img
+          className="home_logo"
+          src="../../src/assets/images/logo-home.svg"
+          alt="Logo"
+        />
       </header>
-      <div className="retour">
-        <ImArrowLeft2 id="retour-icon" />
+      <div className="retour"> 
+      <a href="/admin"><ImArrowLeft2 id="retour-icon" /></a>
+       
+
         <h2 className="entreprise-title">Entreprise</h2>
       </div>
       <div className="cardEntreprise">
@@ -96,8 +115,7 @@ const Entreprises = () => {
                 type="text"
                 name="entreprise"
                 value={firmName}
-                onChange={e => setFirmName(e.target.value)}
-                disabled={user != undefined}
+                onChange={handleChange}
                 placeholder="*********"
               />
             </div>
@@ -106,14 +124,14 @@ const Entreprises = () => {
               <div className="formulaireContact">
                 <input
                   type="text"
-                  name="nom"
+                  name="last_name"
                   placeholder="Nom"
                   value={lastName}
                   onChange={e => setLastName(e.target.value)}
                 />
                 <input
                   type="text"
-                  name="prenom"
+                  name="first_name"
                   placeholder="Prenom"
                   value={firstName}
                   onChange={e => setFirstName(e.target.value)}
@@ -125,7 +143,7 @@ const Entreprises = () => {
               <label>Téléphone :</label>
               <input
                 type="text"
-                name="telephone"
+                name="phone_number"
                 value={phoneNumber}
                 onChange={e => setPhoneNumber(e.target.value)}
                 placeholder="+33***********"
@@ -147,7 +165,7 @@ const Entreprises = () => {
               <label>Identifiant :</label>
               <input
                 type="text"
-                name="identifiant"
+                name="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="****"
@@ -160,7 +178,7 @@ const Entreprises = () => {
                 <input
                   id="checkbox"
                   type="checkbox"
-                  name="admin"
+                  name="is_admin"
                   checked={isAdmin}
                   onChange={e => setIsAdmin(e.target.checked)}
                 />
