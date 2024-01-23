@@ -10,7 +10,6 @@ import deleteUser from "../../requests/delete_user.js";
 import updateUser from "../../requests/update_user.js";
 
 const Entreprises = () => {
-<<<<<<< HEAD
   const navigate = useNavigate();
   const [user, set_user] = useState(undefined);
   const [firmName, setFirmName] = useState("");
@@ -20,17 +19,6 @@ const Entreprises = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
-=======
-  const [values, setValues] = React.useState({
-    firm_name: "",
-    first_name: "",
-    last_name: "",
-    phone_number: "",
-    email: "",
-    password: "",
-    is_admin: false,
-  });
->>>>>>> 4b42f416dd1c2de9ec0195ea77753fdcade4e252
 
   const param_firm_name = useParams().firm_name;
 
