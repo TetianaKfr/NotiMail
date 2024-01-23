@@ -75,7 +75,7 @@ const Entreprises = () => {
     e.preventDefault();
 
     deleteUser(
-      user
+      user.firm_name
     ).then(() => navigate("/admin"));
   };
 
