@@ -100,9 +100,9 @@ const Entreprises = () => {
           alt="Logo"
         />
       </header>
-      <div className="retour"> 
-      <a href="/admin"><ImArrowLeft2 id="retour-icon" /></a>
-       
+      <div className="retour">
+        <a href="/admin"><ImArrowLeft2 id="retour-icon" /></a>
+
 
         <h2 className="entreprise-title">Entreprise</h2>
       </div>
