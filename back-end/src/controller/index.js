@@ -285,6 +285,11 @@ class Controller {
       throw new PermissionException();
     }
 
+    // Empêche de un admin de se détruire
+    if (session.firm_name == firm_name) {
+      throw new PermissionException();
+    }
+
     return (await this.executeQuery(`DELETE FROM users WHERE firm_name = ?`, firm_name)).affectedRows > 0;
   }
 
