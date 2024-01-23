@@ -103,7 +103,7 @@ const Entreprises = () => {
                 type="text"
                 name="entreprise"
                 value={firmName}
-                onChange={handleChange}
+                onChange={e => setFirmName(e.target.value)}
                 placeholder="*********"
               />
             </div>
