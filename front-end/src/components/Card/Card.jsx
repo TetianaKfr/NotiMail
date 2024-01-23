@@ -23,14 +23,10 @@ export const Card = ({ set_users, users, set_modified_users, user }) => {
     setDetailsOpen(prevState => !prevState); // Basculer l'état des détails lors du clic
   };
 
-  const cardStyle = {
-    borderRadius: isClicked ? '35px 35px 35px 35px' : '35px 35px 0 0'
-  };
-
   return (
-    <details>
+    <details className="card_display">
       <summary className={detailsOpen ? 'details-open' : ''}> {/*Condition pour le glissement en css*/}
-        <div className="card" style={cardStyle} onClick={handleClick}>
+        <div className="card" onClick={handleClick}>
           {/* Contenu de gauche de la carte */}
 
           <div className="content-left">
