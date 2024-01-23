@@ -118,7 +118,7 @@ if (EMAIL_PASSWORD == undefined) {
 
 
 /**
- * Mot de passe de l'addresse email utilisé pour envoyer les notification de colis recus
+ * Adresse du site web notimail, envoyé dans le sms et le mail de notification
  * stocké dans le .env
  * @type {string}
  */
@@ -126,6 +126,19 @@ export const FRONT_END_ADDRESS = process.env.NOTIMAIL_FRONT_END_ADDRESS;
 if (EMAIL_PASSWORD == undefined) {
   console.error(
     "Error: The 'NOTIMAIL_FRONT_END_ADDRESS' environment variable should be set"
+  );
+  is_environment_missing = true;
+}
+
+/**
+ * Adresse du site web notimail, envoyé dans le sms et le mail de notification
+ * stocké dans le .env
+ * @type {string}
+ */
+export const ALLMYSMS_TOKEN = process.env.NOTIMAIL_ALLMYSMS_TOKEN;
+if (ALLMYSMS_TOKEN == undefined) {
+  console.error(
+    "Error: The 'NOTIMAIL_ALLMYSMS_TOKEN' environment variable should be set"
   );
   is_environment_missing = true;
 }

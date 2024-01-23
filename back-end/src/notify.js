@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-import { EMAIL_SERVICE, EMAIL, EMAIL_PASSWORD, FRONT_END_ADDRESS } from "./environment.js";
+import { EMAIL_SERVICE, EMAIL, EMAIL_PASSWORD, FRONT_END_ADDRESS, ALLMYSMS_TOKEN } from "./environment.js";
 
 const EMAIL_TRANSPORTER = nodemailer.createTransport({
   service: EMAIL_SERVICE,
@@ -17,7 +17,7 @@ export default function notify(email, phone_number) {
         from: EMAIL,
         to: email,
         subject: "Vous avez recu un courrier",
-        html: `Venez récupérer votre courrier sur <a href='${FRONT_END_ADDRESS}'>Notimail</a>'`,
+        html: `Rendez vous sur <a href='${FRONT_END_ADDRESS}'>Notimail</a>' pour confirmer sa réception`,
       },
       (err, info) => {
         if (err) {
@@ -28,5 +28,30 @@ export default function notify(email, phone_number) {
         }
 
       });
+  }
+
+  if (typeof phone_number != "string") {
+    return;
+  }
+
+  if (phone_number != null) {
+    if (phone_number.startsWith("+")) {
+      phone_number = phone_number.slice(1);
+    }
+    
+    fetch(
+      "https://api.allmysms.com/sms/send/",
+      {
+        headers: {
+          "Authorization": "Bearer " + ALLMYSMS_TOKEN,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          to: phone_number,
+          from: "Notimail",
+          text: `Vous avez recu un courrier: Rendez vous sur ${FRONT_END_ADDRESS} pour confirmer sa réception`,
+        }),
+      }
+    )
   }
 }
