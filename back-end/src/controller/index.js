@@ -391,9 +391,9 @@ class Controller {
       `
         UPDATE users SET 
         ${updated_fields.join(",")}
-        WHERE firm_name = '${firm_name}'
+        WHERE firm_name = ?
       `,
-      updated_values
+      [...updated_values, firm_name]
     );
 
     if (should_notify) {
