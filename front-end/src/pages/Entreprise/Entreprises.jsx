@@ -1,32 +1,81 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { TiArrowLeftThick } from "react-icons/ti";
 import "../Entreprise/entreprise.css";
 import { ImArrowLeft2 } from "react-icons/im";
+import getUser from "../../requests/get_user.js";
+import createUser from "../../requests/create_user.js";
+import deleteUser from "../../requests/delete_user.js";
+import updateUser from "../../requests/update_user.js";
 
 const Entreprises = () => {
-  const [values, setValues] = React.useState({
-    entreprise: "",
-    contact: "",
-    telephone: "",
-    email: "",
-    identifiant: "",
-    admin: false,
-  });
+  const navigate = useNavigate();
+  const [user, set_user] = useState(undefined);
+  const [firmName, setFirmName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  const handleChange = (event) => {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
+  const param_firm_name = useParams().firm_name;
 
-    setValues({
-      ...values,
-      [name]: value,
-    });
+  useEffect(
+    () => {
+      if (param_firm_name != undefined) {
+        getUser(param_firm_name).then((user) => {
+          if (user == null) {
+            navigate("/");
+          } else {
+            set_user(user);
+            setFirmName(user.firm_name);
+            setFirstName(user.first_name);
+            setLastName(user.last_name);
+            setPhoneNumber(user.phone_number);
+            setEmail(user.email);
+            setIsAdmin(user.is_admin);
+          }
+        })
+      }
+    },
+    []
+  );
+
+  const onClickFinish = e => {
+    e.preventDefault();
+
+    if (user == undefined) {
+      createUser(
+        firmName,
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        password,
+        isAdmin
+      ).then(() => navigate("/admin"));
+    } else {
+      updateUser(
+        user.firm_name,
+        {
+          first_name: firstName == user.first_name ? undefined : firstName,
+          last_name: lastName == user.last_name ? undefined : lastName,
+          email: email == user.email ? undefined : email,
+          phone_number: phoneNumber == user.phone_number ? undefined : phoneNumber,
+          password: password == "" ? undefined : password,
+          is_admin: isAdmin == user.is_admin ? undefined : isAdmin,
+        }
+      ).then(() => navigate("/admin"))
+    }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("Formulaire soumis :", values);
+  const onClickDelete = e => {
+    e.preventDefault();
+
+    deleteUser(
+      user
+    ).then(() => navigate("/admin"));
   };
 
   return (
@@ -40,14 +89,15 @@ const Entreprises = () => {
       </div>
       <div className="cardEntreprise">
         <div className="entreprises">
-          <form id="form" onSubmit={handleSubmit}>
+          <form id="form">
             <div className="formulaire">
               <label>Entreprise :</label>
               <input
                 type="text"
                 name="entreprise"
-                value={values.entreprise}
-                onChange={handleChange}
+                value={firmName}
+                onChange={e => setFirmName(e.target.value)}
+                disabled={user != undefined}
                 placeholder="*********"
               />
             </div>
@@ -58,15 +108,15 @@ const Entreprises = () => {
                   type="text"
                   name="nom"
                   placeholder="Nom"
-                  value={values.contact}
-                  onChange={handleChange}
+                  value={lastName}
+                  onChange={e => setLastName(e.target.value)}
                 />
                 <input
                   type="text"
                   name="prenom"
                   placeholder="Prenom"
-                  value={values.contact}
-                  onChange={handleChange}
+                  value={firstName}
+                  onChange={e => setFirstName(e.target.value)}
                 />
               </div>
             </div>
@@ -76,8 +126,8 @@ const Entreprises = () => {
               <input
                 type="text"
                 name="telephone"
-                value={values.telephone}
-                onChange={handleChange}
+                value={phoneNumber}
+                onChange={e => setPhoneNumber(e.target.value)}
                 placeholder="+33***********"
               />
             </div>
@@ -87,8 +137,8 @@ const Entreprises = () => {
               <input
                 type="email"
                 name="email"
-                value={values.email}
-                onChange={handleChange}
+                value={email}
+                onChange={e => setEmail(e.target.value)}
                 placeholder="*********"
               />
             </div>
@@ -98,8 +148,8 @@ const Entreprises = () => {
               <input
                 type="text"
                 name="identifiant"
-                value={values.identifiant}
-                onChange={handleChange}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
                 placeholder="****"
               />
             </div>
@@ -111,17 +161,17 @@ const Entreprises = () => {
                   id="checkbox"
                   type="checkbox"
                   name="admin"
-                  checked={values.admin}
-                  onChange={handleChange}
+                  checked={isAdmin}
+                  onChange={e => setIsAdmin(e.target.checked)}
                 />
               </label>
             </div>
 
             <div className="button">
-              <button style={{border:"unset !important"}} id="terminer" type="submit">
+              <button style={{ border: "unset !important" }} id="terminer" onClick={onClickFinish}>
                 Terminer
               </button>
-              <button id="supprimer" type="button" onClick={() => {}}>
+              <button id="supprimer" type="button" onClick={onClickDelete}>
                 Supprimer
               </button>
             </div>

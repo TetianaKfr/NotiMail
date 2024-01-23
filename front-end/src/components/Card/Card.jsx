@@ -59,7 +59,7 @@ export const Card = ({ set_users, users, set_modified_users, user }) => {
             />
             <label htmlFor={`cmn-toggle-${user.firm_name}`}></label>
 
-            <a href="/entreprises">
+            <a href={"/entreprises/" + user.firm_name}>
               <img
                 className="img-button"
                 src="../../src/assets/images/option.svg"

@@ -21,6 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/admin" element={<PanneauAdmin />} />
         <Route path="/user" element={<PanneauUser />} />
         <Route path="/entreprises" element={<Entreprises />} />
+        <Route path="/entreprises/:firm_name" element={<Entreprises />} />
         <Route path="/notifier" element={<ModalNotifier />} />
         <Route path="/Notification" element={<Notification />} />
       </Routes>

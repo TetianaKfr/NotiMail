@@ -1,4 +1,4 @@
-import { getToken } from "./index.js";
+import { getToken, SERVER_ADDRESS } from "./index.js";
 
 /**
  * Créer un nouvel utilisateur dans la base de données
@@ -23,7 +23,7 @@ export default async function createUser(
   password,
   is_admin
 ) {
-  const response = await fetch(SERVER_ADRESS + "create_user", {
+  const response = await fetch(SERVER_ADDRESS + "create_user", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -34,7 +34,7 @@ export default async function createUser(
       first_name: first_name,
       last_name: last_name,
       email: email,
-      phone_numer: phone_number,
+      phone_number: phone_number,
       password: password,
       is_admin: is_admin,
     })

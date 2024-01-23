@@ -15,9 +15,9 @@ export default async function deleteUser(firm_name) {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${getToken()}`,
     },
-    body: {
+    body: JSON.stringify({
       firm_name: firm_name,
-    }
+    })
   });
 
   if (response.ok) {
