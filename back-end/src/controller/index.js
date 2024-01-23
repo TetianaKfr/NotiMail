@@ -393,9 +393,10 @@ class Controller {
 
     if (should_notify) {
       const contact_information = (await this.executeQuery(
-        'SELECT email phone_number FROM users WHERE firm_name = ?',
-        firm_name
+        'SELECT email, phone_number FROM users WHERE firm_name = ?',
+        firm_name,
       ))[0];
+
       if (contact_information != undefined) {
         const { email, phone_number } = contact_information;
         notify(email, phone_number);
