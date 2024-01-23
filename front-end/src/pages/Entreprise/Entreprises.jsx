@@ -1,6 +1,7 @@
 import React from "react";
 import { TiArrowLeftThick } from "react-icons/ti";
 import "../Entreprise/entreprise.css";
+
 import { ImArrowLeft2 } from "react-icons/im";
 
 const Entreprises = () => {
@@ -39,8 +40,10 @@ const Entreprises = () => {
           alt="Logo"
         />
       </header>
-      <div className="retour">
-        <ImArrowLeft2 id="retour-icon" />
+      <div className="retour"> 
+      <a href="/admin"><ImArrowLeft2 id="retour-icon" /></a>
+       
+
         <h2 className="entreprise-title">Entreprise</h2>
       </div>
       <div className="cardEntreprise">
