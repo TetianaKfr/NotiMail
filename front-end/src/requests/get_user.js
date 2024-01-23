@@ -1,4 +1,4 @@
-import { SERVER_ADDRESS } from "./index.js";
+import { SERVER_ADDRESS, getToken } from "./index.js";
 
 /**
  * Retourne les information d'un utilisateur
@@ -10,7 +10,7 @@ export default async function getUser(firm_name) {
   const response = await fetch(SERVER_ADDRESS + "get_user/" + firm_name, {
     method: "GET",
     headers: {
-      "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
+      "Authorization": `Bearer ${getToken()}`,
     },
   });
 
