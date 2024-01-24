@@ -2,7 +2,7 @@ import Valid from '../../assets/images/vector-valid.svg'
 import Cross from '../../assets/images/vector-cross.svg'
 import MailRedDot from '../../assets/images/mail-reddot.svg'
 import MailLogo from '../../assets/images/mail-logo.svg'
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './notification.css';
 import updateUser from "../../requests/update_user.js"

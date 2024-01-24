@@ -112,7 +112,12 @@ const PanneauAdmin = () => {
               className="icon-style"
             />
           </button>
-          <SendMailsModal modifiedUsers={modifiedUsers} setModifiedUsers={setModifiedUsers} setUsers={setUsers} dialogRef={sendMailsModal} />
+          <SendMailsModal 
+          className="icon-mail"
+          modifiedUsers={modifiedUsers} 
+          setModifiedUsers={setModifiedUsers} 
+          setUsers={setUsers} 
+          dialogRef={sendMailsModal} />
         </div>
       </footer>
     </>

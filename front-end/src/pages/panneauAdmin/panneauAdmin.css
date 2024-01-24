@@ -68,3 +68,8 @@ footer {
   height: 60px;
   font-size: 100px;
 }
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
