@@ -19,7 +19,7 @@ export default function notify(email, phone_number) {
         subject: "Vous avez recu un courrier",
         html: `Rendez vous sur ${FRONT_END_ADDRESS} pour confirmer sa réception`,
       },
-      (err, info) => {
+      (err, _info) => {
         if (err) {
           console.error("Error: Failed to send mail: " + err);
           return;
