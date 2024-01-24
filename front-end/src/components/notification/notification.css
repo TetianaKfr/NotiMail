@@ -1,11 +1,26 @@
-.button-container button {
-    background: #006C92;
-    color: white;
-    font-size: 24px;
-    font-family: 'Kanit', sans-serif;
-    padding: 10px 20px;
-    border-radius: 25px;
-    border: none;
-    cursor: pointer;
-    opacity: 0.8;
+.alert{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction:column;
+}
+.panneau{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction:column;
+}
+.button-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "kanit", sans-serif;
+    color:#006c92;
+}
+.modal-overlay{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width:321px;
+
 }
