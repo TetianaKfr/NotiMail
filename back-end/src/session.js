@@ -19,11 +19,14 @@ export default class Session {
    * @param {Request} req - Requête depuis laquelle le token est récupéré
    */
   constructor(req) {
-    if (req.token == undefined) {
+    let authorization = req.headers.authorization;
+    if (authorization == undefined) {
       return;
     }
 
-    let [token, ...firm_name_parts] = req.token.split(':');
+    let full_token = authorization.slice(7);
+
+    let [token, ...firm_name_parts] = full_token.split(':');
     this.token = token;
     this.firm_name = firm_name_parts.join(':');
   }
