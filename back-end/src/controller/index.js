@@ -148,7 +148,7 @@ class Controller {
    * @return {Promise<SessionState>} niveau de permission de la session
    */
   async verify_session(session) {
-    if (session.firm_name == undefined | session.token == undefined) {
+    if (session.firm_name == undefined || session.token == undefined) {
       return SessionState.NO_SESSION;
     }
 
@@ -426,7 +426,10 @@ class Controller {
    */
   async getUser(session, firm_name) {
     let session_state = await this.verify_session(session);
-    if (session_state == SessionState.NO_SESSION || (session_state == SessionState.USER && firm_name != session.firm_name)) {
+    if (
+      session_state == SessionState.NO_SESSION ||
+      (session_state == SessionState.USER && firm_name != session.firm_name)
+    ) {
       throw new PermissionException();
     }
 
