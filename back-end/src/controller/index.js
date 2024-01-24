@@ -336,11 +336,6 @@ class Controller {
     let updated_fields = [];
     let updated_values = [];
 
-    if (firm_name != undefined) {
-      updated_fields.push(`firm_name = ?`);
-      updated_values.push(firm_name);
-      require_admin = true;
-    }
     if (first_name != undefined) {
       updated_fields.push(`first_name = ?`);
       updated_values.push(first_name);
