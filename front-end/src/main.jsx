@@ -19,11 +19,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/admin" element={<PanneauAdmin />} />
-        <Route path="/user" element={<PanneauUser />} />
+        <Route path="/user" element={<Notification />} />
         <Route path="/entreprises" element={<Entreprises />} />
         <Route path="/entreprises/:firm_name" element={<Entreprises />} />
         <Route path="/notifier" element={<ModalNotifier />} />
-        <Route path="/Notification" element={<Notification />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
