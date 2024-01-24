@@ -4,23 +4,38 @@
     justify-content: center;
     flex-direction:column;
 }
+.image-mail-attente{
+    margin-top: 50px;
+}
+.receptionner {
+    background-color: #006c92;
+    color: white;
+    width: 300px;
+    height: 60px;
+    border-radius: 65px;
+    font-size: 24px;
+    border: none;
+    cursor: pointer;
+}
 .panneau{
     display:flex;
     align-items: center;
     justify-content: center;
     flex-direction:column;
 }
-.button-container{
+.string-container{
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: "kanit", sans-serif;
     color:#006c92;
+    font-size: 24px;
+    width: 350px;
+    margin: 15px 0 40px 0;
 }
 .modal-overlay{
     display: flex;
     align-items: center;
     justify-content: center;
     width:321px;
-
 }
