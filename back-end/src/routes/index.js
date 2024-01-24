@@ -1,5 +1,4 @@
 import express from "express";
-import bearerToken from "express-bearer-token";
 import cors from "cors";
 
 import Session from "../session.js";
@@ -17,7 +16,6 @@ router.use(cors())
 
 router.use(express.urlencoded({ extended: true }));
 router.use(express.json());
-router.use(bearerToken());
 router.use((req, _res, next) => {
   req.session = new Session(req);
   next();
