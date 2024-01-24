@@ -20,12 +20,13 @@ const Modal = (props) => {
 
   return (
     <>
-      <div className="modal-overlay">
-
-        <dialog ref={dialog}>
+      <div className="modal">
+        <dialog className='modal-reception' ref={dialog}>
           <p>Confirmer la réception du courrier</p>
-          <button onClick={() => { closeHandler() }}><img src={Cross}/></button>
-          <button onClick={() => { closeHandler(); props.validate() }}><img src={Valid}/></button>
+          <div className='ValidCross'>
+            <button className="Cross" onClick={() => { closeHandler() }}><img src={Cross} /></button>
+            <button className="Valid" onClick={() => { closeHandler(); props.validate() }}><img src={Valid} /></button>
+          </div>
         </dialog>
         <button className="receptionner" type="button" onClick={openHandler}>
           Réceptionner
@@ -47,7 +48,9 @@ const Notification = () => {
     <>
       <div className='alert'>
         <div className='image-mail-attente'>
-          <img src={MailRedDot} alt="e-mail en attente" />
+          <img src={MailRedDot}
+            className='MailIcon'
+            alt="e-mail en attente" />
         </div>
         <div className="string-container">
           {/* Bouton pour déclencher la confirmation et afficher le Modal */}
