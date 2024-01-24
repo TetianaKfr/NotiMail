@@ -1,5 +1,4 @@
 import express from "express";
-import bearerToken from "express-bearer-token";
 import cors from "cors";
 
 import Session from "../session.js";
